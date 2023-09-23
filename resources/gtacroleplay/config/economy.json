@@ -1,0 +1,12 @@
+{
+    "passiveIncomePerPayDay": 2000,
+    "applyTax": true,
+    "applyUpkeep": true,
+    "grossIncomeMultiplier": 1.0,
+    "incomeTaxRate": 0.7,
+    "upKeepCosts": {
+        "upKeepPerVehicle": 250,
+        "upKeepPerHouse": 350,
+        "upKeepPerBusiness": 600
+    }
+}

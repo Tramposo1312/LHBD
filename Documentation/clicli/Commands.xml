@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<Commands>
+    <Command Name="say" Hash="4241071205" />
+    <Command Name="exit" Hash="2483651598" />
+    <Command Name="quit" Hash="1135269781" />
+    <Command Name="start" Hash="2675529103" />
+    <Command Name="gun" Hash="1251722587" />
+    <Command Name="restart" Hash="3891864071" />
+    <Command Name="stopall" Hash="1683731152" />
+    <Command Name="stop" Hash="3109426870" />
+    <Command Name="refresh" Hash="1619108091" />
+    <Command Name="dumpdoc" Hash="3404143852" />
+    <Command Name="veh" Hash="4108237688" />
+    <Command Name="ped" Hash="4192570337" />
+    <Command Name="siren" Hash="3683367432" />
+    <Command Name="lights" Hash="951890664" />
+    <Command Name="engine" Hash="3903330957" />
+    <Command Name="lock" Hash="2274335502" />
+    <Command Name="skin" Hash="41510942" />
+</Commands>

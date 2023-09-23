@@ -1,0 +1,7 @@
+<meta>
+	<info author="Vortrex" description="Protect spawn area" />
+
+	<script src="client.js" type="client" language="javascript" />
+
+	<file src="config.json" type="client" />
+</meta>
