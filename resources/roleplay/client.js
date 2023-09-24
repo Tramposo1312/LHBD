@@ -51,6 +51,15 @@ addNetworkHandler("updateGoods", function(goodsData) {
     console.log("Received updated goods:", goodsData);
 });
 
+addEventHandler("OnMapLoaded", function(event, client) {
+    if(game.mapName = "MISE03-SALIERYKONEC") {
+        removeEventHandler("OnPlayerJoined");
+    }
+  });
+
+
+
+
 
 
 
