@@ -4,3 +4,7 @@
 /bin
 /include
 /share
+*.log
+*.log
+/htdocs
+logs/ServerLog.log

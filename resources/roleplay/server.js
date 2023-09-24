@@ -6,7 +6,7 @@ const initMoney = 100;
 const db = new module.sqlite.Database("solhdatabase.db");
 
 bindEventHandler("OnResourceStart", thisResource, function(event, resource, client) {
-	setInterval(consumeBizGoods, 6000000);
+
 });
 
 
@@ -16,8 +16,9 @@ bindEventHandler("OnResourceStart", thisResource, function(event, resource, clie
 const PaycheckMoney = 2000;
 
 addEventHandler("OnPlayerJoined", (event, client) => {
-	let playerMoney = db.query(`SELECT money FROM users WHERE username = '${client.name}'`);
+	
 	db.query(`SELECT * FROM users WHERE username = '${client.name}'`);
+	let playerMoney = db.query(`SELECT money FROM users WHERE username = '${client.name}'`);
     let checkUser = db.query(`SELECT * FROM users WHERE username = '${client.name}'`);
 	if (checkUser == ",,,") {
 		messageClient("Seems like you need to register, pal!", client, COLOUR_GREEN);
@@ -34,7 +35,8 @@ addEventHandler("OnPlayerJoined", (event, client) => {
 
 
 		setInterval(() => {
-			hudPlayerMoney(playerMoney);
+			const theplayerMoney = db.query(`SELECT money FROM users WHERE username = '${client.name}'`);
+			hudPlayerMoney(theplayerMoney);
 		 }, 1000);
 
 
@@ -211,24 +213,26 @@ addCommandHandler("spawn", (command, params, client) => {
 
 	const tpplace = params.toLowerCase();
 	if (tpplace === '1') {
-
+		client.despawnPlayer();
 		spawnPlayer(client, littleitaly, 0.0, "TommyHighHAT.i3d");
 
 
 	} else if (tpplace === '2') {
-
+		client.despawnPlayer();
 		spawnPlayer(client, hoboken, 0.0, "TommyHighHAT.i3d");
 
 	} else if (tpplace === '3') {
-
+		client.despawnPlayer();
 		spawnPlayer(client, hoboApart, 0.0, "TommyHighHAT.i3d");
 
 	} else if (tpplace === '4') {
+		client.despawnPlayer();
 		spawnPlayer(client, salieryDoor, 0.0, "TommyHighHAT.i3d");
 	} else if (tpplace === '5') {
-		spawnPlayer(client, kingbed, 0.0, "TommyHighHAT.i3d");
+		client.despawnPlayer();
+		spawnPlayer(client, bongioEmmetPosition, 0.0, "TommyHighHAT.i3d");
 	} else {
-		  messageClient("USAGE: /spawn 1/2/3", client, COLOUR_ORANGE);
+		  messageClient("USAGE: /spawn 1/2/3/4/5", client, COLOUR_ORANGE);
 		}
 	  });
 
@@ -242,13 +246,6 @@ function getClientFromPlayer(player) {
 	}
 }
 
-
-function getDistance(pos1, pos2) {
-		let dx = pos1[0] - pos2[0];
-		let dy = pos1[1] - pos2[1];
-		let dz = pos1[2] - pos2[2];
-		return Math.sqrt(dx * dx + dy * dy + dz * dz);
-	}
 
 function messageCloser(messageText, client) {
 	if (localPlayer != null) {
@@ -349,7 +346,7 @@ addCommandHandler("gun", (command, params, client) => {
 	let weaponId = Number(params) || 8;
 
 	client.player.giveWeapon(weaponId, 50, 999);
-	messageClient(`${client.name} gave themself a ${weaponNames[weaponId]}`, client, COLOUR_YELLOW);
+	messageClient("There you go.. Hide it and fuck off!!", client, COLOUR_WHITE);
 });
 
 // ===========================================================================
@@ -1154,6 +1151,14 @@ let skinModels = [
 ];
 
 // ===========================================================================
+let gunNames = {
+	1: "S&W Model 10 M&P",
+	2: "Colt 1911",
+	3: "S&W Model 27 Magnum",
+	4: "Colt Detective Special",
+	5: "Sawed-off Shotgun",
+	6: "Thompson 1928"
+}
 
 let weaponNames = {
 	2: "Knuckle Duster",
@@ -1497,8 +1502,8 @@ addCommandHandler("pay", (command, params, client) => {
 
         if (playerMoney >= vehiclePrice) {
             // Deduct the vehicle price from the player's money
-            const newPlayerMoney = playerMoney - vehiclePrice;
-            db.query("UPDATE users SET money = ? WHERE username = ?", [newPlayerMoney, client.name]);
+            const PlayerMoney = playerMoney - vehiclePrice;
+            db.query("UPDATE users SET money = ? WHERE username = ?", [PlayerMoney, client.name]);
 
             // Assign the vehicle to the player by updating the 'owner' column
             db.query("UPDATE vehicles SET owner = ? WHERE model = ?", [client.name, vehicleModel]);
@@ -1512,129 +1517,8 @@ addCommandHandler("pay", (command, params, client) => {
 
 
 
-addCommandHandler("buygun", (command, params, client) => {
-
-        const gunModel = params.trim(); // The gun model to buy, e.g., "Colt1911"
-
-        // Query the database to get the price of the specified gun
-        const gunPrice = db.query("SELECT price FROM guns WHERE model = ?", gunModel);
-
-        if (!gunPrice) {
-            messageClient(`Gun "${gunModel}" not found in the store.`, client, COLOUR_ORANGE);
-            return;
-        }
-
-        const playerMoney = client.money || 0;
-
-        if (playerMoney >= gunPrice) {
-            // Deduct the gun price from the player's money
-            const newPlayerMoney = playerMoney - gunPrice;
-            db.query("UPDATE users SET money = ? WHERE username = ?", [newPlayerMoney, client.name]);
-
-            // Add the purchased gun to the player's inventory
-            // You should have a system for tracking player inventory.
-
-            messageClient(`You bought a ${gunModel} for $${gunPrice}.`, client, COLOUR_GREEN);
-        } else {
-            messageClient("You don't have enough money to buy this gun.", client, COLOUR_ORANGE);
-        }
-
-});
 
 */
-
-
-
-
-
-
-const bizgoods = {
-    alcohol: 100,
-    food: 100,
-    drinks: 100
-};
-
-
-function consumeBizGoods() {
-    bizgoods.alcohol -= 1;
-    bizgoods.food -= 1;
-	bizgoods.drinks -= 1
-
-
-    triggerNetworkEvent("updateBizGoods", bizgoods);
-}
-
-
-
-function calculateBusinessIncome(businessType, goods) {
-
-    const incomeRates = {
-        'bar': 450,
-        'transportation': 300
-    };
-
-
-    if (incomeRates.hasOwnProperty(businessType)) {
-        const incomeRate = incomeRates[businessType];
-        return incomeRate * goods;
-    } else {
-        return 0; // Default income if business type is not recognized
-    }
-}
-
-function updateBusinessesAndMoney() {
-
-    db.query("SELECT * FROM businesses", [], (rows) => {
-        rows.forEach((row) => {
-            const income = calculateBusinessIncome(row.bizType, row.goods);
-            const newIncome = row.income + income;
-
-
-            db.query(
-                "UPDATE businesses SET income = ?, lastIncomeTime = ? WHERE id = ?",
-                [newIncome, new Date().toISOString(), row.id]
-            );
-
-
-            db.query(
-                "UPDATE users SET money = money + ? WHERE username = ?",
-                [income, row.bizOwner]
-            );
-        });
-    });
-}
-
-
-addCommandHandler("buybiz", (command, params, client) => {
-    const businessType = params.toLowerCase();
-    const businessCosts = {
-        'bar': 13750,
-        'transportation': 23000
-    };
-
-    if (businessCosts.hasOwnProperty(businessType)) {
-        const purchaseCost = businessCosts[businessType];
-
-        // Check if the player has enough money to purchase
-        const playerMoney = db.query(`SELECT money FROM users WHERE username = '${client.name}'`);
-        if (playerMoney >= purchaseCost) {
-            // Deduct the purchase cost from the player's money
-            const newMoney = playerMoney - purchaseCost;
-            db.query(`UPDATE users SET money = ${newMoney} WHERE username = '${client.name}'`);
-
-            // Add the purchased business to the database
-            db.query(`INSERT INTO businesses (bizOwner, bizType, income, lastIncomeTime, goods) VALUES ('${client.name}', '${businessType}', 0, '${new Date().toISOString()}', 0)`,
-                [client.name, businessType, new Date().toISOString()]);
-
-            messageClient(`You have purchased a ${businessType}!`, client, COLOUR_GREEN);
-        } else {
-            messageClient(`You don't have enough money to purchase a ${businessType}.`, client, COLOUR_ORANGE);
-        }
-    } else {
-        messageClient(`Invalid business type. Usage: /buybiz <businessType>`, client, COLOUR_ORANGE);
-    }
-});
-
 
 //========================================================================================================================
 
@@ -1643,34 +1527,297 @@ addCommandHandler("buybiz", (command, params, client) => {
 //========================================================================================================
 
 
-const bongioEmmetPosition = new Vec3(-1743.42, -5.35, -229.33);
-const gunDealerModel = "TommyRUKAV";
+
+function isNull(val) {
+	if(val == null) {
+		return true;
+	}
+
+	if(typeof val === "undefined") {
+		return true;
+	}
+
+	return false;
+}
 
 
-const gunDealerPed = game.createPed(`${gunDealerModel}.i3d`, bongioEmmetPosition, 0.0);
-const gunDealerAnim = game.add;
-
-
-function isPlayerNearEmmet(playerPosition, gunDealerPosition, radius) {
-    const distance = getDistance(playerPosition, gunDealerPosition);
-    return distance <= radius;
+function getDistance(vec1, vec2) {
+	if(isNull(vec1) || isNull(vec2)) {
+		return false;
+	}
+    return vec1.distance(vec2);
 }
 
 
 
 
-addCommandHandler("buygun", (command, params, client) => {
-	const gunDealerRadius = 10;
-    const playerPosition = client.position;
-    const isNearGunDealer = isPlayerNearEmmet(playerPosition, bongioEmmetPosition, gunDealerRadius);
 
-    if (isNearGunDealer) {
-		messageClient("Psst... I got the good. Pass the money first.", client, COLOUR_SILVER);
-        console.log("Player is near the gun dealer.");
+const bongioEmmetPosition = [-1743.42, -5.35, -229.33];
+const gunDealerModel = "TommyRUKAV";
+
+
+const gunDealerPed = game.createPed(`${gunDealerModel}.i3d`, bongioEmmetPosition, 0.0);
+
+
+addCommandHandler("buygun", (command, params, client) => {
+
+	let gunID = params;
+	const gunDealerRadius = 2;
+    const GunDealerCloseDistance = getDistance(client.player.position, bongioEmmetPosition);
+	
+	
+	let MnP = 980;
+	let	Colt = 1200;
+	let	Magnum = 1800;
+	let	ColtDetective = 3200;
+	let SawedOff = 8000;
+	let	Thompson = 12000;
+	
+
+	let ThisPlayerMoney = db.query(`SELECT money FROM users WHERE username = '${client.name}'`);
+    
+		if(gunID == "" || !gunID) {
+			messageClient("USAGE: /buygun <id>", client, COLOUR_GREEN);
+			messageClient("1- S&W Model 10 M&P: $980", client, COLOUR_WHITE);
+			messageClient("2- Colt 1911: $1200", client, COLOUR_WHITE);
+			messageClient("3- S&W Model 27 Magnum: $1800", client, COLOUR_WHITE);
+			messageClient("4- Colt Detective Special: $3200", client, COLOUR_WHITE);
+			messageClient("5- Sawed-off Shotgun: $8000", client, COLOUR_WHITE);
+			messageClient("6- Thompson 1928: $12000", client, COLOUR_WHITE);	 
+		
+		} 
+		if (GunDealerCloseDistance <= gunDealerRadius) {
+			 if(gunID == "1") {
+
+				if(ThisPlayerMoney <= MnP) {
+				messageClient("Not enough money, fucker.", client, COLOUR_ORANGE);
+				return;
+
+					} else  {
+						let PlayerMoney = ThisPlayerMoney - MnP;
+						const userWeapons1 = db.query(`SELECT weapon1 FROM users WHERE username = '${client.name}'`);
+						const userWeapons2 = db.query(`SELECT weapon2 FROM users WHERE username = '${client.name}'`);
+						const userWeapons3 = db.query(`SELECT weapon3 FROM users WHERE username = '${client.name}'`);
+
+
+						if (userWeapons1 == "") {
+							db.query(`UPDATE users SET weapon1 = '${gunNames[gunID]}' WHERE username = '${client.name}'`);
+							db.query(`UPDATE users SET money = ${PlayerMoney} WHERE username = '${client.name}'`);
+							client.player.giveWeapon(8, 20, 30);
+							messageClient("There you go.. Hide it and fuck off!!", client, COLOUR_WHITE);						
+						} else {
+							if(userWeapons2 == ""){
+								db.query(`UPDATE users SET weapon2 = '${gunNames[gunID]}' WHERE username = '${client.name}'`);
+								db.query(`UPDATE users SET money = ${PlayerMoney} WHERE username = '${client.name}'`);
+								client.player.giveWeapon(8, 20, 30);
+								messageClient("There you go.. Hide it and fuck off!!", client, COLOUR_WHITE);
+							} else {
+								if(userWeapons3 == "") {
+									db.query(`UPDATE users SET weapon3 = '${gunNames[gunID]}' WHERE username = '${client.name}'`);
+									db.query(`UPDATE users SET money = ${PlayerMoney} WHERE username = '${client.name}'`);
+									client.player.giveWeapon(8, 20, 30);
+							} else {
+								messageClient("You can't hold any more weapons", client, COLOUR_ORANGE);
+								messageClient("There you go.. Hide it and fuck off!!", client, COLOUR_WHITE);
+								return;
+							}
+						} 							
+					}
+				}
+
+			} else if(gunID == "2") {
+
+					if(ThisPlayerMoney <= Colt) {
+						messageClient("Not enough money, fucker.", client, COLOUR_ORANGE);
+						return;
+						} else  {
+							let PlayerMoney = ThisPlayerMoney - Colt;
+							const userWeapons1 = db.query(`SELECT weapon1 FROM users WHERE username = '${client.name}'`);
+							const userWeapons2 = db.query(`SELECT weapon2 FROM users WHERE username = '${client.name}'`);
+							const userWeapons3 = db.query(`SELECT weapon3 FROM users WHERE username = '${client.name}'`);
+
+
+							if (userWeapons1 == "") {
+								db.query(`UPDATE users SET weapon1 = '${gunNames[gunID]}' WHERE username = '${client.name}'`);
+								db.query(`UPDATE users SET money = ${PlayerMoney} WHERE username = '${client.name}'`);
+								client.player.giveWeapon(9, 20, 30);	
+								messageClient("There you go.. Hide it and fuck off!!", client, COLOUR_WHITE);					
+							} else {
+								if(userWeapons2 == ""){
+									db.query(`UPDATE users SET weapon2 = '${gunNames[gunID]}' WHERE username = '${client.name}'`);
+									db.query(`UPDATE users SET money = ${PlayerMoney} WHERE username = '${client.name}'`);
+									client.player.giveWeapon(9, 20, 30);
+									messageClient("There you go.. Hide it and fuck off!!", client, COLOUR_WHITE);
+								} else {
+									if(userWeapons3 == "") {
+										db.query(`UPDATE users SET weapon3 = '${gunNames[gunID]}' WHERE username = '${client.name}'`);
+										db.query(`UPDATE users SET money = ${PlayerMoney} WHERE username = '${client.name}'`);
+										client.player.giveWeapon(9, 20, 30);
+										messageClient("There you go.. Hide it and fuck off!!", client, COLOUR_WHITE);
+									} else {
+									messageClient("You can't hold any more weapons", client, COLOUR_ORANGE);
+									return;
+							}
+						} 							
+					}
+				}
+
+			} else if(gunID == "3") {
+
+					if(ThisPlayerMoney <= Magnum) {
+						messageClient("Not enough money, fucker.", client, COLOUR_ORANGE);
+						return;
+					} else  {
+						let PlayerMoney = ThisPlayerMoney - Magnum;
+							const userWeapons1 = db.query(`SELECT weapon1 FROM users WHERE username = '${client.name}'`);
+							const userWeapons2 = db.query(`SELECT weapon2 FROM users WHERE username = '${client.name}'`);
+							const userWeapons3 = db.query(`SELECT weapon3 FROM users WHERE username = '${client.name}'`);
+
+
+							if (userWeapons1 == "") {
+								db.query(`UPDATE users SET weapon1 = '${gunNames[gunID]}' WHERE username = '${client.name}'`);
+								db.query(`UPDATE users SET money = ${PlayerMoney} WHERE username = '${client.name}'`);
+								client.player.giveWeapon(7, 20, 30);	
+								messageClient("There you go.. Hide it and fuck off!!", client, COLOUR_WHITE);
+							} else {
+								if(userWeapons2 == ""){
+									db.query(`UPDATE users SET weapon2 = '${gunNames[gunID]}' WHERE username = '${client.name}'`);
+									db.query(`UPDATE users SET money = ${PlayerMoney} WHERE username = '${client.name}'`);
+									client.player.giveWeapon(7, 20, 30);
+									messageClient("There you go.. Hide it and fuck off!!", client, COLOUR_WHITE);
+									} else {
+										if(userWeapons3 == "") {
+											db.query(`UPDATE users SET weapon3 = '${gunNames[gunID]}' WHERE username = '${client.name}'`);
+											db.query(`UPDATE users SET money = ${PlayerMoney} WHERE username = '${client.name}'`);
+											client.player.giveWeapon(7, 20, 30);
+											messageClient("There you go.. Hide it and fuck off!!", client, COLOUR_WHITE);
+										} else {
+										messageClient("You can't hold any more weapons", client, COLOUR_ORANGE);
+										return;
+								}
+							}
+						}
+					}
+			} else if(gunID == "4") {
+
+					
+				if(ThisPlayerMoney <= ColtDetective) {
+					messageClient("Not enough money, fucker.", client, COLOUR_ORANGE);
+					return;
+				} else  {
+					let PlayerMoney = ThisPlayerMoney - ColtDetective;
+						const userWeapons1 = db.query(`SELECT weapon1 FROM users WHERE username = '${client.name}'`);
+						const userWeapons2 = db.query(`SELECT weapon2 FROM users WHERE username = '${client.name}'`);
+						const userWeapons3 = db.query(`SELECT weapon3 FROM users WHERE username = '${client.name}'`);
+
+
+						if (userWeapons1 == "") {
+							db.query(`UPDATE users SET weapon1 = '${gunNames[gunID]}' WHERE username = '${client.name}'`);
+							db.query(`UPDATE users SET money = ${PlayerMoney} WHERE username = '${client.name}'`);
+							client.player.giveWeapon(6, 20, 30);	
+							messageClient("There you go.. Hide it and fuck off!!", client, COLOUR_WHITE);
+						} else {
+							if(userWeapons2 == ""){
+								db.query(`UPDATE users SET weapon2 = '${gunNames[gunID]}' WHERE username = '${client.name}'`);
+								db.query(`UPDATE users SET money = ${PlayerMoney} WHERE username = '${client.name}'`);
+								client.player.giveWeapon(6, 20, 30);
+								messageClient("There you go.. Hide it and fuck off!!", client, COLOUR_WHITE);
+								} else {
+									if(userWeapons3 == "") {
+										db.query(`UPDATE users SET weapon3 = '${gunNames[gunID]}' WHERE username = '${client.name}'`);
+										db.query(`UPDATE users SET money = ${PlayerMoney} WHERE username = '${client.name}'`);
+										client.player.giveWeapon(6, 20, 30);
+										messageClient("There you go.. Hide it and fuck off!!", client, COLOUR_WHITE);
+									} else {
+									messageClient("You can't hold any more weapons", client, COLOUR_ORANGE);
+									return;
+							}
+						}
+					}
+				}
+			} else if(gunID == "5") { 
+
+					
+				if(ThisPlayerMoney <= SawedOff) {
+					messageClient("Not enough money, fucker.", client, COLOUR_ORANGE);
+					return;
+				} else  {
+					let PlayerMoney = ThisPlayerMoney - SawedOff;
+						const userWeapons1 = db.query(`SELECT weapon1 FROM users WHERE username = '${client.name}'`);
+						const userWeapons2 = db.query(`SELECT weapon2 FROM users WHERE username = '${client.name}'`);
+						const userWeapons3 = db.query(`SELECT weapon3 FROM users WHERE username = '${client.name}'`);
+
+
+						if (userWeapons1 == "") {
+							db.query(`UPDATE users SET weapon1 = '${gunNames[gunID]}' WHERE username = '${client.name}'`);
+							db.query(`UPDATE users SET money = ${PlayerMoney} WHERE username = '${client.name}'`);
+							client.player.giveWeapon(12, 5, 10);		
+							messageClient("There you go.. Hide it and fuck off!!", client, COLOUR_WHITE);
+						} else {
+							if(userWeapons2 == ""){
+								db.query(`UPDATE users SET weapon2 = '${gunNames[gunID]}' WHERE username = '${client.name}'`);
+								db.query(`UPDATE users SET money = ${PlayerMoney} WHERE username = '${client.name}'`);
+								client.player.giveWeapon(12, 5, 10);
+								messageClient("There you go.. Hide it and fuck off!!", client, COLOUR_WHITE);
+								} else {
+									if(userWeapons3 == "") {
+										db.query(`UPDATE users SET weapon3 = '${gunNames[gunID]}' WHERE username = '${client.name}'`);
+										db.query(`UPDATE users SET money = ${PlayerMoney} WHERE username = '${client.name}'`);
+										client.player.giveWeapon(12, 5, 10);
+										messageClient("There you go.. Hide it and fuck off!!", client, COLOUR_WHITE);
+									} else {
+									messageClient("You can't hold any more weapons", client, COLOUR_ORANGE);
+									return;
+							}
+						}
+					}
+				}
+
+			} else if(gunID == "6") {
+
+					
+				if(ThisPlayerMoney <= Thompson) {
+					messageClient("Not enough money, fucker.", client, COLOUR_ORANGE);
+					return;
+				} else  {
+					let PlayerMoney = ThisPlayerMoney - Thompson;
+						const userWeapons1 = db.query(`SELECT weapon1 FROM users WHERE username = '${client.name}'`);
+						const userWeapons2 = db.query(`SELECT weapon2 FROM users WHERE username = '${client.name}'`);
+						const userWeapons3 = db.query(`SELECT weapon3 FROM users WHERE username = '${client.name}'`);
+
+
+						if (userWeapons1 == "") {
+							db.query(`UPDATE users SET weapon1 = '${gunNames[gunID]}' WHERE username = '${client.name}'`);
+							db.query(`UPDATE users SET money = ${PlayerMoney} WHERE username = '${client.name}'`);
+							client.player.giveWeapon(10, 50, 50);
+							messageClient("There you go.. Hide it and fuck off!!", client, COLOUR_WHITE);						
+						} else {
+							if(userWeapons2 == ""){
+								db.query(`UPDATE users SET weapon2 = '${gunNames[gunID]}' WHERE username = '${client.name}'`);
+								db.query(`UPDATE users SET money = ${PlayerMoney} WHERE username = '${client.name}'`);
+								client.player.giveWeapon(10, 50, 50);
+								messageClient("There you go.. Hide it and fuck off!!", client, COLOUR_WHITE);
+								} else {
+									if(userWeapons3 == "") {
+										db.query(`UPDATE users SET weapon3 = '${gunNames[gunID]}' WHERE username = '${client.name}'`);
+										db.query(`UPDATE users SET money = ${PlayerMoney} WHERE username = '${client.name}'`);
+										client.player.giveWeapon(10, 50, 50);
+										messageClient("There you go.. Hide it and fuck off!!", client, COLOUR_WHITE);
+									} else {
+									messageClient("You can't hold any more weapons", client, COLOUR_ORANGE);
+									return;
+							}
+						}
+					}
+				}
+			}
     } else {
-		messageClient("There's no gun dealer next to you.", client, COLOUR_WHITE);
+
+		messageClient("There's no gun dealer next to you.", client, COLOUR_RED);
         console.log("Player is not near the gun dealer.");
     }
+
+	hudPlayerMoney(PlayerMoney);
 });
 
 addCommandHandler("despawn", (command, params, client) => {

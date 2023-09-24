@@ -1,7 +1,7 @@
 "use strict";
 
 
-
+game.hud.enableMoney(true);
 
 addEventHandler("OnPedEnteringVehicle", function(event, ped, vehicle, seat) {
     message(`${ped.name} is entering vehicle ${vehicle.id} seat ${seat}`);
@@ -36,8 +36,8 @@ addEventHandler("OnPedDeath", function(event, ped) {
     ped.kill();
 });
 
-addEventHandler("onPedSpawn", (event, client) => {
-    game.hud.enableMoney(true);
+addEventHandler("onPedSpawn", (event, gunDealerPed) => {
+    gunDealerPed.addAnimation(`${gunDealerAnim}.i3d`);
 });
 
 
