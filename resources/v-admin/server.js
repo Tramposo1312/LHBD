@@ -217,6 +217,7 @@ addCommandHandler("reloadbans", (command, params, client) => {
 
 // ----------------------------------------------------------------------------
 
+
 function messageAdmins(messageText) {
 	getClients().forEach((client) => {
 		if (client.administrator) {

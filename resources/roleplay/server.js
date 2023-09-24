@@ -1406,38 +1406,30 @@ function messageAdmins(messageText) {
 
 	console.warn(`[ADMIN] [#FFFFFF]${messageText}`);
 }
-function messageFaction(facMessage, client) {
-    const playerFaction = getFactionOfPlayer(client);
-    getClients().forEach((client) => {
-        if (isPlayerInSameFaction(client, playerFaction)) {
-            messageClient(`(([FACTION] ${facMessage}))`, client, COLOUR_RED);
-        }
-    })
-}
+function messageFaction(messageText) {
+	
+	getClients().forEach((client) => {
+		
+		db.query(`SELECT facs FROM factions WHERE soldiers = '${client.name}'`);
+		let faction = db.query(`SELECT facs FROM factions WHERE soldiers = '${client.name}'`);
+		if(faction == "") {
+			console.log('faction doesnt exist');
+			messageClient("You don't belong to any family, kid.", client, COLOUR_RED)
+			return;
+		} else {
 
-function getFactionOfPlayer(Player) {
-
-    const faction = db.query(`SELECT facs FROM factions WHERE soldiers = '${Player.name}' OR leader = '${Player.name}'`);
-    return faction;
-}
-
-
-function isPlayerInSameFaction(client, factionToCheck) {
-    const clientFaction = db.query(`SELECT facs FROM factions WHERE soldiers = '${client.name}' OR leader = '${client.name}'`);
-    return clientFaction === factionToCheck;
-}
+			db.query(`SELECT soldiers FROM factions WHERE facs = '${faction}'`);
+			let txtSoldiers = db.query(`SELECT soldiers FROM factions WHERE facs = '${faction}'`);
+			if(txtSoldiers !== "") {
+				messageClient(`(([${faction}] ${messageText}))`, client, COLOUR_AQUA);
+			}
+		}
+	});
+} 
 
 
 addCommandHandler("f", (command, params, client) => {
-	const message = params.trim();
-
-	if (message === "") {
-		messageClient("Usage: /f <message>", client, COLOUR_GREEN);
-		return;
-	}
-
-	messageFaction(`${client.name}: ${message}`);
-
+	messageFaction(`${client.name}: ${params}`)
 });
 
 
