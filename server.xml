@@ -60,6 +60,6 @@
 	<resources>
 		<resource src="roleplay" />
 		<resource src="v-randomtips" />
-		<resource src="v-admin" />
+		<resource src="v-logo" />
 	</resources>
 </server>
