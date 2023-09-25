@@ -36,9 +36,9 @@ addEventHandler("onPlayerJoin", (event, client) => {
 addEventHandler("onPlayerJoined", (event, client) => {
 	if (typeof gta != "undefined") {
 		sendClientBlockedScripts();
-	}
-
+	}	
 	triggerNetworkEvent("v.admin.token", client, scriptConfig.serverToken);
+	
 });
 
 // ----------------------------------------------------------------------------
@@ -484,5 +484,8 @@ addNetworkHandler("v.admin.token", function (fromClient, token) {
 	}
 });
 
+addNetworkHandler("p.login", function(client) {
+	
+})
 // ----------------------------------------------------------------------------
 

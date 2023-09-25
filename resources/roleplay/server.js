@@ -16,45 +16,57 @@ bindEventHandler("OnResourceStart", thisResource, function(event, resource, clie
 const PaycheckMoney = 2000;
 let LoggedIn = false;
 let RegisteredPlayer = false;
-addEventHandler("OnPlayerJoined", (event, client) => {
+let Teleported = false;
+addEventHandler("OnPlayerJoin", (event, client) => {
 	
-	db.query(`SELECT * FROM users WHERE username = '${client.name}'`);
-	let playerMoney = db.query(`SELECT money FROM users WHERE username = '${client.name}'`);
-    let checkUser = db.query(`SELECT * FROM users WHERE username = '${client.name}'`);
-	if (checkUser == ",,,") {
-		messageClient("Seems like you need to register, pal!", client, COLOUR_GREEN);
-		messageClient("To register, type /register <password>", client, COLOUR_GREEN);
-		console.log(checkUser);
-		return;
-	} else if (checkUser !== ",,,") {
-		messageClient("Look who's back...", client, COLOUR_AQUA);
-		messageClient('Use /login <password> before i touch you, stupid kid.', client, COLOUR_AQUA);
-		playerMoney = parseInt(playerMoney, 10) | 0;
-		hudPlayerMoney(playerMoney);
-		const RegisteredPlayer = true;
+	
 
-		messageClient(`You will receive a paycheck of $${PaycheckMoney} every one hour ingame.`, client, COLOUR_GREEN);
+})
 
+addEventHandler("OnPlayerJoined", (event, client) => {
+		if(game.mapName == "MISE03-SALIERYKONEC") {
+			spawnPlayer(client, [-1774.0, -3.93, 7.32], 0.0, "TommyHighHAT.i3d");
+		}
+		let avariable = Boolean(Teleported);
 
-		setInterval(() => {
-			const theplayerMoney = db.query(`SELECT money FROM users WHERE username = '${client.name}'`);
-			hudPlayerMoney(theplayerMoney);
-		 }, 1000);
+		if(!avariable) {
+			db.query(`SELECT * FROM users WHERE username = '${client.name}'`);
+			let playerMoney = db.query(`SELECT money FROM users WHERE username = '${client.name}'`);
+			let checkUser = db.query(`SELECT * FROM users WHERE username = '${client.name}'`);
+			if (checkUser == ",,,") {
+				messageClient("Seems like you need to register, pal!", client, COLOUR_GREEN);
+				messageClient("To register, type /register <password>", client, COLOUR_GREEN);
+				console.log(checkUser);
+				return;
+			} else if (checkUser !== ",,,") {
+				messageClient("Look who's back...", client, COLOUR_AQUA);
+				messageClient('Use /login <password> before i touch you, stupid kid.', client, COLOUR_AQUA);
+				playerMoney = parseInt(playerMoney, 10) | 0;
+				hudPlayerMoney(playerMoney);
+				
 
-
-		const paycheckInterval = 3600000;
-
-		setInterval(() => {
-
-            playerMoney += PaycheckMoney;
-            db.query(`UPDATE users SET money = ${playerMoney} WHERE username = '${client.name}'`);
+				messageClient(`You will receive a paycheck of $${PaycheckMoney} every one hour ingame.`, client, COLOUR_GREEN);
 
 
-            messageClient(`You received a paycheck of $${PaycheckMoney}.`, client, COLOUR_GREEN);
-        }, paycheckInterval);
+				setInterval(() => {
+					const theplayerMoney = db.query(`SELECT money FROM users WHERE username = '${client.name}'`);
+					hudPlayerMoney(theplayerMoney);
+				}, 1000);
 
-    }
 
+				const paycheckInterval = 3600000;
+
+				setInterval(() => {
+
+					playerMoney += PaycheckMoney;
+					db.query(`UPDATE users SET money = ${playerMoney} WHERE username = '${client.name}'`);
+
+
+					messageClient(`You received a paycheck of $${PaycheckMoney}.`, client, COLOUR_GREEN);
+				}, paycheckInterval);
+
+   			 }				
+		} 
 });
 
 
@@ -208,18 +220,14 @@ addCommandHandler("login", (command, params, client) => {
 
 // ===========================================================================
 
-//========================================================================
-addNetworkHandler("mapLoaded", function(client, mapName) {
-	if(mapName == "MISE03-SALIERYKONEC") {
-	  spawnPlayer(client, [-1774.0, -3.93, 7.32], 0.0, "TommyHighHAT.i3d");
-	}
-});
+
 
 addCommandHandler("cmap", (command, params, client) => {
-	removeEventHandler("OnPlayerJoin");
+
 	client.despawnPlayer();
 	let newMap = "MISE03-SALIERYKONEC";
 	game.changeMap(newMap);
+	Teleported = true;
 	
 });
 
@@ -230,11 +238,7 @@ addCommandHandler("spawn", (command, params, client) => {
 	let asalier = [-1774.0, -3.93, 7.32];
 	let salieryDoor = [-1774.6744384765625, -5.628890037536621, 3.844797372817993];
 	let hoboApart = [453.92, -3.66, 297];
-
-	if (loggedIn = false) {
-		messageClient("Log in first, kid.", client, COLOUR_RED);
-		return;
-	}
+	
 
 	const tpplace = params.toLowerCase();
 	if (tpplace === '1') {
