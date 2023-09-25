@@ -4,6 +4,7 @@
 let logMessagePrefix = "ADMIN:";
 const initMoney = 100;
 const db = new module.sqlite.Database("solhdatabase.db");
+const pendingInvitations = [];
 
 bindEventHandler("OnResourceStart", thisResource, function(event, resource, client) {
 
@@ -14,11 +15,17 @@ bindEventHandler("OnResourceStart", thisResource, function(event, resource, clie
 
 // ===========================================================================
 const PaycheckMoney = 2000;
-let LoggedIn = false;
+let loggedIn = false;
 let RegisteredPlayer = false;
 let Teleported = false;
+let fromSaliery = false;
+
+
+
+
+
 addEventHandler("OnPlayerJoin", (event, client) => {
-	
+
 	
 
 })
@@ -27,9 +34,13 @@ addEventHandler("OnPlayerJoined", (event, client) => {
 		if(game.mapName == "MISE03-SALIERYKONEC") {
 			spawnPlayer(client, [-1774.0, -3.93, 7.32], 0.0, "TommyHighHAT.i3d");
 		}
-		let avariable = Boolean(Teleported);
-
-		if(!avariable) {
+		let aTeleported = Boolean(Teleported);
+		let aFromSaliery = Boolean(fromSaliery)
+		if(fromSaliery) {
+			spawnPlayer(client, lastPos, 0.0, "TommyHighHAT.i3d");
+		}
+		
+		if(!aTeleported) {
 			db.query(`SELECT * FROM users WHERE username = '${client.name}'`);
 			let playerMoney = db.query(`SELECT money FROM users WHERE username = '${client.name}'`);
 			let checkUser = db.query(`SELECT * FROM users WHERE username = '${client.name}'`);
@@ -103,6 +114,7 @@ addCommandHandler("register", (command, params, client) => {
 			hudPlayerMoney(initMoney);
 			db.query(`INSERT INTO users (username, password, money) VALUES ('${client.name}', '${passwordParams}', '${initMoney}')`);
 			messageClient("You are now registered. Use /login <password> to log in.", client, COLOUR_GREEN);
+			RegisteredPlayer = true;
 
             } else if (regQuery !== ",,") {
 				messageClient("You are already registered. Use /login <password> to log in.", client, COLOUR_AQUA);
@@ -140,7 +152,7 @@ addCommandHandler("login", (command, params, client) => {
 
 				messageClient("Welcome back kid, don't get caught up lacking in the streets.", client, COLOUR_AQUA);
 				spawnPlayer(client, littleitaly, 180.0, 'TommyHighHAT.i3d');
-				const loggedIn = true;
+				loggedIn = true;
 
 				} else {
 					messageClient("Are you dumb or are you fucking dumb? Pass is not correct. Try again, kid", client, COLOUR_RED);
@@ -221,11 +233,20 @@ addCommandHandler("login", (command, params, client) => {
 // ===========================================================================
 
 
-
+let lastPos = null;
 addCommandHandler("cmap", (command, params, client) => {
-
+	lastPos = client.player.position;
 	client.despawnPlayer();
 	let newMap = "MISE03-SALIERYKONEC";
+	game.changeMap(newMap);
+	Teleported = true;
+
+	
+});
+addCommandHandler("exit", (command, params, client) => {
+	
+	client.despawnPlayer();
+	let newMap = "FREERIDE";
 	game.changeMap(newMap);
 	Teleported = true;
 	
@@ -1266,7 +1287,7 @@ addCommandHandler("pm", (command, params, client) => {
 			messageClient(`"((You sent a PM to ${targetClient.name}: ${pmessageParams}))"`, client, COLOUR_YELLOW);
 			messageClient(`"((You received a message from ${pmSender})): ${pmessageParams}"`, targetClient, COLOUR_ORANGE);
 		} else if (targetClient.index === client.index) {
-			messageClient("You can't PM yourself, you lonely idiot.", client, COLOUR_RED);
+			message(`Oi, ${client.name} tried to PM himself, laugh at this lonely fucking idiot.`, client, COLOUR_RED);
 		}
 	} else {
 		messageClient("The kid is not online.", client, COLOUR_RED);
@@ -1894,3 +1915,67 @@ addCommandHandler("despawn", (command, params, client) => {
 
 
 //==================================================================================
+
+
+addCommandHandler("invfac", (command, params, client) => {
+    let targetClient = getClientFromParams(params);
+	db.query(`SELECT leader FROM factions WHERE leader = '${client.name}'`);
+	db.query(`SELECT facs FROM factions WHERE soldiers = '${client.name}'`);
+	db.query(`SELECT facs FROM factions WHERE soldiers = '${targetClient.name}'`);
+	let isLeader = db.query(`SELECT leader FROM factions WHERE leader = '${client.name}'`);
+	let pFaction = db.query(`SELECT facs FROM factions WHERE soldiers = '${client.name}'`);
+	let tpFaction = db.query(`SELECT facs FROM factions WHERE soldiers = '${targetClient.name}'`);
+
+	if (isLeader !== "") {
+        if(targetClient) {	
+			if (targetClient.index !== client.index) {
+				if(tpFaction !== "") {
+					messageClient("This player is already rolling with a family.", client, COLOUR_RED);
+					return;
+				} else {
+
+					const invitation = {
+                        inviter: client.name,
+                        invitee: targetClient.name,
+                        faction: pFaction, 
+                    };
+
+                    pendingInvitations.push(invitation);
+
+					messageClient(`You've sent an invitation to ${targetClient.name}`, client, COLOUR_ORANGE);
+					messageClient(`${client.name} has sent you an invitation to ${pFaction} family. Use /accfam to accept.`, targetClient, COLOUR_YELLOW);
+				}
+			} else {
+				message(`This kid ${client.name} from ${pFaction} tried to send a family invitation to himself, laugh at this lonely idiot.`);
+			}
+		} else {
+			message(`This kid ${client.name} from ${pFaction} tried to send a family invitation to an offline player, laugh at this blindfuck.`);
+		}
+	} else {
+		messageClient("You are not a family leader , fool.", client, COLOUR_RED);
+		return;
+	}
+});
+
+
+addCommandHandler("accfam", (command, params, client) => {
+    const pendingInvitation = pendingInvitations.find((invitation) => invitation.invitee === client.name);
+
+    if (pendingInvitation) {
+        db.query(`INSERT INTO factions (facs, soldiers) VALUES('${pendingInvitation.faction}', '${client.name}')`)
+        messageClient(`You've accepted the invitation to join ${pendingInvitation.faction} family.`, client, COLOUR_GREEN);
+
+        const inviterClient = pendingInvitation.inviter;
+        if (inviterClient) {
+            messageClient(`${client.name} has accepted your invitation to join ${pendingInvitation.faction} family.`, inviterClient, COLOUR_GREEN);
+        }
+
+        pendingInvitations.splice(pendingInvitations.indexOf(pendingInvitation), 1);
+    } else {
+        messageClient("You don't have any pending family invitations.", client, COLOUR_RED);
+    }
+});
+
+
+
+

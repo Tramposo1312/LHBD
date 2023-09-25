@@ -61,5 +61,6 @@
 		<resource src="roleplay" />
 		<resource src="v-randomtips" />
 		<resource src="v-logo" />
+		<resource src="v-scoreboard" />
 	</resources>
 </server>
