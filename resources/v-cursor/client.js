@@ -25,7 +25,3 @@ addEventHandler("OnDrawnHUD", (event) => {
 });
 
 // ===========================================================================
-addEventHandler("onDrawnHUD", (event, client) => {
-		mafia.enableMoney(client);
-		mafia.setMoney(client, 100);
-	});

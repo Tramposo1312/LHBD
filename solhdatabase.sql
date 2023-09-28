@@ -1,2 +1,1 @@
--- Drop weapon1, weapon2, and weapon3 columns from the users table
-ALTER TABLE users DROP COLUMN weapon1;
+UPDATE users SET weapon1 = NULL, weapon2 = NULL, weapon3 = NULL WHERE username = 'Tramposo38';

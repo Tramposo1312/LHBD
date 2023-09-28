@@ -12,6 +12,36 @@
 
 
 
+addCommandHandler("spawn", (command, params, client) => {
+	let Hospital = [-758.792, 13.2488, 761.116];
+	let hoboken = [328.71826, -3.187930, 267.53866];
+	let saliery = [-1774.30, -5.56, 7.62];
+	let asalier = [-1774.0, -3.93, 7.32];
+	let salieryDoor = [-1774.6744384765625, -5.628890037536621, 3.844797372817993];
+	let hoboApart = [453.92, -3.66, 297];
+	
+
+	const tpplace = params.toLowerCase();
+	if (tpplace === '1') {
+		
+		spawnPlayer(client, asalier, 0.0, "TommyHighHAT.i3d");
+
+
+	} else if (tpplace === '2') {
+		
+		spawnPlayer(client, hoboken, 0.0, "TommyHighHAT.i3d");
+
+	} else if (tpplace === '3') {
+		spawnPlayer(client, hoboApart, 0.0, "TommyHighHAT.i3d");
+
+	} else if (tpplace === '4') {
+		spawnPlayer(client, salieryDoor, 0.0, "TommyHighHAT.i3d");
+	} else if (tpplace === '5') {
+		spawnPlayer(client, bongioEmmetPosition, 0.0, "TommyHighHAT.i3d");
+	} else {
+		  messageClient("USAGE: /spawn 1/2/3/4/5", client, COLOUR_ORANGE);
+		}
+	  });
 
 // ===========================================================================
 bindEventHandler("OnResourceStart", thisResource, (event, resource) => {
@@ -52,7 +82,7 @@ addEventHandler("OnPlayerJoin", (event, client) => {
 });
 
 // ===========================================================================
-addEventHandler("OnPedDeath", (event, client) => {
+addEventHandler("OnPedDeath", (event, ped) => {
     let Hospital = [-758.792, 13.2488, 761.116];
     messageClient("You died foo", client, COLOUR_RED);
 

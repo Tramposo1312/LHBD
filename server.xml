@@ -59,8 +59,10 @@
 	<!-- https://wiki.gtaconnected.com/Resources -->
 	<resources>
 		<resource src="roleplay" />
+		<resource src="v-admin" />
 		<resource src="v-randomtips" />
-		<resource src="v-logo" />
+		<resource src="v-nametags" />
 		<resource src="v-scoreboard" />
+
 	</resources>
 </server>

@@ -33,29 +33,29 @@ addEventHandler("OnPedJackVehicle", function(event, ped, vehicle, seat) {
 
 // ===========================================================================
 addEventHandler("OnPedDeath", function(event, ped) {
-	ped.health = 100;
-
+	
+    ped.health = 100;
+    
 });
 
 addEventHandler("onPedSpawn", (event, gunDealerPed) => {
-    gunDealerPed.addAnimation(`breath01c.i3d`);
+    gunDealerPed.addAnimation(`Gestikulace05.i3d`);
 });
 
 
-
+addNetworkHandler("PlayerChat", function(player) {
+    player.addAnimation(`xGestik01a.i3d`);
+})
 
 addNetworkHandler("hudMoney", function(newMoney) {
     game.hud.setMoney(newMoney);
 });
 
-addNetworkHandler("updateGoods", function(goodsData) {
-    console.log("Received updated goods:", goodsData);
-});
+
 
 addEventHandler("OnMapLoaded", function(event, client) {
   
-  });
-
+});
 
 
 
