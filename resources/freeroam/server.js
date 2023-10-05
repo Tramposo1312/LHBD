@@ -61,6 +61,7 @@ addNetworkHandler("mapLoaded", function(client, mapNew) {
 	if(mapNew == "MISE03-SALIERYKONEC") {
 		spawnPlayer(client, [-1774.0, -3.93, 7.32], 0.0, 'TommyHighHAT.i3d');
 	}
+	
 });
 
 
@@ -77,16 +78,18 @@ addEventHandler("OnPlayerJoined", (event, client) => {
 
 addEventHandler("OnPlayerJoin", (event, client) => {
 	console.log(`${client.name} is joining!`);
-	let littleitaly = [-1980.949, -4.982666, 23.199167];
-	spawnPlayer(client, littleitaly, 0.0, 'TommyHighHAT.i3d');
+	let restau = [-1053.87, -5.23, 60]; 
+	let interior = [-4.23, 22.54, -558];
+	spawnPlayer(client, restau, 0.0, 'TommyHighHAT.i3d');
+	
 });
 
 // ===========================================================================
 addEventHandler("OnPedDeath", (event, ped) => {
     let Hospital = [-758.792, 13.2488, 761.116];
-    messageClient("You died foo", client, COLOUR_RED);
+    messageClient("You died foo", ped, COLOUR_RED);
 
-    spawnPlayer(client, Hospital, 0.0, "TommyHighHAT.i3d");
+    spawnPlayer(ped, Hospital, 0.0, "TommyHighHAT.i3d");
 });
 
 

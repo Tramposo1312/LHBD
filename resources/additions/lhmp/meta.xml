@@ -1,6 +1,0 @@
-<meta>
-	<info author="Vortrex" version="1.0" description="Binds the G key to enter the closest vehicle as passenger" />
-
-	<script src="client.nut" type="client" language="squirrel" />
-    <script src="server.nut" type="server" language="squirrel" />
-</meta>

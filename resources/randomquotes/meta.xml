@@ -1,0 +1,5 @@
+<meta>
+	<info title="randomquotes" author="Tramposo" version="1.0" description="Random quotes ingame at X seconds" />
+
+	<script src="server.js" type="server" language="javascript" />
+</meta>

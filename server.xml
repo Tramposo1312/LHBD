@@ -4,15 +4,15 @@
 
 <server>
 	<!-- General Information -->
-	<servername>Dark Valleys of Lost Heaven</servername>
+	<servername>Lost Heaven: Broken Dreams</servername>
 	<game>mafia:one</game>
 	<gamemode>Roleplay</gamemode>
 	<serverbrowser>true</serverbrowser>
 	<maxplayers>120</maxplayers>
 	<password></password>
 	<minclientversion>1.1.0</minclientversion>
-	<duplicatenames>true</duplicatenames>
-	<mapname>FREERIDENOC</mapname>
+	<duplicatenames>false</duplicatenames>
+	<mapname>MISE11-VILA</mapname>
 
 	<!-- Networking -->
 	<port>22000</port>
@@ -52,17 +52,18 @@
 
 	<!-- Rules -->
 	<!-- https://wiki.gtaconnected.com/ServerRules -->
-	<rule name="Tramposo" value="Nobody" />
+	<rule name="Tramposo" value="" />
 	<rule name="Community" value="SAMP - SOLS" />
 
 	<!-- Resources -->
 	<!-- https://wiki.gtaconnected.com/Resources -->
 	<resources>
+
 		<resource src="roleplay" />
 		<resource src="v-admin" />
-		<resource src="v-randomtips" />
-		<resource src="v-nametags" />
-		<resource src="v-scoreboard" />
+		<resource src="randomquotes" />
+		<resource src="nametags" />
+		<resource src="v-hudtoggle" />
 
 	</resources>
 </server>

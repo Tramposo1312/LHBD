@@ -1,7 +1,6 @@
 "use strict";
 
 // ===========================================================================
-let logMessagePrefix = "ADMIN:";
 const initMoney = 100;
 const db = new module.sqlite.Database("solhdatabase.db");
 const pendingInvitations = [];
@@ -22,22 +21,7 @@ let fromSaliery = false;
 
 
 
-
-
-addEventHandler("OnPedDeath", (event, client) => {
-	
-	
-
-})
-
-
-
-
-
-
-
 addEventHandler("OnPlayerJoined", (event, client) => {
-	let ClientMoney = db.query(`SELECT money FROM users WHERE username = '${client.name}'`);
 
 		if(game.mapName == "MISE03-SALIERYKONEC") {
 			spawnPlayer(client, [-1774.0, -3.93, 7.32], 0.0, "TommyHighHAT.i3d");
@@ -59,8 +43,7 @@ addEventHandler("OnPlayerJoined", (event, client) => {
 			} else if (checkUser !== ",,,") {
 				messageClient("Look who's back...", client, COLOUR_AQUA);
 				messageClient('Use /login <password> before i touch you, stupid kid.', client, COLOUR_AQUA);
-				ClientMoney = parseInt(ClientMoney, 10) | 0;
-				hudClientMoney(ClientMoney);
+				
 				
 
 				messageClient(`You will receive a paycheck of $${PaycheckMoney} every one hour ingame.`, client, COLOUR_GREEN);
@@ -93,6 +76,9 @@ addCommandHandler("mymoney", (command, params, client) => {
 
 function hudClientMoney(ClientMoney, client) {
     triggerNetworkEvent("hudMoney", client, ClientMoney);
+}
+function playClientAnimation(anAnimation, client) {
+	triggerNetworkEvent("AnimationPlay", client, anAnimation);
 }
 
 
@@ -127,19 +113,22 @@ addCommandHandler("register", (command, params, client) => {
 
 addCommandHandler("login", (command, params, client) => {
 	let db = new module.sqlite.Database("solhdatabase.db");
+	let ClientMoney = db.query(`SELECT money FROM users WHERE username = '${client.name}'`);
+
 	let motorest  = [-7.22, 2.4, 20.15];
 	let littleitaly = [-1980.949, -4.982666, 23.199167];
 	let saliery = [-1774.30, -5.56, 7.62];
 	let bartest = [-387.11, 15.47, -515];
 	let kingbed = [-545.79, 15.38, -436.02];
+	let vila = [106.33, -5.11, 171.22];
 
-
-		let splitParams = params.split(" ");
-		let logpassParams = splitParams[0];
+	let splitParams = params.split(" ");
+	let logpassParams = splitParams[0];
+	if(!loggedIn) {
 
 		db.query(`SELECT * FROM users WHERE username = '${client.name}'`);
 		let loginQuery = db.query(`SELECT * FROM users WHERE username = '${client.name}'`);
-
+	
 		if (loginQuery == ",,,") {
 			messageClient("You need to register first, stupid kid. Use /register <password>.", client, COLOUR_GREEN);
 			return;
@@ -154,7 +143,9 @@ addCommandHandler("login", (command, params, client) => {
 			if (logpassParams === storedPassword) {
 
 				messageClient("Welcome back kid, don't get caught up lacking in the streets.", client, COLOUR_AQUA);
-				spawnPlayer(client, littleitaly, 180.0, 'TommyHighHAT.i3d');
+				spawnPlayer(client, vila, 180.0, 'TommyHighHAT.i3d');
+				ClientMoney = parseInt(ClientMoney, 10) | 0;
+				hudClientMoney(ClientMoney);
 				
 				loggedIn = true;
 
@@ -162,6 +153,9 @@ addCommandHandler("login", (command, params, client) => {
 					messageClient("Are you dumb or are you fucking dumb? Pass is not correct. Try again, kid", client, COLOUR_RED);
 			}
 		}
+	} else {
+		messageClient("You already logged in, kid. Wanna get on my nerves or what?", client, COLOUR_RED);
+	}
 	});
 
 	addCommandHandler("givemoney", (command, params, client) => {
@@ -233,25 +227,25 @@ addCommandHandler("login", (command, params, client) => {
 
 
 // ===========================================================================
+let ToMap = "MISE03-SALIERYKONEC";
 
+function updateMapPlayer(ToMap, client) {
+	triggerNetworkEvent("OnChangeMapC", client, ToMap);
+}
 
 let lastPos = null;
 addCommandHandler("cmap", (command, params, client) => {
-	lastPos = client.player.position;
 	client.despawnPlayer();
-	let newMap = "MISE03-SALIERYKONEC";
-	game.changeMap(newMap);
-	Teleported = true;
-
-	
+	updateMapPlayer(ToMap);	
+	Teleported = true;	
 });
 addCommandHandler("exit", (command, params, client) => {
-	
+
 	client.despawnPlayer();
 	let newMap = "FREERIDE";
 	game.changeMap(newMap);
 	spawnPlayer(client, lastPos, 0.0, "TommyHighHAT.i3d");
-	
+
 });
 
 addCommandHandler("spawn", (command, params, client) => {
@@ -301,7 +295,7 @@ function getClientFromPlayer(player) {
 
 function messageCloser(messageText, client) {
 	if (localPlayer != null) {
-		let messageRadius = 20.0;
+		let messageRadius = 30.0;
 		let playerPos = localPlayer.position;
 
 		getClients().forEach((element) => {
@@ -310,12 +304,21 @@ function messageCloser(messageText, client) {
 				let distance = getDistance(playerPos, closePlayerPos);
 
 				if (distance < messageRadius) {
-					messageClient(`${client.name} says: [#FFFFFF]${messageText}`, element, COLOUR_WHITE);
+					if (distance < 10.0) {
+						messageClient(`${client.name} says: [#FFFFFF]${messageText}`, element, COLOUR_WHITE);
+					}
+					if (distance > 10.0 && distance < 20.0) {
+						messageClient(`${client.name} says: [#FFFFFF]${messageText}`, element, toColour(169, 169, 169));
+					}
+					if (distance > 20.0 && distance < 30.0) {
+						messageClient(`${client.name} says: [#FFFFFF]${messageText}`, element, toColour(85, 85, 85));	
+					}
 				}
 			}
-		});
+		})
  	};
-	messageClient(`${messageText}`, client, COLOUR_WHITE);
+
+	messageClient(`${client.name} says: [#FFFFFF]${messageText}`, client, COLOUR_WHITE);
 }
 
 
@@ -327,6 +330,7 @@ addEventHandler("OnPlayerJoin", (event, client) => {
 
 addEventHandler("OnPlayerQuit", (event, client, reasonId) => {
 	console.log(`${client.name} has left!`);
+	loggedIn = false;
 });
 
 // ===========================================================================
@@ -334,9 +338,11 @@ addEventHandler("OnPlayerQuit", (event, client, reasonId) => {
 addEventHandler("OnPlayerChat", (event, client, messageText) => {
 	event.preventDefault();
 
-	let colour = COLOUR_WHITE;
-	messageCloser(`${client.name} says: [#FFFFFF]${messageText}`, client, colour);
-	triggerNetworkEvent("PlayerChat", client);
+	messageCloser(`${client.name} says: [#FFFFFF]${messageText}`, client, COLOUR_WHITE);
+
+	if(client.player.vehicle) {
+		messageCloser(`${client.name} says: [#FFFFFF]${messageText}`, client, COLOUR_SILVER);
+	}
 });
 
 
@@ -1497,7 +1503,6 @@ addCommandHandler("pay", (command, params, client) => {
             return;
         }
 
-        // Check if recipient exists and is not the sender
         const recipient = getClientFromParams(recipientName);
 
         if (recipient) {
@@ -1506,7 +1511,7 @@ addCommandHandler("pay", (command, params, client) => {
                 const senderMoney = ClientMoney;
 
                 if (senderMoney >= amount) {
-                    // Update the sender's money
+                   
                     let newSenderMoney = senderMoney - amount;
                     db.query(`UPDATE users SET money = ${newSenderMoney} WHERE username = '${client.name}'`);
 
@@ -1995,10 +2000,184 @@ addCommandHandler("accfam", (command, params, client) => {
     }
 });
 
+//===========================================================================================================
+// HANDLING COMMANDS
+addCommandHandler("talk", (command, params, client) => {
+	playClientAnimation(`Gestikulace05.i3d`);
+});
+
+addCommandHandler("point", (command, params, client) => {
+	playClientAnimation(`GestoPojdSem02.i3d`);
+})
+
+addCommandHandler("drink", (command, params, client) => {
+	playClientAnimation(`GestSklNapitise.i3d`);
+}) 
+addCommandHandler("wound", (command, params, client) => {
+	playClientAnimation(`game12 sara01 chyceni f.i3d`);
+})
+
+//===========================================================================================================
+// HANDLING ALL THE BUSINESS SHIT
+/*class LiquorType {
+	constructor(name, description, pricePerUnit) {
+	  this.name = name;
+	  this.description = description; 
+	  this.pricePerUnit = pricePerUnit; 
+	}
+  }
+  
+  const whiskey = new LiquorType("Whiskey", "A strong and aged spirit.", 10.0);
+  const vodka = new LiquorType("Vodka", "A clear and neutral spirit.", 8.0);
+  const rum = new LiquorType("Rum", "A sweet and spiced spirit.", 12.0);
+  const gin = new LiquorType("Gin", "A herbal and aromatic spirit.", 9.0);
+  const tequila = new LiquorType("Tequila", "A Mexican agave spirit.", 11.0);
+  
+  const liquorTypes = {
+	whiskey,
+	vodka,
+	rum,
+	gin,
+	tequila,
+  };
+  
+class Business {
+	constructor(name, owner, location, employees, inventory) {
+	  this.name = name; 
+	  this.owner = owner; 
+	  this.location = location; 
+	  this.employees = employees;
+	  this.inventory = inventory; 
+	  this.profit = 0; 
+	}
+  
+	calculateInventoryValue() {
+	  let totalValue = 0;
+	  for (const item of this.inventory) {
+		totalValue += item.price * item.quantity;
+	  }
+	  return totalValue;
+	}
+  
+	
+	runBusinessDay() {
+	  // Simulate various business operations, such as serving customers, restocking inventory, and more
+	  // Update profit based on daily transactions
+	  const dailyIncome = /* Calculate daily income based on sales /
+	  this.profit += dailyIncome;
+	}
+  }
+  
+  // Example usage:
+  const speakeasy = new Business(
+	"Speakeasy Bar",
+	"Al Capone",
+	"123 Gangster Street",
+	["Bartender1", "Bartender2", "SecurityGuard"],
+	[
+	  { name: "Whiskey", price: 10.0, quantity: 100 },
+	  { name: "Vodka", price: 8.0, quantity: 80 },
+	  // ...other inventory items
+	]
+  );
+  
+  // Calculate the value of the inventory
+  const inventoryValue = speakeasy.calculateInventoryValue();
+  console.log(`Inventory value: $${inventoryValue}`);
+  
+  // Simulate a day of business operations
+  speakeasy.runBusinessDay();
+  console.log(`Today's profit: $${speakeasy.profit}`);
+
+
+let businessTypesNames = {
+	1: "Bar",
+	2: "Restaurant",
+	3: "Warehouse",
+	4: "Waste Management"
+}
+
+ addCommandHandler("createbiz", (command, params, client) => {
+	if (client.administrator) {
+		let splitParams = params.split(" ");
+		let bizName = splitParams[0];
+		let bizType = parseInt(splitParams.slice(1).join(" "), 10);
+        if (bizName === "" || bizType === "") {
+            messageClient('Usage: /createbiz <businessname> <businesstype ID>', client, COLOUR_GREEN);
+			messageClient('1: Bar', client, COLOUR_SILVER);
+			messageClient('2: Restaurant', client, COLOUR_SILVER);
+			messageClient('3: Warehouse', client, COLOUR_SILVER);
+			messageClient('4: Waste Management', client, COLOUR_SILVER);
+            return;
+        }
+
+       	db.query(`INSERT INTO businesses (biz, bizTypen, bizOwner) VALUES ('${bizName}', '${businessTypesNames[bizType]}', '${client.name}')`);
+        messageClient(`Business "${bizName}" has been created.`, client, COLOUR_GREEN);
+    } else {
+        messageClient("You are not authorized to make businesses.", client, COLOUR_ORANGE);
+    }
+ }); 
+*/  
 
 
 
 
 
 
+//==========================================================================================================================
+//HANDLING INVENTORY SYSTEM
 
+function displayInventory(client) {
+    const playerName = client.name;
+    const inventory = getPlayerInventory(playerName);
+
+    if (inventory.length === 0) {
+        messageClient("Your inventory is empty.", player, COLOUR_WHITE);
+        return;
+    }
+  
+    messageClient("INVENTORY ======================================", player, COLOUR_YELLOW);
+
+    const weapons = inventory.filter(item => item.category === "Weapons");
+    if (weapons.length > 0) {
+        messageClient("Weapons:", player, COLOUR_YELLOW);
+        for (const weapon of weapons) {
+            messageClient(`${weapon.name}`, player, COLOUR_WHITE);
+        }
+    }
+
+
+    const drugs = inventory.filter(item => item.category === "Drugs");
+    if (drugs.length > 0) {
+        messageClient("Drugs:", player, COLOUR_YELLOW);
+        for (const drug of drugs) {
+            messageClient(`${drug.name} (x${drug.quantity})`, player, COLOUR_WHITE);
+        }
+    }
+}
+
+// ...
+
+// Sample inventory data with categories (Weapons and Drugs)
+const playerInventories = {
+    "player1": [
+        { id: 1, name: "Weapon 1", quantity: 3, category: "Weapons" },
+        { id: 2, name: "Weapon 2", quantity: 5, category: "Weapons" },
+        { id: 3, name: "Drug 1", quantity: 2, category: "Drugs" },
+    ],
+    // Add more players, weapons, and drugs as needed
+};
+
+// ...
+
+// Command handler for /inv command
+addCommandHandler("inv", (command, params, client) => {
+    displayInventory(client);
+});
+
+addCommandHandler("testv", (command, params, client) => {
+	messageClient(`Debugging: ${client.player.vehicle}`, client, COLOUR_GREEN);
+})
+
+
+//==========================================================================================================================

@@ -13,8 +13,8 @@ bindEventHandler("OnResourceStart", thisResource, function (event, resource) {
 	setChatWindowEnabled(chatEnabled);
 	bindKey(SDLK_F7, KEYSTATE_UP, toggleHUD);
 	bindKey(SDLK_F8, KEYSTATE_UP, toggleChatBox);
-	bindKey(SDLK_TAB, KEYSTATE_DOWN, hideChatBox);
-	bindKey(SDLK_TAB, KEYSTATE_UP, showChatBox);
+	bindKey(SDLK_ESC, KEYSTATE_DOWN, hideChatBox);
+	bindKey(SDLK_ESC, KEYSTATE_UP, showChatBox);
 });
 
 // ----------------------------------------------------------------------------
@@ -31,13 +31,6 @@ bindEventHandler("OnResourceStop", thisResource, function (event, resource) {
 function toggleHUD() {
 	hudEnabled = !hudEnabled;
 	setHUDEnabled(hudEnabled);
-	if (game.game == GAME_GTA_IV) {
-		natives.displayCash(hudEnabled);
-		natives.displayAmmo(hudEnabled);
-		natives.displayHud(hudEnabled);
-		natives.displayRadar(hudEnabled);
-		natives.displayAreaName(hudEnabled);
-	}
 }
 
 // ----------------------------------------------------------------------------

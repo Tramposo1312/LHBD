@@ -4,7 +4,7 @@
 
 let smallGameMessageFontFile = (typeof gta != "undefined") ? "fonts/pricedown.ttf" : "fonts/aurora-condensed-bold.ttf";
 let smallGameMessageFont = null;
-let smallGameMessageText = "";
+let smallGameMessageText = "TESTING THIS SHIT";
 let smallGameMessageColour = COLOUR_WHITE;
 let smallGameMessageTimer = null;
 

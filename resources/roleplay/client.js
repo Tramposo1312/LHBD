@@ -1,69 +1,59 @@
 "use strict";
-
+// ===========================================================================
 
 game.hud.enableMoney(true);
+let Hospital = [-758.792, 13.2488, 761.116];
 
-addEventHandler("OnPedEnteringVehicle", function(event, ped, vehicle, seat) {
-    message(`${ped.name} is entering vehicle ${vehicle.id} seat ${seat}`);
-});
 
-// ===========================================================================
-
-addEventHandler("OnPedExitingVehicle", function(event, ped, vehicle, seat) {
-    message(`${ped.name} is exiting vehicle ${vehicle.id} seat ${seat}`);
-});
-
-// ===========================================================================
-
-addEventHandler("OnPedEnteredVehicle", function(event, ped, vehicle, seat) {
-    message(`${ped.name} has entered vehicle ${vehicle.id} seat ${seat}`);
-});
-
-// ===========================================================================
-
-addEventHandler("OnPedExitedVehicle", function(event, ped, vehicle, seat) {
-    message(`${ped.name} has exited vehicle ${vehicle.id} seat ${seat}`);
-});
-
-// ===========================================================================
-
-addEventHandler("OnPedJackVehicle", function(event, ped, vehicle, seat) {
-    message(`${ped.name} has jacked vehicle ${vehicle.id} seat ${seat}`);
-});
 
 // ===========================================================================
 addEventHandler("OnPedDeath", function(event, ped) {
+    ped.addAnimation(`game12 sara01 chyceni f.i3d`);  
+
+    if(localPlayer != null) { 
+        message(`${localPlayer.name} got got.`)
+        localPlayer.playAnimation(`game12 sara01 chyceni f.i3d`);
+    } else {
+        message('Debugging localPlayer');
+    }
+
+        
+      
+
+});
+// ===========================================================================
+addEventHandler("OnResourceReady", function (event, resource) {
 	
-    ped.health = 100;
-    
 });
-
-addEventHandler("onPedSpawn", (event, gunDealerPed) => {
-    gunDealerPed.addAnimation(`Gestikulace05.i3d`);
-});
-
-
-addNetworkHandler("PlayerChat", function(player) {
-    player.addAnimation(`xGestik01a.i3d`);
+addEventHandler("OnMapLoaded", function(event, ped) {
+    if(ped != localPlayer) {
+        ped.kill();
+    }
+       
 })
+
+// ===========================================================================
+
+// ===========================================================================
+
+
+addEventHandler("onPedSpawn", (event, ped) => {
+    ped.playAnimation(`Gestikulace05.i3d`);
+    if(ped === Radni) {
+        ped.kill();
+    }
+
+});
+
+
 
 addNetworkHandler("hudMoney", function(newMoney) {
     game.hud.setMoney(newMoney);
 });
 
-
-
-addEventHandler("OnMapLoaded", function(event, client) {
-  
-});
-
-
-
-
-
-
-
-
+addNetworkHandler("AnimationPlay", function(animation) {
+    localPlayer.playAnimation(animation);
+})
 
 
 
