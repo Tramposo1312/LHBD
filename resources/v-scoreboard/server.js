@@ -16,6 +16,10 @@ function updatePlayerScoreboardPing() {
 
 // ----------------------------------------------------------------------------
 
+function updatePlayerScoreboardGTAIV(client, episode, gameMode) {
+	client.setData("v.ivinfo", [episode, gameMode], true);
+}
+
 // ----------------------------------------------------------------------------
 
 function getClientFromParams(params) {
@@ -47,5 +51,9 @@ function getClientFromParams(params) {
 
 // ----------------------------------------------------------------------------
 
+addNetworkHandler("v.ivinfo.", function(client, episode, gameMode) {
+	//console.log(`${client.name}'s episode is ${episode} and gamemode is ${gameMode}`);
+	updatePlayerScoreboardGTAIV(client, episode, gameMode);
+});
 
 // ----------------------------------------------------------------------------

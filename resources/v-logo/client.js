@@ -2,7 +2,7 @@
 
 // ===========================================================================
 
-let logoImagePath = (typeof gta != "undefined") ? "gtac-logo.png" : "mafiac-logo.png";
+let logoImagePath = "mafiac-logo.png";
 let logoImage = null;
 let logoPos = new Vec2(game.width - 132, game.height - 132);
 let logoSize = new Vec2(128, 128);
@@ -31,6 +31,7 @@ function loadLogoImage() {
 	let tempLogoImage = null;
 	if (logoStream != null) {
 		tempLogoImage = graphics.loadPNG(logoStream);
+		console.log('[TRAMPOSO] Debugging LOGO IMAGE PATH')
 		logoStream.close();
 	}
 

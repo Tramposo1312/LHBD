@@ -1,32 +1,17 @@
 <?xml version="1.0" ?>
 <Commands>
+    <Command Name="gamestats" Hash="3782704029" />
     <Command Name="say" Hash="4241071205" />
     <Command Name="exit" Hash="2483651598" />
-    <Command Name="unban" Hash="2975207781" />
     <Command Name="quit" Hash="1135269781" />
-    <Command Name="start" Hash="2675529103" />
-    <Command Name="gun" Hash="1251722587" />
-    <Command Name="restart" Hash="3891864071" />
-    <Command Name="stopall" Hash="1683731152" />
-    <Command Name="stop" Hash="3109426870" />
-    <Command Name="refresh" Hash="1619108091" />
+    <Command Name="clear" Hash="3853644038" />
+    <Command Name="connect" Hash="1959786783" />
+    <Command Name="reconnect" Hash="1240758083" />
+    <Command Name="console" Hash="906219446" />
+    <Command Name="cvar" Hash="2588334565" />
+    <Command Name="q" Hash="4110462503" />
+    <Command Name="disconnect" Hash="3820433" />
+    <Command Name="fpscounter" Hash="2973827809" />
     <Command Name="dumpdoc" Hash="3404143852" />
-    <Command Name="veh" Hash="4108237688" />
-    <Command Name="ped" Hash="4192570337" />
-    <Command Name="siren" Hash="3683367432" />
-    <Command Name="a" Hash="3904355907" />
-    <Command Name="lights" Hash="951890664" />
-    <Command Name="geoip" Hash="1182365374" />
-    <Command Name="engine" Hash="3903330957" />
-    <Command Name="lock" Hash="2274335502" />
-    <Command Name="skin" Hash="41510942" />
-    <Command Name="makeadmin" Hash="3368070885" />
-    <Command Name="kick" Hash="517332741" />
-    <Command Name="scripts" Hash="3709769534" />
-    <Command Name="ban" Hash="1660866789" />
-    <Command Name="announce" Hash="3872841077" />
-    <Command Name="blockscript" Hash="1370008896" />
-    <Command Name="ip" Hash="2783163181" />
-    <Command Name="reloadbans" Hash="3089794434" />
-    <Command Name="reloadadmins" Hash="2864461194" />
+    <Command Name="chatscale" Hash="402639070" />
 </Commands>

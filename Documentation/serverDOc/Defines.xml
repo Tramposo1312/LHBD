@@ -529,16 +529,9 @@
     <Define Name="CHAT_TYPE_CHAT" Value="1" />
     <Define Name="CHAT_TYPE_INFO" Value="2" />
     <Define Name="CHAT_TYPE_DEBUG" Value="3" />
-    <Define Name="NONE" Value="0" />
-    <Define Name="MAX_PEDS" Value="512" />
-    <Define Name="MAX_VEHICLES" Value="512" />
-    <Define Name="ELEMENT_ELEMENT" Value="0" />
-    <Define Name="ELEMENT_ENTITY" Value="6" />
-    <Define Name="ELEMENT_PED" Value="14" />
-    <Define Name="ELEMENT_PLAYER" Value="30" />
-    <Define Name="ELEMENT_VEHICLE" Value="38" />
-    <Define Name="ELEMENT_DUMMY" Value="70" />
-    <Define Name="ELEMENT_OBJECT" Value="134" />
+    <Define Name="SERVER_VERSION_MAJOR" Value="1" />
+    <Define Name="SERVER_VERSION_MINOR" Value="4" />
+    <Define Name="SERVER_VERSION_PATCH" Value="0" />
     <Define Name="GAME_UNKNOWN" Value="0" />
     <Define Name="GAME_MAFIA_ONE" Value="10" />
     <Define Name="GAME_MAFIA_TWO" Value="11" />
@@ -549,58 +542,11 @@
     <Define Name="GAME_GTA_SA" Value="3" />
     <Define Name="GAME_GTA_IV" Value="5" />
     <Define Name="GAME_GTA_IV_EFLC" Value="6" />
-    <Define Name="WEAPON_KNUCKLEDUSTER" Value="2" />
-    <Define Name="WEAPON_KNIFE" Value="3" />
-    <Define Name="WEAPON_BASEBALLBAT" Value="4" />
-    <Define Name="WEAPON_MOLOTOV" Value="5" />
-    <Define Name="WEAPON_COLTDETECTIVESPECIAL" Value="6" />
-    <Define Name="WEAPON_SW_MAGNUM" Value="7" />
-    <Define Name="WEAPON_SW_MP" Value="8" />
-    <Define Name="WEAPON_COLT1911" Value="9" />
-    <Define Name="WEAPON_TOMMYGUN" Value="10" />
-    <Define Name="WEAPON_PUMPSHOTGUN" Value="11" />
-    <Define Name="WEAPON_SAWEDOFF" Value="12" />
-    <Define Name="WEAPON_SPRINGFIELD" Value="13" />
-    <Define Name="WEAPON_MOSINNAGANT" Value="13" />
-    <Define Name="WEAPON_GRENADE" Value="15" />
-    <Define Name="WEAPON_BUCKET" Value="17" />
-    <Define Name="WEAPON_STEELBAR" Value="20" />
-    <Define Name="WEAPON_CROWBAR" Value="25" />
-    <Define Name="WEAPON_WOODENPLANK" Value="28" />
-    <Define Name="WEAPON_BOTTLE" Value="29" />
-    <Define Name="WEAPON_SWORD" Value="31" />
-    <Define Name="WEAPON_DOGSHEAD" Value="32" />
-    <Define Name="PEDBEHAVIOR_NOREACT" Value="4" />
-    <Define Name="PEDBEHAVIOR_NOREACT_GUARDPLAYER" Value="2" />
-    <Define Name="PEDBEHAVIOR_REACTALL" Value="0" />
-    <Define Name="PEDBEHAVIOR_REACTTOATTACKS_ATTACK" Value="64" />
-    <Define Name="PEDBEHAVIOR_REACTTOATTACKS_AWAYORATTACK" Value="32" />
-    <Define Name="PEDBEHAVIOR_REACTTOPLAYER_AWAY" Value="16" />
-    <Define Name="PEDBEHAVIOR_REACTTOPLAYERHIT_ATTACK" Value="8" />
-    <Define Name="CLIENT_VERSION_MAJOR" Value="1" />
-    <Define Name="CLIENT_VERSION_MINOR" Value="3" />
-    <Define Name="CLIENT_VERSION_PATCH" Value="1" />
-    <Define Name="CLIENT_VERSION_BUILD" Value="0" />
-    <Define Name="ACTOR_TYPE_GHOSTOBJECT" Value="1" />
-    <Define Name="ACTOR_TYPE_PLAYER" Value="2" />
-    <Define Name="ACTOR_TYPE_CAR" Value="4" />
-    <Define Name="ACTOR_TYPE_SCRIPT" Value="5" />
-    <Define Name="ACTOR_TYPE_DOOR" Value="6" />
-    <Define Name="ACTOR_TYPE_TROLLEY" Value="8" />
-    <Define Name="ACTOR_TYPE_MODEL" Value="9" />
-    <Define Name="ACTOR_TYPE_BOTTLE" Value="10" />
-    <Define Name="ACTOR_TYPE_TRAFFIC" Value="12" />
-    <Define Name="ACTOR_TYPE_PEDESTRIAN" Value="18" />
-    <Define Name="ACTOR_TYPE_BRIDGE" Value="20" />
-    <Define Name="ACTOR_TYPE_DOG" Value="21" />
-    <Define Name="ACTOR_TYPE_PLANE" Value="22" />
-    <Define Name="ACTOR_TYPE_RAILROUTE" Value="24" />
-    <Define Name="ACTOR_TYPE_FUELPUMPER" Value="25" />
-    <Define Name="ACTOR_TYPE_HUMAN" Value="27" />
-    <Define Name="ACTOR_TYPE_RACECAMERA" Value="28" />
-    <Define Name="ACTOR_TYPE_WAGON" Value="30" />
-    <Define Name="ACTOR_TYPE_CLOCK" Value="34" />
-    <Define Name="ACTOR_TYPE_PHYSICAL" Value="35" />
-    <Define Name="ACTOR_TYPE_TRUCK" Value="36" />
-    <Define Name="ACTOR_TYPE_INITSCRIPT" Value="155" />
+    <Define Name="ELEMENT_ELEMENT" Value="0" />
+    <Define Name="ELEMENT_ENTITY" Value="6" />
+    <Define Name="ELEMENT_PED" Value="14" />
+    <Define Name="ELEMENT_PLAYER" Value="30" />
+    <Define Name="ELEMENT_VEHICLE" Value="38" />
+    <Define Name="ELEMENT_DUMMY" Value="70" />
+    <Define Name="ELEMENT_OBJECT" Value="134" />
 </Defines>

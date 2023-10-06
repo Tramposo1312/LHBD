@@ -63,7 +63,7 @@
 		<resource src="v-admin" />
 		<resource src="randomquotes" />
 		<resource src="nametags" />
-		<resource src="v-hudtoggle" />
+		<resource src="scoreboard" />
 
 	</resources>
 </server>

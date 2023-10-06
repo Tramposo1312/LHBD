@@ -1,9 +1,15 @@
 ﻿{
 	"admins": [
 		{
+			"ip": "",
+			"name": "",
+			"token": "",
+			"addedBy": ""
+		},
+		{
 			"ip": "26.253.103.83",
 			"name": "Tramposo38",
-			"token": "70cMucLKHkGDvdw4EUPx16Bubbq303kKlcT8NiqYtMKQ3COVlDXimo0qyW4nZEMI9wPUhs5mKRqEckzwjbguCkZ5QFg9TPfPU1v8yUaHBvRchh7UIr5ORI6es7Ueout7",
+			"token": "HbMowq0mx47vD7u4tXAy5qqGHGiN4WsyntVWn4o2wNwwaPg5ZWnBhpkXmaxEbH8W0iq2HwOYNVf8UmpbvkArXLvB4LTeBoxYBnSto8322onNZMfVtYb8Rq35PAReleRB",
 			"addedBy": "Console"
 		}
 	],
@@ -17,5 +23,5 @@
 		[],
 		[]
 	],
-	"serverToken": "HlSUNn8VQkfzFPbKZu5jZFoJKNfFba0x"
+	"serverToken": ""
 }
