@@ -45,7 +45,7 @@ bindEventHandler("OnResourceStart", thisResource, function (event, resource) {
 // ----------------------------------------------------------------------------
 
 addEventHandler("OnDrawnHUD", function (event) {
-	if (isKeyDown(SDLK_F5)) {
+	if (isKeyDown(SDLK_ESCAPE)) {
 		if (listFont != null && titleFont != null) {
 			let playersText = `MAFIOSOS`;
 			let scoreboardStart = (game.height / 2) - (Math.floor(getClients().length / 2) * 20);
@@ -60,18 +60,12 @@ addEventHandler("OnDrawnHUD", function (event) {
 			let size = null;
 
 			let listColumns = ["ID", "Name", "Ping"];
-			if (typeof gta != "undefined") {
-				// Episode
-				text = "Unknown";
-				if (gta.game == GAME_GTA_IV) {
-					listColumns = ["ID", "Name", "Ping", "Episode", "Gamemode"];
-				}
-			}
+			
 
 			let columnWidth = Math.round(listWidth / listColumns.length);
 			let listLeft = Math.round(game.width / 2) - (listWidth / 2);
 
-			graphics.drawRectangle(null, [listLeft, scoreboardStart - 5], [listWidth + 50, 1], COLOUR_WHITE);
+			graphics.drawRectangle(null, [listLeft, scoreboardStart - 5], [listWidth + 50, 1], toColour(255, 255, 255));
 
 			for (let i in listColumns) {
 				let columnLeft = Math.round(listLeft + (columnWidth * i));

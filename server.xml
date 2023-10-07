@@ -12,7 +12,7 @@
 	<password></password>
 	<minclientversion>1.1.0</minclientversion>
 	<duplicatenames>false</duplicatenames>
-	<mapname>MISE11-VILA</mapname>
+	<mapname>FREERIDENOC</mapname>
 
 	<!-- Networking -->
 	<port>22000</port>
@@ -64,6 +64,6 @@
 		<resource src="randomquotes" />
 		<resource src="nametags" />
 		<resource src="scoreboard" />
-
+		<resource src="v-servernames" />
 	</resources>
 </server>

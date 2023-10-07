@@ -9,10 +9,10 @@ bindEventHandler("OnResourceStart", thisResource, (event, resource) => {
 // ===========================================================================
 
 addEventHandler("OnPlayerJoined", (event, client) => {
+	
 	console.log(`${client.name} has joined!`);
-
-	let position = [-1981.51, -4.66, 29.37];
-	spawnPlayer(client, position, 0.0, "TommyCOATHAT.i3d");
+	triggerNetworkEvent("TutorialCam", client);
+	
 });
 
 // ===========================================================================

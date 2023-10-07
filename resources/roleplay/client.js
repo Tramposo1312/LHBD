@@ -3,26 +3,39 @@
 
 game.hud.enableMoney(true);
 let Hospital = [-758.792, 13.2488, 761.116];
+let SongLink = "";
+let SongFromURL = null;
+let MTheme = null;
 let IntroSong = null;
-let IntroSongPath = "mafiaintro.mp3";
+let IntroSongPath = 'dvolhintro.mp3';
 
 
+addNetworkHandler("playAudio", function() {
+    message("Call is working")
+    MTheme = audio.createSoundFromURL("https://d167.d2mefast.net/tb/e/76/mafia_soundtrack_theme_music_mp3_83338.mp3");
 
+    if(MTheme != null || !MTheme) {
+        MTheme.play();
+        message('Audio working');
+    } else {
+        message('Audio not working')
+    }
+
+})
 // ===========================================================================
 addEventHandler("OnPedDeath", function(event, ped) {
     if(localPlayer != null) {
         message(`${localPlayer.name} got got.`)
         localPlayer.playAnimation(`game12 sara01 chyceni f.i3d`);
-        game.fadeCamera(false, 3.0);
+        game.fadeCamera(fadeIn, 3.0);
     } else {
         message('Debugging localPlayer');
     }
 });
 // ===========================================================================
-addEventHandler("OnResourceReady", function (event, resource) {
-    IntroSong = loadSong();
-    message("RESOURCE READY!");
-    console.log("[TRAMPOSO] RESOURCE READY");
+addEventHandler("OnResourceReady", function(event, resource) {
+
+    message(`${MTheme}`);
 });
 
 addEventHandler("OnPedJackVehicle", function(event, ped) {
@@ -30,37 +43,40 @@ addEventHandler("OnPedJackVehicle", function(event, ped) {
 })
 
 addEventHandler('onPedInflictDamage', function(event, ped, responsibleEntity, weapon, loss, pedPiece) {
-   message(`${ped.type}, lol ${responsibleEntity}`);
-   message(`${ped.type} is getting hit by ${responsibleEntity} using ${weapon}, losing ${loss} and now debugging ${pedPiece}`);
+
 });
 
 addEventHandler("OnDrawnHUD", function () {
-	
+
 });
 
+addEventHandler("OnAddActor", function(event, actorType, actorName, model) {
 
+    if(actorType.isType(ACTOR_TYPE_HUMAN)) {
+        event.preventDefault();
+    }
+
+    if(actorType.isType(ACTOR_TYPE_CAR)) {
+        event.preventDefault();
+    }
+
+    if(actorName == "Radni") {
+        event.preventDefault();
+    }
+});
 // ===========================================================================
 function loadSong() {
     let audioFile = openFile(IntroSongPath);
-    let audioObject = null;
-    if (audioFile) {
-        audioObject = audio.createSound(audioFile, true);
+    let objIntroSong = null;
+    if(audioFile != null) {
+        objIntroSong = createSound(audioFile, true);
         audioFile.close();
     }
 
-
-    return audioObject;
+    return objIntroSong;
 }
 
-addNetworkHandler("playAudio", function() {
-    if (IntroSong != null) {
-		IntroSong.sound.play();
-        message("AUDIO WORKING!!")
-	} else {
-        message(`${IntroSong}`);
-        return;
-    }
-})
+
 // ===========================================================================
 
 

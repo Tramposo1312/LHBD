@@ -19,6 +19,13 @@ let RegisteredPlayer = false;
 let Teleported = false;
 let fromSaliery = false;
 
+let motorest  = [-7.22, 2.4, 20.15];
+let littleitaly = [-1980.949, -4.982666, 23.199167];
+let saliery = [-1774.30, -5.56, 7.62];
+let bartest = [-387.11, 15.47, -515];
+let kingbed = [-545.79, 15.38, -436.02];
+let vila = [106.33, -5.11, 171.22];
+
 
 
 addEventHandler("OnPlayerJoined", (event, client) => {
@@ -33,14 +40,14 @@ addEventHandler("OnPlayerJoined", (event, client) => {
 		}
 
 		if(!aTeleported) {
-			db.query(`SELECT * FROM users WHERE username = '${client.name}'`);
-			let checkUser = db.query(`SELECT * FROM users WHERE username = '${client.name}'`);
-			if (checkUser == ",,,") {
+			db.query(`SELECT username FROM users WHERE username = '${client.name}'`);
+			let checkUser = db.query(`SELECT username FROM users WHERE username = '${client.name}'`);
+			if (checkUser == "") {
 				messageClient("Seems like you need to register, pal!", client, COLOUR_GREEN);
 				messageClient("To register, type /register <password>", client, COLOUR_GREEN);
 				console.log(checkUser);
 				return;
-			} else if (checkUser !== ",,,") {
+			} else if (checkUser !== "") {
 				messageClient("Look who's back...", client, COLOUR_AQUA);
 				messageClient('Use /login <password> before i touch you, stupid kid.', client, COLOUR_AQUA);
 
@@ -98,26 +105,22 @@ addCommandHandler("register", (command, params, client) => {
 	let db = new module.sqlite.Database("solhdatabase.db");
     let splitParams = params.split(" ");
     let passwordParams = splitParams[0];
-	if (RegisteredPlayer = true) {
-		messageClient("Foo, you are already registered", client, COLOUR_RED);
-		return;
-	}
+
     if (!passwordParams) {
         messageClient("Usage: /register <password>", client, COLOUR_GREEN);
         return;
     }
 
-    db.query(`SELECT * FROM users WHERE username = '${client.name}'`);
-	let regQuery = db.query(`SELECT * FROM users WHERE username = '${client.name}'`);
+	let regQuery = db.query(`SELECT username FROM users WHERE username = '${client.name}'`);
 
-		if (regQuery == ",,,") {
+		if (regQuery == "") {
 
 			hudClientMoney(initMoney);
 			db.query(`INSERT INTO users (username, password, money) VALUES ('${client.name}', '${passwordParams}', '${initMoney}')`);
 			messageClient("You are now registered. Use /login <password> to log in.", client, COLOUR_GREEN);
 			RegisteredPlayer = true;
 
-            } else if (regQuery !== ",,") {
+            } else if (regQuery !== "") {
 				messageClient("You are already registered. Use /login <password> to log in.", client, COLOUR_AQUA);
             }
     });
@@ -127,21 +130,16 @@ addCommandHandler("login", (command, params, client) => {
 	let db = new module.sqlite.Database("solhdatabase.db");
 	let ClientMoney = db.query(`SELECT money FROM users WHERE username = '${client.name}'`);
 
-	let motorest  = [-7.22, 2.4, 20.15];
-	let littleitaly = [-1980.949, -4.982666, 23.199167];
-	let saliery = [-1774.30, -5.56, 7.62];
-	let bartest = [-387.11, 15.47, -515];
-	let kingbed = [-545.79, 15.38, -436.02];
-	let vila = [106.33, -5.11, 171.22];
+
 
 	let splitParams = params.split(" ");
 	let logpassParams = splitParams[0];
 	if(!loggedIn) {
 
-		db.query(`SELECT * FROM users WHERE username = '${client.name}'`);
-		let loginQuery = db.query(`SELECT * FROM users WHERE username = '${client.name}'`);
+		db.query(`SELECT username FROM users WHERE username = '${client.name}'`);
+		let loginQuery = db.query(`SELECT username FROM users WHERE username = '${client.name}'`);
 
-		if (loginQuery == ",,,") {
+		if (loginQuery == "") {
 			messageClient("You need to register first, stupid kid. Use /register <password>.", client, COLOUR_GREEN);
 			return;
 		} else if (!logpassParams) {
@@ -150,9 +148,9 @@ addCommandHandler("login", (command, params, client) => {
 			return;
 		}
 
-		if (loginQuery.length >= 4) {
-			const storedPassword = loginQuery[2].trim();
-			if (logpassParams === storedPassword) {
+		if (loginQuery !== "") {
+			const storedPassword = db.query(`SELECT password FROM users WHERE username = '${client.name}'`);
+			if (logpassParams == storedPassword) {
 
 				messageClient("Welcome back kid, don't get caught up lacking in the streets.", client, COLOUR_AQUA);
 				spawnPlayer(client, vila, 180.0, 'TommyHighHAT.i3d');
@@ -305,13 +303,32 @@ function getClientFromPlayer(player) {
 }
 
 
-function messageCloser(messageText, client) {
+
+
+
+addEventHandler("OnPlayerJoin", (event, client) => {
+	console.log(`${client.name} IP:${client.ip} is joining!`);
+});
+
+// ===========================================================================
+
+addEventHandler("OnPlayerQuit", (event, client, reasonId) => {
+    console.log(`${client.name} IP:${client.ip} has left! Reason: ${reasonId}`);
+    db.query(`UPDATE users SET lastX = '${client.player.position.x}', lastY = '${client.player.position.y}', lastZ = '${client.player.position.z}' WHERE username = '${client.name}'`);
+});
+
+
+// ===========================================================================
+
+addEventHandler("OnPlayerChat", (event, client, messageText) => {
+	event.preventDefault();
+
 	if (localPlayer != null) {
 		let messageRadius = 30.0;
 		let playerPos = localPlayer.position;
 
 		getClients().forEach((element) => {
-			if (element.type == ELEMENT_PLAYER && element !== localPlayer) {
+			if (element.type == ELEMENT_PLAYER && element != localPlayer) {
 				let closePlayerPos = element.position;
 				let distance = getDistance(playerPos, closePlayerPos);
 
@@ -328,35 +345,25 @@ function messageCloser(messageText, client) {
 				}
 			}
 		})
- 	};
+ 	}
+	messageClient(`${client.name} says: ${messageText}`, client, COLOUR_WHITE);
+	addToLog(client.name+': '+messageText);
+});
 
-	messageClient(`${client.name} says: [#FFFFFF]${messageText}`, client, COLOUR_WHITE);
+function addToLog(text)
+{
+	var file2 = openFile('chatLog.txt', false);
+	if(!file2)
+		return;
+	var filePreviousData = file2.readBytes(file2.length);
+	file2.close();
+
+	var file = openFile('chatLog.txt', true);
+	if(!file)
+		return;
+	file.writeBytes(filePreviousData+text+"\r\n");
+	file.close();
 }
-
-
-addEventHandler("OnPlayerJoin", (event, client) => {
-	console.log(`${client.name} IP:${client.ip} is joining!`);
-});
-
-// ===========================================================================
-
-addEventHandler("OnPlayerQuit", (event, client, reasonId) => {
-	console.log(`${client.name} IP:${client.ip} has left!`);
-	loggedIn = false;
-});
-
-// ===========================================================================
-
-addEventHandler("OnPlayerChat", (event, client, messageText) => {
-	event.preventDefault();
-
-	messageCloser(`${client.name} says: [#FFFFFF]${messageText}`, client);
-
-	if(client.player.vehicle) {
-		messageCloser(`${client.name} says: [#FFFFFF]${messageText}`, client);
-	}
-});
-
 
 
 
@@ -1449,23 +1456,7 @@ function logError(messageText) {
 	console.error(logMessagePrefix.trim() + " " + messageText);
 }
 
-addCommandHandler("createfac", (command, params, client) => {
-    if (client.administrator) {
-        let factionName = params.trim();
 
-        if (factionName === "") {
-            messageClient("Usage: /createfac <factionName>", client, COLOUR_GREEN);
-            return;
-        }
-
-       	db.query(`INSERT INTO factions (facs, soldiers, leader) VALUES ('${factionName}', '${client.name}', '${client.name}')`, );
-        messageClient(`Faction "${factionName}" has been created.`, client, COLOUR_GREEN);
-
-
-    } else {
-        messageClient("You are not authorized to create factions.", client, COLOUR_ORANGE);
-    }
-});
 
 
 function messageAdmins(messageText) {
@@ -1477,31 +1468,10 @@ function messageAdmins(messageText) {
 
 	console.warn(`[ADMIN] [#FFFFFF]${messageText}`);
 }
-function messageFaction(messageText) {
-
-	getClients().forEach((client) => {
-
-		db.query(`SELECT facs FROM factions WHERE soldiers = '${client.name}'`);
-		let faction = db.query(`SELECT facs FROM factions WHERE soldiers = '${client.name}'`);
-		if(faction == "") {
-			console.log('faction doesnt exist');
-			messageClient("You don't belong to any family, kid.", client, COLOUR_RED)
-			return;
-		} else {
-
-			db.query(`SELECT soldiers FROM factions WHERE facs = '${faction}'`);
-			let txtSoldiers = db.query(`SELECT soldiers FROM factions WHERE facs = '${faction}'`);
-			if(txtSoldiers !== "") {
-				messageClient(`(([${faction}] ${messageText}))`, client, COLOUR_AQUA);
-			}
-		}
-	});
-}
 
 
-addCommandHandler("f", (command, params, client) => {
-	messageFaction(`${client.name}: ${params}`)
-});
+
+
 
 
 addCommandHandler("pay", (command, params, client) => {
@@ -1956,11 +1926,11 @@ addCommandHandler("despawn", (command, params, client) => {
 addCommandHandler("invfac", (command, params, client) => {
 	let targetClient = getClientFromParams(params);
 	db.query(`SELECT leader FROM factions WHERE leader = '${client.name}'`);
-	db.query(`SELECT facs FROM factions WHERE soldiers = '${client.name}'`);
-	db.query(`SELECT facs FROM factions WHERE soldiers = '${targetClient.name}'`);
+	db.query(`SELECT fac FROM factions WHERE soldiers = '${client.name}'`);
+	db.query(`SELECT fac FROM factions WHERE soldiers = '${targetClient.name}'`);
 	let isLeader = db.query(`SELECT leader FROM factions WHERE leader = '${client.name}'`);
-	let pFaction = db.query(`SELECT facs FROM factions WHERE soldiers = '${client.name}'`);
-	let tpFaction = db.query(`SELECT facs FROM factions WHERE soldiers = '${targetClient.name}'`);
+	let pFaction = db.query(`SELECT fac FROM factions WHERE soldiers = '${client.name}'`);
+	let tpFaction = db.query(`SELECT fac FROM factions WHERE soldiers = '${targetClient.name}'`);
 
 	if (isLeader !== "") {
         if(targetClient) {
@@ -1998,7 +1968,7 @@ addCommandHandler("accfam", (command, params, client) => {
     const pendingInvitation = pendingInvitations.find((invitation) => invitation.invitee === client.name);
 
     if (pendingInvitation) {
-        db.query(`INSERT INTO factions (facs, soldiers) VALUES('${pendingInvitation.faction}', '${client.name}')`)
+        db.query(`INSERT INTO factions (fac, soldiers) VALUES('${pendingInvitation.faction}', '${client.name}')`)
         messageClient(`You've accepted the invitation to join ${pendingInvitation.faction} family.`, client, COLOUR_GREEN);
 
         const inviterClient = pendingInvitation.inviter;
@@ -2193,3 +2163,77 @@ addCommandHandler("testv", (command, params, client) => {
 
 
 //==========================================================================================================================
+//FACTION SYSTEM
+addCommandHandler("createfac", (command, params, client) => {
+    if (client.administrator) {
+        let factionName = params.trim();
+
+        if (factionName === "") {
+            messageClient("Usage: /createfac <factionName>", client, COLOUR_GREEN);
+            return;
+        }
+
+       	db.query(`INSERT INTO factions (fac, soldiers, leader) VALUES ('${factionName}', '${client.name}', '${client.name}')`, );
+        messageClient(`Faction "${factionName}" has been created.`, client, COLOUR_GREEN);
+
+
+    } else {
+        messageClient("You are not authorized to create factions.", client, COLOUR_ORANGE);
+    }
+});
+
+addCommandHandler("f", (command, params, client) => {
+	let factionMessageText = params;
+	if(!factionMessageText) {
+		messageClient("/f <text>, kid.", client, COLOUR_RED);
+	} else {
+		messageFaction(`${client.name}: ${factionMessageText}`);
+	}
+
+});
+
+function messageFaction(messageText) {
+
+	getClients().forEach((client) => {
+
+		db.query(`SELECT fac FROM factions WHERE soldiers = '${client.name}'`);
+		let cFaction = db.query(`SELECT fac FROM factions WHERE soldiers = '${client.name}'`);
+		if(cFaction == "") {
+			messageClient("You don't belong to any family, kid.", client, COLOUR_RED)
+			return;
+		} else {
+			db.query(`SELECT soldiers FROM factions WHERE fac = '${cFaction}'`);
+			let txtSoldiers = db.query(`SELECT soldiers FROM factions WHERE fac = '${cFaction}'`);
+			if(txtSoldiers !== "") {
+				messageClient(`(([${cFaction}] ${messageText}))`, client, COLOUR_AQUA);
+			}
+		}
+	});
+}
+
+addCommandHandler("fsetspawn", (command, params, client) => {
+    let facLeader = db.query(`SELECT leader FROM factions WHERE leader = '${client.name}'`);
+    if (facLeader == "") {
+        messageClient("You are not a faction leader, kid.", client, COLOUR_RED);
+    } else {
+        let factionsSpawn = client.player.position;
+        let faction = db.query(`SELECT fac FROM factions WHERE leader = '${client.name}'`);
+        let query = db.query(`INSERT INTO factions (facX, facY, facZ) VALUES ('${factionsSpawn.x}', '${factionsSpawn.y}', '${factionsSpawn.z}')`);
+        if (query) {
+            messageClient(`You have set a new faction spawn for ${faction}`, client, COLOUR_GREEN);
+        } else {
+			messageClient("Something bad happened")
+		}
+    }
+});
+
+//======================================================================================================
+
+addCommandHandler("caparts", (command, params, client) => {
+	if(client.administrator) {
+		apartPos = client.player.position;
+		db.query(`INSERT INTO dyncbuilds (builds, apartX, apartY, apartZ) VALUES ('Apartement','${apartPos.x}', '${apartPos.y}', '${apartPos.z}'`)
+	} else {
+		messageClient("You're not allowed to do that, kid.", client, COLOUR_RED);
+	}
+});
