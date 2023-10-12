@@ -37,11 +37,11 @@ addEventHandler("OnDrawnHUD", function (event) {
 			let playersText = `MAFIOSOS LIST`;
 			let scoreboardStart = (game.height / 2) - (Math.floor(getClients().length / 2) * 20);
 			titleFont.measure(playersText, listWidth, 0.0, 1.0, 10, false, false);
-			titleFont.render(playersText, [game.width / 2, scoreboardStart - 85], 0, 0.5, 0.0, titleFont.size, COLOUR_WHITE, false, false, false, true);
+			titleFont.render(playersText, [game.width / 2, scoreboardStart - 85], 0, 0.5, 0.0, titleFont.size, COLOUR_AQUA, false, false, false, true);
 
 			let playerCountText = `${getClients().length} soldiers in the streets`;
 			subTitleFont.measure(playerCountText, listWidth, 0.0, 1.0, 10, false, false);
-			subTitleFont.render(playerCountText, [game.width / 2, scoreboardStart - 55], 0, 0.5, 0.0, subTitleFont.size, COLOUR_WHITE, false, false, false, true);
+			subTitleFont.render(playerCountText, [game.width / 2, scoreboardStart - 55], 0, 0.5, 0.0, subTitleFont.size, COLOUR_AQUA, false, false, false, true);
 
 			let text = "";
 			let size = null;
@@ -52,12 +52,12 @@ addEventHandler("OnDrawnHUD", function (event) {
 			let columnWidth = Math.round(listWidth / listColumns.length);
 			let listLeft = Math.round(game.width / 2) - (listWidth / 2);
 
-			graphics.drawRectangle(null, [listLeft, scoreboardStart - 5], [listWidth + 50, 1], toColour(255, 255, 255));
+			graphics.drawRectangle(null, [listLeft, scoreboardStart - 5], [listWidth + 50, 1], COLOUR_AQUA);
 
 			for (let i in listColumns) {
 				let columnLeft = Math.round(listLeft + (columnWidth * i));
 				size = listFont.measure(listColumns[i], columnWidth, 0.5, 1.0, 10, false, false);
-				listFont.render(listColumns[i], [columnLeft, scoreboardStart - 30], columnWidth, 0.5, 1.0, listFont.size, COLOUR_WHITE, false, false, false, true);
+				listFont.render(listColumns[i], [columnLeft, scoreboardStart - 30], columnWidth, 0.5, 1.0, listFont.size, COLOUR_AQUA, false, false, false, true);
 			}
 
 			let clients = getClients();

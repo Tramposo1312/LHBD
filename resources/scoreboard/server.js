@@ -5,7 +5,7 @@ const db = new module.sqlite.Database("lhbddatabase.db");
 
 bindEventHandler("OnResourceStart", thisResource, function(event, resource) {
 	setInterval(updatePlayerScoreboardPing, 2000);
-	setPlayersFactions();
+	setInterval(setPlayersFactions, 2000);
 });
 
 // ----------------------------------------------------------------------------
@@ -19,8 +19,8 @@ function updatePlayerScoreboardPing() {
 // ----------------------------------------------------------------------------
 function setPlayersFactions() {
 	getClients().forEach((client) => {
-		let fGet = toString(db.query(`SELECT fac FROM factions WHERE soldiers = '${client.name}'`));
-		if(fGet != "") {
+		let fGet = db.query(`SELECT fac FROM factions WHERE soldiers = '${client.name}'`);
+		if(fGet !== "") {
 			client.setData("t.faction", fGet, true);
 		} else {
 			client.setData("t.faction", "No Faction", true);

@@ -1,1 +1,2 @@
-[object ArrayBuffer]'Tramposo38+': '+'test'
+[object ArrayBuffer]'Tramposo38 said: a'
+'

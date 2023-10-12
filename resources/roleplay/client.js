@@ -8,6 +8,8 @@ let SongFromURL = null;
 let MTheme = null;
 let IntroSong = null;
 let IntroSongPath = 'matheme.mp3';
+let deathCam = new Vec3 (0, 0, 0);
+
 
 
 addEventHandler("OnResourceReady", function(event, resource) {
@@ -31,13 +33,17 @@ addNetworkHandler("IntroPlayAudio", function() {
 // ===========================================================================
 addEventHandler("OnPedDeath", function(event, ped) {
     if(localPlayer != null) {
+        let deathCam = new Vec3 (0, 0, 0);
+        deathCam.x = localPlayer.position.x + 3;
+        deathCam.y = localPlayer.position.y + 3;
+        deathCam.z = localPlayer.position.z;
         message(`${localPlayer.name} got got.`)
+        game.setCameraLookAt(deathCam, localPlayer.position, true);
         localPlayer.playAnimation(`game12 sara01 chyceni f.i3d`);
         game.fadeCamera(true, 1.0, 0);
         ped.respawn(Hospital);
-    } else {
-        message('Debugging localPlayer');
     }
+    ped.playAnimation(`game12 sara01 chyceni f.i3d`);
 });
 // ===========================================================================
 
@@ -58,8 +64,6 @@ addEventHandler("OnAddActor", function(event, actorType, actorName, model) {
     message("Event is working")
 });
 // ===========================================================================
-
-
 
 // ===========================================================================
 

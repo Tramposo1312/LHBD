@@ -23,7 +23,7 @@ addCommandHandler("help", function(command, params) {
 			case "npc":
 			case "bot":
 			case "civilian":
-				message("[#666666]/ped <id/name>[#FFFFFF]to spawn a ped.", COLOUR_WHITE);
+				message("[#666666]/ped <id/name>[#FFFFFF]to spawn a ped. ((admins only))", COLOUR_WHITE);
 				break;
 
 			case "plr":
@@ -63,7 +63,10 @@ addCommandHandler("help", function(command, params) {
 
 				message("Keys: " + enabledKeys, COLOUR_WHITE);
 				break;
-
+			case "animlist":
+			case "anims":
+				message("[#666666]Animations list available on this server for now:", COLOUR_WHITE)
+				message("/talk /point /drink /wound")
 			default:
 				showMainHelpList();
 				break;

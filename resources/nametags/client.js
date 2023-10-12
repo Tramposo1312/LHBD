@@ -3,10 +3,13 @@
 // ----------------------------------------------------------------------------
 
 // Configuration
-
+let labelFont = null;
 let nametagFont = null;
 let afkStatusFont = null;
 let pingFont = null;
+let labelDistance = 20;
+let labelWidth = 70;
+let labelColour = [255, 195, 0];
 let nametagDistance = 50.0;
 let nametagWidth = 70;
 let nametagColour = [
@@ -24,6 +27,7 @@ let nametagColour = [
 addEventHandler("OnResourceReady", function (event, resource) {
 	if (resource == thisResource) {
 		//let fontFile = openFile("pricedown.ttf", false);
+		labelFont = lucasFont.createDefaultFont(12.0, "Roboto", "Light");
 		nametagFont = lucasFont.createDefaultFont(12.0, "Roboto", "Light");
 		afkStatusFont = lucasFont.createDefaultFont(18.0, "Roboto", "Light");
 		//nametagFont = lucasFont.createFont(fontFile, 16.0);
@@ -48,17 +52,19 @@ function getDistance(pos1, pos2) {
 }
 
 // ----------------------------------------------------------------------------
-function drawLabeltag(x, y, text, colour) {
-	let width = nametagWidth;
-
-	y -= 20;
-	if (nametagFont != null) {
-		let size = nametagFont.measure(text, game.width, 0.0, 0.0, nametagFont.size, false, false);
-		let colourT = createColour(Math.floor(255.0 * alpha), 255, 255, 255);
-		nametagFont.render(text, [x - size[0] / 2, y - size[1] / 2], game.width, 0.0, 0.0, nametagFont.size, colour, false, false, false, true);
+function drawLabel(x, y, text, distance, colour) {
+	if (labelFont == null) {
+		return false;
 	}
 
+	y -= 2;
+
+	if (labelFont != null) {
+		let lSize = labelFont.measure(text, game.width, 0.0, 0.0, labelFont.size, false, false);
+		nametagFont.render(text, [x - lSize[0] / 2, y - lSizeize[1] / 2], game.width, 0.0, 0.0, labelFont.size, colour, false, false, false, true);
+	}
 }
+
 function drawNametag(x, y, health, armour, text, ping, alpha, distance, colour, afk, skin) {
 	if (nametagFont == null) {
 		return false;
@@ -131,7 +137,27 @@ function drawNametag(x, y, health, armour, text, ping, alpha, distance, colour, 
 }
 
 // ----------------------------------------------------------------------------
+function updateLabel(element) {
+	if(localPlayer != null) {
+		let playerPosition = localPlayer.position;
+		let elementPosition = element.position;
+		let thePeds = getElementsByType(ELEMENT_PED);
 
+		elementPosition.y += 2;
+
+		let ScreenPosition = getScreenFromWorldPosition(elementPosition);
+		if (ScreenPosition[2] >= 0.0) {
+			let theDistance = getDistance(playerPosition, elementPosition);
+			if (distance < labelDistance) {
+				if (element.type == ELEMENT_PED) {
+					let theColour = COLOUR_YELLOW;
+					let theText = "EY COME HERE FOO!"
+					drawLabel(ScreenPosition.x, ScreenPosition.y, theText, theDistance, theColour);
+				}
+			}
+		}
+	}
+}
 function updateNametags(element) {
 	if (localPlayer != null) {
 		let playerPos = localPlayer.position;
@@ -165,8 +191,12 @@ function updateNametags(element) {
 					drawNametag(screenPos.x, screenPos.y, health, armour, element.name, 0, 1.0 - distance / nametagDistance, distance, colour, afk, element.skin);
 				}
 				if (element.type == ELEMENT_PED) {
-					drawNametag(screenPos.x, screenPos.y, health, armour, element.name, 0, 1.0 - distance / nametagDistance, distance, colour, afk, element.skin);
-					drawLabeltag(screenPos.x, screenPos.y, "Type /buygun to check guns list.", colour);
+					let colour = COLOUR_WHITE;
+					let afk = false;
+					if (element.getData("v.afk") > 0) {
+						afk = true;
+					}
+					drawNametag(screenPos.x, screenPos.y, false, false, "TEST TEST", 0, 1.0 - distance / nametagDistance, distance, colour, afk, element.skin);
 				}
 			}
 		}
@@ -201,10 +231,15 @@ addEventHandler("OnDrawnHUD", function (event) {
 			updateNametags(peds[i]);
 		}
 	}
+	let namedPeds = getElementsByType(ELEMENT_PED);
+	for (let i in namedPeds) {
+		if (namedPeds[i] != localPlayer) {
+			updateLabel(namedPeds[i]);
+		}
+	}
 	
 });
 
 // ----------------------------------------------------------------------------
-
 
 // ----------------------------------------------------------------------------

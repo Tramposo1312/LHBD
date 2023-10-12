@@ -37,7 +37,7 @@ bindEventHandler("OnResourceStart", thisResource, function(event, resource, clie
 
 // ===========================================================================
 //NATIVES
-const PaycheckMoney = 2000;
+const PaycheckMoney = 1500;
 let loggedIn = false;
 let RegisteredPlayer = false;
 let Teleported = false;
@@ -98,7 +98,7 @@ addEventHandler("OnPlayerJoined", (event, client) => {
 
 
 					messageClient("== Payday! =============================", client, COLOUR_YELLOW);
-					messageClient(`Paycheck: {ALTCOLOUR}$${PaycheckMoney}`, client, COLOUR_GREEN);
+					messageClient(`Paycheck: $${PaycheckMoney}`, client, COLOUR_GREEN);
 					hudClientMoney(ClientMoney);
 				}, paycheckInterval);
 
@@ -112,6 +112,8 @@ addEventHandler("OnPlayerJoined", (event, client) => {
 		PlayerFactionSpawn.y = parseFloat(db.query(`SELECT facY FROM factions WHERE soldiers= '${client.name}'`));
 		PlayerFactionSpawn.z = parseFloat(db.query(`SELECT facZ FROM factions WHERE soldiers= '${client.name}'`));
 	}
+	//GUNS
+	
 });
 
 
@@ -133,6 +135,16 @@ addCommandHandler("spawntype", (command, params, client) => {
 		} else {
 			messageClient("Motherfucker you're not rolling with a family.", client, COLOUR_GREEN)
 		}
+	}
+})
+
+addCommandHandler("dummy", (command, params, client) => {
+	let dummyPos = client.player.position;
+	let dummy = game.createDummyElement(dummyPos);
+	if(dummy) {
+		messageInfo(`${client.name} created a dummy.`);
+	} else {
+		messageInfo("Failed to create a dummy.");
 	}
 })
 addCommandHandler("audio", (command, params, client) => {
@@ -177,6 +189,7 @@ addCommandHandler("register", (command, params, client) => {
 			hudClientMoney(initMoney);
 			db.query(`INSERT INTO users (username, password, money) VALUES ('${client.name}', '${passwordParams}', '${initMoney}')`);
 			messageClient("You are now registered. Use /login <password> to log in.", client, COLOUR_GREEN);
+			db.query(`UPDATE users SET spawnT = '3' WHERE username = '${client.name}'`)
 			RegisteredPlayer = true;
 
             } else if (regQuery !== "") {
@@ -213,11 +226,23 @@ addCommandHandler("login", (command, params, client) => {
 				let spawnType = parseInt(db.query(`SELECT spawnT from users WHERE username = '${client.name}'`)) | 0;
 				if(spawnType == 1) {
 					spawnPlayer(client, LastPlayerPosition, 0.0, 'TommyHighHAT.i3d')
+					messageClient("Welcome back kid, don't get caught up lacking in the streets.", client, COLOUR_AQUA);
+					messageClient('[GENERAL INFO] Set your spawn type for next session using /spawntype', client, COLOUR_ORANGE)
+					messageClient('[GENERAL INFO] Use /help to see the help list.', client, COLOUR_ORANGE)
+					messageClient('[GENERAL INFO] Be aware that guns will disappear after quitting, since this retard client would not save ammo.', client, COLOUR_ORANGE)
 				} else if(spawnType == 2) {
 					spawnPlayer(client, PlayerFactionSpawn, 0.0, 'TommyHighHAT.i3d');
 					messageClient("Welcome back kid, don't get caught up lacking in the streets.", client, COLOUR_AQUA);
+					messageClient('[GENERAL INFO] Set your spawn type for next session using /spawntype', client, COLOUR_ORANGE)
+					messageClient('[GENERAL INFO] Use /help to see the help list.', client, COLOUR_ORANGE)
+					messageClient('[GENERAL INFO] Be aware that guns will disappear after quitting, since this retard client would not save ammo.', client, COLOUR_ORANGE)
+
 				} else {
 					spawnPlayer(client, littleitaly, 180.0, 'TommyHighHAT.i3d');
+					messageClient("Welcome back kid, don't get caught up lacking in the streets.", client, COLOUR_AQUA);
+					messageClient('[GENERAL INFO] Set your spawn type for next session using /spawntype', client, COLOUR_ORANGE)
+					messageClient('[GENERAL INFO] Use /help to see the help list.', client, COLOUR_ORANGE)
+					messageClient('[GENERAL INFO] Be aware that guns will disappear after quitting, since this retard client would not save ammo.', client, COLOUR_ORANGE)
 					console.log(`[TRMPOSO] ${client.name}'s position is on default.`)
 				}
 
@@ -228,7 +253,7 @@ addCommandHandler("login", (command, params, client) => {
 				loggedIn = true;
 
 				} else {
-					messageClient("Are you dumb or are you fucking dumb? Pass is not correct. Try again, kid", client, COLOUR_RED);
+					messageClient("Wrong password, you fucking idiot. Try again, kid", client, COLOUR_RED);
 			}
 		}
 	} else {
@@ -385,6 +410,8 @@ addEventHandler("OnPlayerQuit", (event, client, reasonId) => {
     console.log(`${client.name} IP:${client.ip} has left! Reason: ${DisconnectedReason[reasonId]}`);
     if(loggedIn){
 		db.query(`UPDATE users SET lastX = '${client.player.position.x}', lastY = '${client.player.position.y}', lastZ = '${client.player.position.z}' WHERE username = '${client.name}'`);
+		db.query(`UPDATE users SET weapon1 = '', weapon2 = '', weapon3 = '' WHERE username = '${client.name}'`)
+
 	}
 	loggedIn = false;
 });
@@ -397,40 +424,40 @@ addEventHandler("OnPlayerChat", (event, client, messageText) => {
 
 	if (localPlayer != null) {
 		let messageRadius = 30.0;
-		let playerPos = localPlayer.position;
+		let playerPos = client.player.position;
 
-		getClients().forEach((element) => {
-			if (element.type == ELEMENT_PLAYER && element != localPlayer) {
-				let closePlayerPos = element.position;
+		getClients().forEach((client) => {
+			if (client.player != localPlayer) {
+				let closePlayerPos = client.player.position;
 				let distance = getDistance(playerPos, closePlayerPos);
 
 				if (distance < messageRadius) {
-					if (distance < 10.0) {
-						messageClient(`${client.name} says: [#FFFFFF]${messageText}`, element, COLOUR_WHITE);
+					if (distance <= 10.0) {
+						messageClient(`${client.name} says: [#FFFFFF]${messageText}`, client, COLOUR_WHITE);
 					}
-					if (distance > 10.0 && distance < 20.0) {
-						messageClient(`${client.name} says: [#FFFFFF]${messageText}`, element, toColour(169, 169, 169));
+					if (distance > 10.0 && distance <= 20.0) {
+						messageClient(`${client.name} says: [#FFFFFF]${messageText}`, client, toColour(169, 169, 169));
 					}
-					if (distance > 20.0 && distance < 30.0) {
-						messageClient(`${client.name} says: [#FFFFFF]${messageText}`, element, toColour(85, 85, 85));
+					if (distance > 20.0 && distance <= 30.0) {
+						messageClient(`${client.name} says: [#FFFFFF]${messageText}`, client, toColour(85, 85, 85));
 					}
 				}
 			}
 		})
  	}
 	messageClient(`${client.name} says: ${messageText}`, client, COLOUR_WHITE);
-	addToLog(`'${client.name}+': '+'${messageText}'`);
+	addToLog(`'${client.name} said: ${messageText}'`);
 });
 
 function addToLog(text)
 {
-	var file2 = openFile('chatLog.txt', false);
+	var file2 = openFile('chatlog.txt', false);
 	if(!file2)
 		return;
 	var filePreviousData = file2.readBytes(file2.length);
 	file2.close();
 
-	var file = openFile('chatLog.txt', true);
+	var file = openFile('chatlog.txt', true);
 	if(!file)
 		return;
 	file.writeBytes(filePreviousData+text+"\r\n");
@@ -508,7 +535,7 @@ addCommandHandler("siren", (command, params, client) => {
 	}
 
 	client.player.vehicle.siren = !client.player.vehicle.siren;
-	message(`${client.name} turned their vehicle siren ${(client.player.vehicle.siren) ? "on" : "off"}`);
+	messageInfo(`${client.name} turned their vehicle siren ${(client.player.vehicle.siren) ? "on" : "off"}`);
 });
 
 
@@ -521,10 +548,32 @@ addCommandHandler("lights", (command, params, client) => {
 	}
 
 	client.player.vehicle.lights = !client.player.vehicle.lights;
-	message(`${client.name} turned their vehicle lights ${(client.player.vehicle.lights) ? "on" : "off"}`);
+	messageInfo(`${client.name} turned their vehicle lights ${(client.player.vehicle.lights) ? "on" : "off"}`);
 });
 
 // ===========================================================================
+function messageInfo(infoText) {
+	let infoRadius = 30.0;
+	let playerPos = client.player.position;
+
+	getClients().forEach((client) => {
+		let closePlayerPos = client.player.position;
+		let distance = getDistance(playerPos, closePlayerPos);
+
+		if (distance < infoRadius) {
+			if (distance <= 10.0) {
+				messageClient(`${infoText}`, client, toColour(177, 156, 217));
+			}
+			if (distance > 10.0 && distance <= 20.0) {
+				messageClient(`${infoText}`, client, toColour(194, 24, 91));
+			}
+			if (distance > 20.0 && distance <= 30.0) {
+				messageClient(`${infoText}`, client, toColour(136, 14, 79));
+			}
+		}
+		
+	})
+}
 
 addCommandHandler("engine", (command, params, client) => {
 	if (!client.player.vehicle) {
@@ -533,7 +582,10 @@ addCommandHandler("engine", (command, params, client) => {
 	}
 
 	client.player.vehicle.engine = !client.player.vehicle.engine;
-	message(`${client.name} turned their vehicle engine ${(client.player.vehicle.engine) ? "on" : "off"}`);
+	if(game.mapName == "FREERIDENOC") {
+		client.player.vehicle.lights = !client.player.vehicle.lights;
+	}
+	messageInfo(`${client.name} turned their vehicle engine ${(client.player.vehicle.engine) ? "on" : "off"}`);
 });
 // ----------------------------------------------------------------------------
 
@@ -541,8 +593,28 @@ addCommandHandler("me", (command, params, client) => {
 	if (!params) {
 		messageClient("USAGE: /me <text>", client, COLOUR_SILVER)
 		return false;
-		}
-	message(`${client.name} ${params}`, toColour(177, 156, 217, 255));
+	}
+	
+		let meMessageRadius = 30.0;
+		let playerPos = client.player.position;
+
+		getClients().forEach((client) => {
+				let closePlayerPos = client.player.position;
+				let distance = getDistance(playerPos, closePlayerPos);
+
+				if (distance < meMessageRadius) {
+					if (distance <= 10.0) {
+						messageClient(`${client.name} ${params}`, client, toColour(177, 156, 217));
+					}
+					if (distance > 10.0 && distance <= 20.0) {
+						messageClient(`${client.name} ${params}`, client, toColour(194, 24, 91));
+					}
+					if (distance > 20.0 && distance <= 30.0) {
+						messageClient(`${client.name} ${params}`, client, toColour(136, 14, 79));
+					}
+				}
+			
+		})
 });
 
 addCommandHandler("do", (command, params, client) => {
@@ -550,15 +622,56 @@ addCommandHandler("do", (command, params, client) => {
 	messageClient("USAGE: /do <text>", client, COLOUR_SILVER)
 	return false;
 	}
-	message(`${params} ((${client.name})) `, toColour(177, 156, 217, 255));
-});
+	
+	let doMessageRadius = 30.0;
+	let playerPos = client.player.position;
 
+	getClients().forEach((client) => {
+			let closePlayerPos = client.player.position;
+			let distance = getDistance(playerPos, closePlayerPos);
+
+			if (distance < doMessageRadius) {
+				if (distance <= 10.0) {
+					messageClient(`${params} ((${client.name}))`, client, toColour(177, 156, 217));
+				}
+				if (distance > 10.0 && distance <= 20.0) {
+					messageClient(`${params} ((${client.name}))`, client, toColour(194, 24, 91));
+				}
+				if (distance > 20.0 && distance <= 30.0) {
+					messageClient(`${params} ((${client.name}))`, client, toColour(136, 14, 79));
+				}
+			}
+		
+	})
+
+})
 addCommandHandler("my", (command, params, client) => {
 	if (!params) {
 	messageClient("USAGE: /my <text>", client, COLOUR_SILVER)
 	return false;
 	}
-	message(`${client.name}'s ${params} `, toColour(177, 156, 217, 255));
+	
+	let myMessageRadius = 30.0;
+	let playerPos = client.player.position;
+
+	getClients().forEach((client) => {
+			let closePlayerPos = client.player.position;
+			let distance = getDistance(playerPos, closePlayerPos);
+
+			if (distance < myMessageRadius) {
+				if (distance <= 10.0) {
+					messageClient(`${client.name}'s ${params}`, client, toColour(177, 156, 217));
+				}
+				if (distance > 10.0 && distance <= 20.0) {
+					messageClient(`${client.name}'s ${params}`, client, toColour(194, 24, 91));
+				}
+				if (distance > 20.0 && distance <= 30.0) {
+					messageClient(`${client.name}'s ${params} `, client, toColour(136, 14, 79));
+				}
+			}
+		
+	})
+
 });
 
 
@@ -568,8 +681,28 @@ addCommandHandler("s", (command, params, client) => {
 	if (!params) {
 		messageClient("USAGE: /shout <text>!", client, COLOUR_SILVER)
 		return false;
-		}
-	message(`${client.name} shouts: ${params}!`, toColour(255, 255, 200, 255));
+	}
+	
+	let shoutRadius = 50.0;
+	let playerPos = client.player.position;
+
+	getClients().forEach((client) => {
+			let closePlayerPos = client.player.position;
+			let distance = getDistance(playerPos, closePlayerPos);
+
+			if (distance < shoutRadius) {
+				if (distance <= 10.0) {
+					messageClient(`${client.name} shouts: ${params}!`, client, COLOUR_WHITE);
+				}
+				if (distance > 10.0 && distance <= 35.0) {
+					messageClient(`${client.name} shouts: ${params}!`, client, COLOUR_SILVER);
+				}
+				if (distance > 35.0 && distance <= 50.0) {
+					messageClient(`${client.name} shouts: ${params}!`, client, toColour(66, 66, 66));
+				}
+			}
+		
+	})
 });
 
 
@@ -1678,7 +1811,6 @@ addCommandHandler("buygun", (command, params, client) => {
 	let	Magnum = 1800;
 	let	ColtDetective = 3200;
 	let SawedOff = 8000;
-	let	Thompson = 12000;
 
 
 
@@ -1690,7 +1822,6 @@ addCommandHandler("buygun", (command, params, client) => {
 			messageClient("3- S&W Model 27 Magnum: $1800", client, COLOUR_WHITE);
 			messageClient("4- Colt Detective Special: $3200", client, COLOUR_WHITE);
 			messageClient("5- Sawed-off Shotgun: $8000", client, COLOUR_WHITE);
-			messageClient("6- Thompson 1928: $12000", client, COLOUR_WHITE);
 
 		}
 		if (GunDealerCloseDistance <= gunDealerRadius) {
@@ -1930,56 +2061,8 @@ addCommandHandler("buygun", (command, params, client) => {
 						}
 					}
 				}
-
-			} else if(gunID == "6") {
-
-
-				if(ClientMoney <= Thompson) {
-					messageClient("Not enough money, fucker.", client, COLOUR_ORANGE);
-					return;
-				} else  {
-
-						const userWeapons1 = db.query(`SELECT weapon1 FROM users WHERE username = '${client.name}'`);
-						const userWeapons2 = db.query(`SELECT weapon2 FROM users WHERE username = '${client.name}'`);
-						const userWeapons3 = db.query(`SELECT weapon3 FROM users WHERE username = '${client.name}'`);
-
-
-						if (userWeapons1 == "") {
-							ClientMoney = ClientMoney - Thompson;
-							db.query(`UPDATE users SET weapon1 = '${gunNames[gunID]}' WHERE username = '${client.name}'`);
-							db.query(`UPDATE users SET money = ${ClientMoney} WHERE username = '${client.name}'`);
-							client.player.giveWeapon(10, 50, 50);
-							messageClient("There you go.. Hide it and fuck off!!", client, COLOUR_WHITE);
-							db.query(`SELECT money FROM users WHERE username = '${client.name}'`);
-							hudClientMoney(ClientMoney);
-						} else {
-							if(userWeapons2 == ""){
-								ClientMoney = ClientMoney - Thompson;
-								db.query(`UPDATE users SET weapon2 = '${gunNames[gunID]}' WHERE username = '${client.name}'`);
-								db.query(`UPDATE users SET money = ${ClientMoney} WHERE username = '${client.name}'`);
-								client.player.giveWeapon(10, 50, 50);
-								messageClient("There you go.. Hide it and fuck off!!", client, COLOUR_WHITE);
-								db.query(`SELECT money FROM users WHERE username = '${client.name}'`);
-								hudClientMoney(ClientMoney);
-								} else {
-									if(userWeapons3 == "") {
-										ClientMoney = ClientMoney - Thompson;
-										db.query(`UPDATE users SET weapon3 = '${gunNames[gunID]}' WHERE username = '${client.name}'`);
-										db.query(`UPDATE users SET money = ${ClientMoney} WHERE username = '${client.name}'`);
-										client.player.giveWeapon(10, 50, 50);
-										messageClient("There you go.. Hide it and fuck off!!", client, COLOUR_WHITE);
-										db.query(`SELECT money FROM users WHERE username = '${client.name}'`);
-										hudClientMoney(ClientMoney);
-									} else {
-									messageClient("You can't hold any more weapons", client, COLOUR_ORANGE);
-									return;
-							}
-						}
-					}
-				}
-			}
-    } else {
-
+			} 
+		} else {
 		messageClient("There's no gun dealer next to you.", client, COLOUR_RED);
         console.log("Player is not near the gun dealer.");
     }
@@ -1997,9 +2080,6 @@ addCommandHandler("despawn", (command, params, client) => {
 
 addCommandHandler("invfac", (command, params, client) => {
 	let targetClient = getClientFromParams(params);
-	db.query(`SELECT leader FROM factions WHERE leader = '${client.name}'`);
-	db.query(`SELECT fac FROM factions WHERE soldiers = '${client.name}'`);
-	db.query(`SELECT fac FROM factions WHERE soldiers = '${targetClient.name}'`);
 	let isLeader = db.query(`SELECT leader FROM factions WHERE leader = '${client.name}'`);
 	let pFaction = db.query(`SELECT fac FROM factions WHERE soldiers = '${client.name}'`);
 	let tpFaction = db.query(`SELECT fac FROM factions WHERE soldiers = '${targetClient.name}'`);
@@ -2011,7 +2091,6 @@ addCommandHandler("invfac", (command, params, client) => {
 					messageClient("This player is already rolling with a family.", client, COLOUR_RED);
 					return;
 				} else {
-
 					const invitation = {
                         inviter: client.name,
                         invitee: targetClient.name,
@@ -2030,7 +2109,7 @@ addCommandHandler("invfac", (command, params, client) => {
 			message(`This kid ${client.name} from ${pFaction} tried to send a family invitation to an offline player, laugh at this blindfuck.`);
 		}
 	} else {
-		messageClient("You are not a family leader , fool.", client, COLOUR_RED);
+		messageClient("You are not a family leader, fool.", client, COLOUR_RED);
 		return;
 	}
 });
@@ -2055,7 +2134,7 @@ addCommandHandler("accfam", (command, params, client) => {
 });
 
 //===========================================================================================================
-// HANDLING COMMANDS
+// ANIMAIONS
 addCommandHandler("talk", (command, params, client) => {
 	playClientAnimation(`Gestikulace05.i3d`);
 });
@@ -2181,49 +2260,7 @@ let businessTypesNames = {
 //==========================================================================================================================
 //HANDLING INVENTORY SYSTEM
 
-function displayInventory(client) {
-    const playerName = client.name;
-    const inventory = getPlayerInventory(playerName);
 
-    if (inventory.length === 0) {
-        messageClient("Your inventory is empty.", player, COLOUR_WHITE);
-        return;
-    }
-
-    messageClient("INVENTORY ======================================", player, COLOUR_YELLOW);
-
-    const weapons = inventory.filter(item => item.category === "Weapons");
-    if (weapons.length > 0) {
-        messageClient("Weapons:", player, COLOUR_YELLOW);
-        for (const weapon of weapons) {
-            messageClient(`${weapon.name}`, player, COLOUR_WHITE);
-        }
-    }
-
-
-    const drugs = inventory.filter(item => item.category === "Drugs");
-    if (drugs.length > 0) {
-        messageClient("Drugs:", player, COLOUR_YELLOW);
-        for (const drug of drugs) {
-            messageClient(`${drug.name} (x${drug.quantity})`, player, COLOUR_WHITE);
-        }
-    }
-}
-
-function displayInventory() {
-
-}
-
-// ...
-
-// Command handler for /inv command
-addCommandHandler("inv", (command, params, client) => {
-    displayInventory(client);
-});
-
-addCommandHandler("testv", (command, params, client) => {
-	messageClient(`Debugging: ${client.player.vehicle}`, client, COLOUR_GREEN);
-})
 
 
 //==========================================================================================================================
@@ -2266,7 +2303,6 @@ function messageFaction(messageText) {
 			messageClient("You don't belong to any family, kid.", client, COLOUR_RED)
 			return;
 		} else {
-			db.query(`SELECT soldiers FROM factions WHERE fac = '${cFaction}'`);
 			let txtSoldiers = db.query(`SELECT soldiers FROM factions WHERE fac = '${cFaction}'`);
 			if(txtSoldiers !== "") {
 				messageClient(`(([${cFaction}] ${messageText}))`, client, COLOUR_AQUA);
@@ -2292,7 +2328,7 @@ addCommandHandler("fsetspawn", (command, params, client) => {
 });
 
 //======================================================================================================
-
+/*
 addCommandHandler("caparts", (command, params, client) => {
 	if(client.administrator) {
 		apartPos = client.player.position;
@@ -2306,3 +2342,21 @@ addCommandHandler("caparts", (command, params, client) => {
 addCommandHandler("enter", (command, params, client) => {
 	let entryRadius = 2.0;
 })
+*/
+//======================================================================================================
+//BUSINESS SYSTEM
+
+function getBusinessTypeName(type) {
+    const businessTypes = {
+        1: "Clothing Store",
+        2: "Restaurant",
+        3: "Bar",
+        4: "New Car Dealership",
+        5: "Used Car Dealership",
+        6: "24/7",
+        7: "Gun Shop",
+    };
+
+    return businessTypes[type] || "Undefined";
+}
+
