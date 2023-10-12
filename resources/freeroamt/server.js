@@ -9,10 +9,10 @@ bindEventHandler("OnResourceStart", thisResource, (event, resource) => {
 // ===========================================================================
 
 addEventHandler("OnPlayerJoined", (event, client) => {
-	
+
 	console.log(`${client.name} has joined!`);
 	triggerNetworkEvent("TutorialCam", client);
-	
+
 });
 
 // ===========================================================================
@@ -77,7 +77,9 @@ addCommandHandler("gun", (command, params, client) => {
 });
 
 // ===========================================================================
-
+addCommandHandler("dbg", (command, params, client) => {
+	triggerNetworkEvent("fadeThatCam", client);
+});
 addCommandHandler("siren", (command, params, client) => {
 	if (!client.player.vehicle) {
 		messageClient("You need to be in a vehicle!", client, COLOUR_RED);

@@ -1,9 +1,11 @@
 "use strict";
 
 // ----------------------------------------------------------------------------
+const db = new module.sqlite.Database("lhbddatabase.db");
 
 bindEventHandler("OnResourceStart", thisResource, function(event, resource) {
-	setInterval(updatePlayerScoreboardPing, 3000);
+	setInterval(updatePlayerScoreboardPing, 2000);
+	setPlayersFactions();
 });
 
 // ----------------------------------------------------------------------------
@@ -15,10 +17,18 @@ function updatePlayerScoreboardPing() {
 }
 
 // ----------------------------------------------------------------------------
+function setPlayersFactions() {
+	getClients().forEach((client) => {
+		let fGet = toString(db.query(`SELECT fac FROM factions WHERE soldiers = '${client.name}'`));
+		if(fGet != "") {
+			client.setData("t.faction", fGet, true);
+		} else {
+			client.setData("t.faction", "No Faction", true);
+		}
+	})
 
-function updatePlayerScoreboardGTAIV(client, episode, gameMode) {
-	client.setData("v.ivinfo", [episode, gameMode], true);
 }
+
 
 // ----------------------------------------------------------------------------
 
@@ -51,9 +61,5 @@ function getClientFromParams(params) {
 
 // ----------------------------------------------------------------------------
 
-addNetworkHandler("v.ivinfo.", function(client, episode, gameMode) {
-	//console.log(`${client.name}'s episode is ${episode} and gamemode is ${gameMode}`);
-	updatePlayerScoreboardGTAIV(client, episode, gameMode);
-});
 
 // ----------------------------------------------------------------------------

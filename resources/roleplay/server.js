@@ -1,51 +1,85 @@
 "use strict";
 
 // ===========================================================================
+let DisconnectedReason ={1: "Lost Connection", 2: "Disconnected", 3: "Unsupported Client",4: "Incorrect Password",5: "Unsupported Executable", 6: "Disconnected", 7: "Banned", 8: "Failed", 9: "Invalid Name", 10: "Crashed"}
 const initMoney = 100;
-const db = new module.sqlite.Database("solhdatabase.db");
+const db = new module.sqlite.Database("lhbddatabase.db");
 const pendingInvitations = [];
 
+//DYNCBUILDS
+
+let dyncbuilds = [];
+let LastPlayerPosition = new Vec3 (0, 0, 0);
+
+// ===========================================================================
+
 bindEventHandler("OnResourceStart", thisResource, function(event, resource, client) {
-	console.log('[TRAMPOSO] Roleplay resource is ready to use.');
+
+
+    let initDync = db.query('SELECT builds, bizX, bizY, bizZ, apartX, apartY, apartZ FROM dyncbuilds');
+
+	dyncbuilds.push({
+            builds: initDync.builds,
+            bizX: initDync[1],
+            bizY: initDync[2],
+            bizZ: initDync[3],
+            apartX: initDync[4],
+            apartY: initDync[5],
+            apartZ: initDync[6],
+	})
+
+
+
 });
 
 
 
 
 // ===========================================================================
+//NATIVES
 const PaycheckMoney = 2000;
 let loggedIn = false;
 let RegisteredPlayer = false;
 let Teleported = false;
-let fromSaliery = false;
-
+let factionsSpawn = null;
+// ===========================================================================
+//LOCATIONS
 let motorest  = [-7.22, 2.4, 20.15];
 let littleitaly = [-1980.949, -4.982666, 23.199167];
 let saliery = [-1774.30, -5.56, 7.62];
 let bartest = [-387.11, 15.47, -515];
 let kingbed = [-545.79, 15.38, -436.02];
 let vila = [106.33, -5.11, 171.22];
+// ===========================================================================
+//SPAWNS
+let PlayerFactionSpawn = new Vec3 (0, 0, 0);
 
 
+
+
+
+
+
+
+// ===========================================================================
 
 addEventHandler("OnPlayerJoined", (event, client) => {
+	//POSITION
+	LastPlayerPosition.x = parseFloat(db.query(`SELECT lastX from users WHERE username = '${client.name}'`));
+	LastPlayerPosition.y = parseFloat(db.query(`SELECT lastY from users WHERE username = '${client.name}'`));
+	LastPlayerPosition.z = parseFloat(db.query(`SELECT lastZ from users WHERE username = '${client.name}'`));
 
-		if(game.mapName == "MISE03-SALIERYKONEC") {
-			spawnPlayer(client, [-1774.0, -3.93, 7.32], 0.0, "TommyHighHAT.i3d");
-		}
-		let aTeleported = Boolean(Teleported);
-		let aFromSaliery = Boolean(fromSaliery)
-		if(fromSaliery) {
-			spawnPlayer(client, lastPos, 0.0, "TommyHighHAT.i3d");
-		}
+	console.log(`[TRMPOSO] ${client.name} => LastPosX: ${LastPlayerPosition.x}`);
+	console.log(`[TRMPOSO] ${client.name} => LastPosY: ${LastPlayerPosition.y}`);
+	console.log(`[TRMPOSO] ${client.name} => LastPosZ: ${LastPlayerPosition.z}`);
 
-		if(!aTeleported) {
+	//START LOGGING QUERY
+			triggerNetworkEvent("IntroPlayAudio", client);
 			db.query(`SELECT username FROM users WHERE username = '${client.name}'`);
 			let checkUser = db.query(`SELECT username FROM users WHERE username = '${client.name}'`);
 			if (checkUser == "") {
-				messageClient("Seems like you need to register, pal!", client, COLOUR_GREEN);
+				messageClient("Welcome to Lost Heaven: Broken Dreams", client, COLOUR_GREEN);
 				messageClient("To register, type /register <password>", client, COLOUR_GREEN);
-				console.log(checkUser);
 				return;
 			} else if (checkUser !== "") {
 				messageClient("Look who's back...", client, COLOUR_AQUA);
@@ -63,18 +97,44 @@ addEventHandler("OnPlayerJoined", (event, client) => {
 					db.query(`UPDATE users SET money = ${ClientMoney} WHERE username = '${client.name}'`);
 
 
-					messageClient(`You received a paycheck of $${PaycheckMoney}.`, client, COLOUR_GREEN);
+					messageClient("== Payday! =============================", client, COLOUR_YELLOW);
+					messageClient(`Paycheck: {ALTCOLOUR}$${PaycheckMoney}`, client, COLOUR_GREEN);
 					hudClientMoney(ClientMoney);
 				}, paycheckInterval);
 
-
-
-   			 }
-		}
+	}
+	//SPAWNS CHECK
+	let pFaction = db.query(`SELECT fac FROM factions WHERE soldiers = '${client.name}'`)
+	if(pFaction == "") {
+		console.log(`[TRMPOSO] Player ${client.name} is not rolling with a faction`)
+	} else {
+		PlayerFactionSpawn.x = parseFloat(db.query(`SELECT facX FROM factions WHERE soldiers= '${client.name}'`));
+		PlayerFactionSpawn.y = parseFloat(db.query(`SELECT facY FROM factions WHERE soldiers= '${client.name}'`));
+		PlayerFactionSpawn.z = parseFloat(db.query(`SELECT facZ FROM factions WHERE soldiers= '${client.name}'`));
+	}
 });
 
 
+addCommandHandler("spawntype", (command, params, client) => {
+	let spwnTp = params
+	if(!spwnTp || spwnTp == "") {
+		messageClient("Spawn Types===============================", client, COLOUR_YELLOW);
+		messageClient("1: Last Position, 2: Faction Spawn", client, COLOUR_WHITE);
+		messageClient("Usage: /spawntype 1/2", client, COLOUR_WHITE);
+	}
 
+	if(spwnTp == "1") {
+		messageClient("You set your spawn to your last position", client, COLOUR_GREEN)
+		db.query(`UPDATE users SET spawnT = '1' WHERE username = '${client.name}'`)
+	} else if(spwnTp == "2") {
+		if(PlayerFactionSpawn != [0, 0, 0]) {
+			messageClient("You set your spawn to your faction spawn", client, COLOUR_GREEN)
+			db.query(`UPDATE users SET spawnT = '2' WHERE username = '${client.name}'`)
+		} else {
+			messageClient("Motherfucker you're not rolling with a family.", client, COLOUR_GREEN)
+		}
+	}
+})
 addCommandHandler("audio", (command, params, client) => {
 	triggerNetworkEvent("playAudio", client)
 })
@@ -102,7 +162,6 @@ function playClientAnimation(anAnimation, client) {
 
 
 addCommandHandler("register", (command, params, client) => {
-	let db = new module.sqlite.Database("solhdatabase.db");
     let splitParams = params.split(" ");
     let passwordParams = splitParams[0];
 
@@ -127,7 +186,6 @@ addCommandHandler("register", (command, params, client) => {
 
 
 addCommandHandler("login", (command, params, client) => {
-	let db = new module.sqlite.Database("solhdatabase.db");
 	let ClientMoney = db.query(`SELECT money FROM users WHERE username = '${client.name}'`);
 
 
@@ -151,9 +209,19 @@ addCommandHandler("login", (command, params, client) => {
 		if (loginQuery !== "") {
 			const storedPassword = db.query(`SELECT password FROM users WHERE username = '${client.name}'`);
 			if (logpassParams == storedPassword) {
+				message(``)
+				let spawnType = parseInt(db.query(`SELECT spawnT from users WHERE username = '${client.name}'`)) | 0;
+				if(spawnType == 1) {
+					spawnPlayer(client, LastPlayerPosition, 0.0, 'TommyHighHAT.i3d')
+				} else if(spawnType == 2) {
+					spawnPlayer(client, PlayerFactionSpawn, 0.0, 'TommyHighHAT.i3d');
+					messageClient("Welcome back kid, don't get caught up lacking in the streets.", client, COLOUR_AQUA);
+				} else {
+					spawnPlayer(client, littleitaly, 180.0, 'TommyHighHAT.i3d');
+					console.log(`[TRMPOSO] ${client.name}'s position is on default.`)
+				}
 
-				messageClient("Welcome back kid, don't get caught up lacking in the streets.", client, COLOUR_AQUA);
-				spawnPlayer(client, vila, 180.0, 'TommyHighHAT.i3d');
+
 				ClientMoney = parseInt(ClientMoney, 10) | 0;
 				hudClientMoney(ClientMoney);
 
@@ -225,7 +293,9 @@ addCommandHandler("login", (command, params, client) => {
 
 
 // ===========================================================================
-
+addCommandHandler("scd", (command, params, client) => {
+	localPlayer.health = 0;
+})
 
 
 
@@ -243,7 +313,6 @@ function updateMapPlayer(ToMap, client) {
 	triggerNetworkEvent("OnChangeMapC", client, ToMap);
 }
 
-let lastPos = null;
 addCommandHandler("cmap", (command, params, client) => {
 	client.despawnPlayer();
 	updateMapPlayer(ToMap);
@@ -313,8 +382,11 @@ addEventHandler("OnPlayerJoin", (event, client) => {
 // ===========================================================================
 
 addEventHandler("OnPlayerQuit", (event, client, reasonId) => {
-    console.log(`${client.name} IP:${client.ip} has left! Reason: ${reasonId}`);
-    db.query(`UPDATE users SET lastX = '${client.player.position.x}', lastY = '${client.player.position.y}', lastZ = '${client.player.position.z}' WHERE username = '${client.name}'`);
+    console.log(`${client.name} IP:${client.ip} has left! Reason: ${DisconnectedReason[reasonId]}`);
+    if(loggedIn){
+		db.query(`UPDATE users SET lastX = '${client.player.position.x}', lastY = '${client.player.position.y}', lastZ = '${client.player.position.z}' WHERE username = '${client.name}'`);
+	}
+	loggedIn = false;
 });
 
 
@@ -347,7 +419,7 @@ addEventHandler("OnPlayerChat", (event, client, messageText) => {
 		})
  	}
 	messageClient(`${client.name} says: ${messageText}`, client, COLOUR_WHITE);
-	addToLog(client.name+': '+messageText);
+	addToLog(`'${client.name}+': '+'${messageText}'`);
 });
 
 function addToLog(text)
@@ -2138,17 +2210,9 @@ function displayInventory(client) {
     }
 }
 
-// ...
+function displayInventory() {
 
-// Sample inventory data with categories (Weapons and Drugs)
-const playerInventories = {
-    "player1": [
-        { id: 1, name: "Weapon 1", quantity: 3, category: "Weapons" },
-        { id: 2, name: "Weapon 2", quantity: 5, category: "Weapons" },
-        { id: 3, name: "Drug 1", quantity: 2, category: "Drugs" },
-    ],
-    // Add more players, weapons, and drugs as needed
-};
+}
 
 // ...
 
@@ -2216,9 +2280,9 @@ addCommandHandler("fsetspawn", (command, params, client) => {
     if (facLeader == "") {
         messageClient("You are not a faction leader, kid.", client, COLOUR_RED);
     } else {
-        let factionsSpawn = client.player.position;
+        factionsSpawn = client.player.position;
         let faction = db.query(`SELECT fac FROM factions WHERE leader = '${client.name}'`);
-        let query = db.query(`INSERT INTO factions (facX, facY, facZ) VALUES ('${factionsSpawn.x}', '${factionsSpawn.y}', '${factionsSpawn.z}')`);
+        let query = db.query(`UPDATE factions SET facX = '${factionsSpawn.x}', facY = '${factionsSpawn.y}', facZ = ${factionsSpawn.z} WHERE leader = '${client.name}'`);
         if (query) {
             messageClient(`You have set a new faction spawn for ${faction}`, client, COLOUR_GREEN);
         } else {
@@ -2233,7 +2297,12 @@ addCommandHandler("caparts", (command, params, client) => {
 	if(client.administrator) {
 		apartPos = client.player.position;
 		db.query(`INSERT INTO dyncbuilds (builds, apartX, apartY, apartZ) VALUES ('Apartement','${apartPos.x}', '${apartPos.y}', '${apartPos.z}'`)
+		messageClient("You created an apartment entry successfully!", client, COLOUR_GREEN);
 	} else {
 		messageClient("You're not allowed to do that, kid.", client, COLOUR_RED);
 	}
 });
+
+addCommandHandler("enter", (command, params, client) => {
+	let entryRadius = 2.0;
+})
