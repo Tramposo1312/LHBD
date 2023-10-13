@@ -59,3 +59,19 @@ addCommandHandler("sveh", (command, params, client) => {
 	}
 });
 
+addCommandHandler("veh", (command, params, client) => {
+	let model = getVehicleModelFromParams(params);
+	if (!model) {
+		messageClient("That vehicle model is invalid!");
+		return false;
+	}
+
+	let frontOfPlayer = getPosInFrontOfPos(client.player.position, client.player.heading, 5);
+	let vehicle = game.createVehicle(`${model}.i3d`, frontOfPlayer, client.player.heading);
+
+	if (vehicle) {
+		messageClient(`${client.name} spawned a ${vehicleNames[vehicleModels.indexOf(model)]} vehicle`, client, COLOUR_YELLOW);
+	} else {
+		messageClient(`Vehicle failed to create!`, client, COLOUR_ORANGE);
+	}
+});
