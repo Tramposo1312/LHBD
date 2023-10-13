@@ -59,3 +59,4 @@ addCommandHandler("sveh", (command, params, client) => {
 	}
 });
 
+12
