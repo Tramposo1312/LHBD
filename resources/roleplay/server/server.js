@@ -15,6 +15,8 @@ let LastPlayerPosition = new Vec3 (0, 0, 0);
 
 bindEventHandler("OnResourceStart", thisResource, function(event, resource, client) {
 	initVehicleScript();
+	let debug = getElements();
+            console.log(`[TRAMPOSOOO]${debug}`)
 });
 
 
@@ -485,51 +487,8 @@ function vectorDistance(vec1, vec2) {
 
 
 // ===========================================================================
-addCommandHandler("sveh", (command, params, client) => {
-	if(client.administrator) {
-		let model = getVehicleModelFromParams(params);
-
-		if (!model) {
-			messageClient("That vehicle model is invalid!");
-			return false;
-		}
-
-		let frontOfPlayer = getPosInFrontOfPos(client.player.position, client.player.heading, 5);
-		let sVehicle = game.createVehicle(`${model}.i3d`, frontOfPlayer, client.player.heading);
-
-		if (sVehicle) {
-			messageClient(`${client.name} spawned a ${vehicleNames[vehicleModels.indexOf(model)]} vehicle`, client, COLOUR_YELLOW);
-			let sVehDebug = db.query(`INSERT INTO svehs (model, posX, posY, posZ, heading) VALUES ('${model}', '${frontOfPlayer.x}', '${frontOfPlayer.y}', '${frontOfPlayer.z}', '${client.player.heading}')`);
-			if(sVehDebug) {
-				messageClient('Vehicle saved successfully.', client, COLOUR_GREEN)
-			} else {
-				messageClient('Something wrong happened', client, COLOUR_ORANGE);
-			}
-		} else {
-			messageClient(`Vehicle failed to create!`, client, COLOUR_ORANGE);
-		}
-	} else {
-			messageClient('Youre not an admin.', client, COLOUR_ORANGE);
-	}
-});
 
 
-addCommandHandler("veh", (command, params, client) => {
-	let model = getVehicleModelFromParams(params);
-	if (!model) {
-		messageClient("That vehicle model is invalid!");
-		return false;
-	}
-
-	let frontOfPlayer = getPosInFrontOfPos(client.player.position, client.player.heading, 5);
-	let vehicle = game.createVehicle(`${model}.i3d`, frontOfPlayer, client.player.heading);
-
-	if (vehicle) {
-		messageClient(`${client.name} spawned a ${vehicleNames[vehicleModels.indexOf(model)]} vehicle`, client, COLOUR_YELLOW);
-	} else {
-		messageClient(`Vehicle failed to create!`, client, COLOUR_ORANGE);
-	}
-});
 
 // ===========================================================================
 
@@ -1830,6 +1789,7 @@ const gunDealerModel = "TommyRUKAV";
 
 
 const gunDealerPed = game.createPed(`${gunDealerModel}.i3d`, bongioEmmetPosition, 0.0);
+gunDealerPed.name = "Charles Guiliano";
 
 addCommandHandler("cguns", (command, params, client) => {
 	db.query(`UPDATE users SET weapon1 = NULL, weapon2 = NULL, weapon3 = NULL WHERE username = '${client.name}'`);

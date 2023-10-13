@@ -1,4 +1,25 @@
-const serverVehicles = [];
+//FUNCTIONS
+
+function getVehicleData(vehicle, dataName) {
+    if (vehicle != null) {
+        if (vehicle.getData != null) {
+            return vehicle.getData(dataName);
+        }
+    }
+    return null;
+}
+
+function setVehicleData(vehicle, dataName, dataValue, syncToClients = true) {
+    if (vehicle != null) {
+        if (typeof server != "undefined") {
+            return vehicle.setData(dataName, dataValue, syncToClients);
+        } else {
+            return vehicle.setData(dataName, dataValue);
+        }
+    }
+}
+
+
 function createServerVehicles() {
 	for (let vehID = 1; vehID <= 23; vehID++) {
 		let modelQuery = db.query(`SELECT model FROM svehs WHERE vehID = '${vehID}'`);
@@ -15,12 +36,11 @@ function createServerVehicles() {
 			let asVehPos = new Vec3(aposX, aposY, aposZ);
 			let tempServerVehicle = game.createVehicle(`${aModel}.i3d`, asVehPos, aHeading)
 			if(tempServerVehicle) {
+                setVehicleData(tempServerVehicle, 'forRent', true)
 				console.log(`Vehicle ${vehID} created successfully`);
 			} else {
 				console.log(`Vehicle ${vehID} failed to create.`);
 			}
-			serverVehicles.push(tempServerVehicle);
-
 		}
 	}
 }
@@ -30,6 +50,25 @@ function initVehicleScript() {
 	createServerVehicles();
 	console.log('[TRMPOSO] Vehicle script initialised successfully.');
 }
+
+//COMANDS
+
+addCommandHandler("engine", (command, params, client) => {
+	if (!client.player.vehicle) {
+		messageClient("You need to be in a vehicle!", client, COLOUR_RED);
+		return false;
+	}
+    let vDebug = getVehicleData(client.player.vehicle, 'forRent');
+    message(`${vDebug}`);
+	client.player.vehicle.engine = !client.player.vehicle.engine;
+
+	if(game.mapName == "FREERIDENOC") {
+		client.player.vehicle.lights = !client.player.vehicle.lights;
+		return;
+	}
+	messageInfo(`${client.name} turned their vehicle engine ${(client.player.vehicle.engine) ? "on" : "off"}`);
+});
+
 
 addCommandHandler("sveh", (command, params, client) => {
 	if(client.administrator) {
@@ -58,5 +97,3 @@ addCommandHandler("sveh", (command, params, client) => {
 			messageClient('Youre not an admin.', client, COLOUR_ORANGE);
 	}
 });
-
-12

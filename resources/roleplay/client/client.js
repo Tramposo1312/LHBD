@@ -69,8 +69,7 @@ addEventHandler("OnAddActor", function(event, actorType, actorName, model) {
 
 
 addEventHandler("onPedSpawn", (event, ped) => {
-    message(`${ped.name} spawned`);
-    if(ped != localPlayer) {
+    if(ped.name == "Charles Guiliano") {
         ped.playAnimation(`Gestikulace05.i3d`);
     }
 });
