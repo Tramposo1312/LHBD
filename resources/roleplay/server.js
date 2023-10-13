@@ -5,6 +5,7 @@ let DisconnectedReason ={1: "Lost Connection", 2: "Disconnected", 3: "Unsupporte
 const initMoney = 100;
 const db = new module.sqlite.Database("lhbddatabase.db");
 const pendingInvitations = [];
+const sVehPositions = [];
 
 //DYNCBUILDS
 
@@ -15,7 +16,7 @@ let LastPlayerPosition = new Vec3 (0, 0, 0);
 
 bindEventHandler("OnResourceStart", thisResource, function(event, resource, client) {
 
-
+	initVehicleScript();
     let initDync = db.query('SELECT builds, bizX, bizY, bizZ, apartX, apartY, apartZ FROM dyncbuilds');
 
 	dyncbuilds.push({
@@ -116,7 +117,17 @@ addEventHandler("OnPlayerJoined", (event, client) => {
 	
 });
 
-
+addCommandHandler("spark", (command, params, client) => {
+	if(client.administrator) {
+		if(client.player.vehicle) {
+			messageClient(`Debugging: This vehicle is ${client.player.vehicle}`, client, COLOUR_ORANGE)
+		} else {
+			messageClient('You are not in a vehicle.', client, COLOUR_RED);
+		}
+	} else {
+		messageClient('Youre not an admin, kid', client, COLOUR_RED);
+	}
+})
 addCommandHandler("spawntype", (command, params, client) => {
 	let spwnTp = params
 	if(!spwnTp || spwnTp == "") {
@@ -477,11 +488,50 @@ function vectorDistance(vec1, vec2) {
 
 
 // ===========================================================================
+addCommandHandler("sveh", (command, params, client) => {
+	if(client.administrator) {
+		let model = getVehicleModelFromParams(params);
 
+		if (!model) {
+			messageClient("That vehicle model is invalid!");
+			return false;
+		}
 
+		let frontOfPlayer = getPosInFrontOfPos(client.player.position, client.player.heading, 5);
+		let sVehicle = game.createVehicle(`${model}.i3d`, frontOfPlayer, client.player.heading);
+
+		if (sVehicle) {
+			messageClient(`${client.name} spawned a ${vehicleNames[vehicleModels.indexOf(model)]} vehicle`, client, COLOUR_YELLOW);
+			let sVehDebug = db.query(`INSERT INTO svehs (model, posX, posY, posZ, heading) VALUES ('${model}', '${frontOfPlayer.x}', '${frontOfPlayer.y}', '${frontOfPlayer.z}', '${client.player.heading}')`);
+			if(sVehDebug) {
+				messageClient('Vehicle saved successfully.', client, COLOUR_GREEN)
+			} else {
+				messageClient('Something wrong happened', client, COLOUR_ORANGE);
+			}
+		} else {
+			messageClient(`Vehicle failed to create!`, client, COLOUR_ORANGE);
+		}
+	} else {
+			messageClient('Youre not an admin.', client, COLOUR_ORANGE);
+	}
+});
+
+addCommandHandler("svspawn", (command, params, client) => {
+	let dbgVeh = db.query(`SELECT model FROM svehs WHERE vehID = '1'`);
+	let sDBGVeh = String(dbgVeh);
+	let dposX = parseFloat(db.query(`SELECT posX FROM svehs WHERE vehID = '1'`))
+	let dposY = parseFloat(db.query(`SELECT posY FROM svehs WHERE vehID = '1'`))
+	let dposZ = parseFloat(db.query(`SELECT posZ FROM svehs WHERE vehID = '1'`))
+	let dHeading = parseFloat(db.query(`SELECT heading FROM svehs WHERE vehID = '1'`))
+	let dbgPos = new Vec3(0, 0, 0);
+	dbgPos.x = dposX;
+	dbgPos.y = dposY;
+	dbgPos.z = dposZ;
+	message(`${dposX}, ${dposY}, ${dposZ}, ${dbgPos}, ${dbgPos.x}`)
+	game.createVehicle(`${sDBGVeh}.i3d`, dbgPos, dHeading);
+})
 addCommandHandler("veh", (command, params, client) => {
 	let model = getVehicleModelFromParams(params);
-
 	if (!model) {
 		messageClient("That vehicle model is invalid!");
 		return false;
@@ -2091,6 +2141,7 @@ addCommandHandler("invfac", (command, params, client) => {
 					messageClient("This player is already rolling with a family.", client, COLOUR_RED);
 					return;
 				} else {
+					
 					const invitation = {
                         inviter: client.name,
                         invitee: targetClient.name,
@@ -2359,4 +2410,34 @@ function getBusinessTypeName(type) {
 
     return businessTypes[type] || "Undefined";
 }
+// ===================================================================================================
+//SERVERVEHICLES
 
+function createServerVehicles() {
+	for (let vehID = 1; vehID <= 23; vehID++) {
+		let modelQuery = db.query(`SELECT model FROM svehs WHERE vehID = '${vehID}'`);
+		let posxQuery = db.query(`SELECT posX FROM svehs WHERE vehID = '${vehID}'`);
+		let posyQuery = db.query(`SELECT posY FROM svehs WHERE vehID = '${vehID}'`);
+		let poszQuery = db.query(`SELECT posZ FROM svehs WHERE vehID = '${vehID}'`);
+		let headingQuery = db.query(`SELECT heading FROM svehs WHERE vehID = '${vehID}'`);
+		if(modelQuery) {
+			let aModel = String(modelQuery);
+			let aposX = parseFloat(posxQuery);
+			let aposY = parseFloat(posyQuery);
+			let aposZ = parseFloat(poszQuery);
+			let aHeading = parseFloat(headingQuery);
+			let asVehPos = new Vec3(aposX, aposY, aposZ);
+			let sVehicle = game.createVehicle(`${aModel}.i3d`, asVehPos, aHeading)
+			if(sVehicle) {
+				console.log(`Vehicle ${vehID} created successfully`);
+			} else {
+				console.log(`Vehicle ${vehID} failed to create.`);
+			}
+		}
+	}
+}
+function initVehicleScript() {
+	console.log('[TRMPOSO] Initialising vehicle script...')
+	createServerVehicles();
+	console.log('[TRMPOSO] Vehicle script initialised successfully.');
+}
