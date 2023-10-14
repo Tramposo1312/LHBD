@@ -57,8 +57,8 @@ function retrieveFactionsFromDatabase() {
   
         const faction = new Faction(name, slots, vehicles, businesses, soldiers, leader);
         factions.push(faction);
-        console.log(`${nameQuery} faction retrieved successfully`);
         console.log(faction);
+        console.log(`${nameQuery} faction retrieved successfully`);
       } 
     }
     return factions;  

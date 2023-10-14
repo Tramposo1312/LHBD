@@ -32,7 +32,10 @@ addNetworkHandler("IntroPlayAudio", function() {
 
 // ===========================================================================
 addEventHandler("OnPedDeath", function(event, ped) {
-    if(localPlayer != null) {
+    if(ped.name != localPlayer.name) {
+        ped.playAnimation(`game12 sara01 chyceni f.i3d`);
+        ped.kill();        
+    } else {
         let deathCam = new Vec3 (0, 0, 0);
         deathCam.x = localPlayer.position.x + 3;
         deathCam.y = localPlayer.position.y + 3;
@@ -40,13 +43,14 @@ addEventHandler("OnPedDeath", function(event, ped) {
         message(`${localPlayer.name} got got.`)
         game.setCameraLookAt(deathCam, localPlayer.position, true);
         localPlayer.playAnimation(`game12 sara01 chyceni f.i3d`);
-        game.fadeCamera(true, 1.0, 0);
-        ped.respawn(Hospital);
-    }
-    ped.playAnimation(`game12 sara01 chyceni f.i3d`);
-});
+        localPlayer.respawn(Hospital);
+    }});
 // ===========================================================================
-
+addEventHandler("OnMapLoaded", function(event, mapName) {
+    if(mapName == "MISE11-VILA") {
+        spawnPlayer(localPlayer, vila, 0.0, 'TommyHighHAT.i3d');
+    }
+})
 
 addEventHandler("OnPedJackVehicle", function(event, ped) {
     message(`${ped.name} jacked a car`)
@@ -61,7 +65,7 @@ addEventHandler("OnDrawnHUD", function () {
 });
 
 addEventHandler("OnAddActor", function(event, actorType, actorName, model) {
-    message("Event is working")
+    event.preventDefault();
 });
 // ===========================================================================
 

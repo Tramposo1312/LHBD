@@ -341,13 +341,13 @@ addCommandHandler("scd", (command, params, client) => {
 
 
 // ===========================================================================
-let ToMap = "MISE03-SALIERYKONEC";
 
 function updateMapPlayer(ToMap, client) {
-	triggerNetworkEvent("OnChangeMapC", client, ToMap);
+	triggerNetworkEvent("mapChanging", client, ToMap);
 }
 
 addCommandHandler("cmap", (command, params, client) => {
+	let ToMap = "MISE11-VILA";
 	client.despawnPlayer();
 	updateMapPlayer(ToMap);
 	Teleported = true;
@@ -373,7 +373,7 @@ addCommandHandler("spawn", (command, params, client) => {
 	const tpplace = params.toLowerCase();
 	if (tpplace === '1') {
 		client.despawnPlayer();
-		spawnPlayer(client, asalier, 0.0, "TommyHighHAT.i3d");
+		spawnPlayer(client, vila, 0.0, "TommyHighHAT.i3d");
 
 
 	} else if (tpplace === '2') {
