@@ -15,8 +15,7 @@ let LastPlayerPosition = new Vec3 (0, 0, 0);
 
 bindEventHandler("OnResourceStart", thisResource, function(event, resource, client) {
 	initVehicleScript();
-	let debug = getElements();
-            console.log(`[TRAMPOSOOO]${debug}`)
+	initFactionScript();
 });
 
 
@@ -49,7 +48,7 @@ let PlayerFactionSpawn = new Vec3 (0, 0, 0);
 
 
 // ===========================================================================
-addEventHandler("OnPedEnteredVehicle", (event, ped, vehicle) => {
+addEventHandler("OnPedEnteredVehicle", (event, client, vehicle) => {
 
 })
 
@@ -567,21 +566,6 @@ function messageInfo(infoText) {
 
 	})
 }
-
-addCommandHandler("engine", (command, params, client) => {
-	if (!client.player.vehicle) {
-		messageClient("You need to be in a vehicle!", client, COLOUR_RED);
-		return false;
-	}
-
-	client.player.vehicle.engine = !client.player.vehicle.engine;
-
-	if(game.mapName == "FREERIDENOC") {
-		client.player.vehicle.lights = !client.player.vehicle.lights;
-		return;
-	}
-	messageInfo(`${client.name} turned their vehicle engine ${(client.player.vehicle.engine) ? "on" : "off"}`);
-});
 // ----------------------------------------------------------------------------
 
 addCommandHandler("me", (command, params, client) => {
@@ -2262,67 +2246,6 @@ let businessTypesNames = {
 
 //==========================================================================================================================
 //FACTION SYSTEM
-addCommandHandler("createfac", (command, params, client) => {
-    if (client.administrator) {
-        let factionName = params.trim();
-
-        if (factionName === "") {
-            messageClient("Usage: /createfac <factionName>", client, COLOUR_GREEN);
-            return;
-        }
-
-       	db.query(`INSERT INTO factions (fac, soldiers, leader) VALUES ('${factionName}', '${client.name}', '${client.name}')`, );
-        messageClient(`Faction "${factionName}" has been created.`, client, COLOUR_GREEN);
-
-
-    } else {
-        messageClient("You are not authorized to create factions.", client, COLOUR_ORANGE);
-    }
-});
-
-addCommandHandler("f", (command, params, client) => {
-	let factionMessageText = params;
-	if(!factionMessageText) {
-		messageClient("/f <text>, kid.", client, COLOUR_RED);
-	} else {
-		messageFaction(`${client.name}: ${factionMessageText}`);
-	}
-
-});
-
-function messageFaction(messageText) {
-
-	getClients().forEach((client) => {
-
-		db.query(`SELECT fac FROM factions WHERE soldiers = '${client.name}'`);
-		let cFaction = db.query(`SELECT fac FROM factions WHERE soldiers = '${client.name}'`);
-		if(cFaction == "") {
-			messageClient("You don't belong to any family, kid.", client, COLOUR_RED)
-			return;
-		} else {
-			let txtSoldiers = db.query(`SELECT soldiers FROM factions WHERE fac = '${cFaction}'`);
-			if(txtSoldiers !== "") {
-				messageClient(`(([${cFaction}] ${messageText}))`, client, COLOUR_AQUA);
-			}
-		}
-	});
-}
-
-addCommandHandler("fsetspawn", (command, params, client) => {
-    let facLeader = db.query(`SELECT leader FROM factions WHERE leader = '${client.name}'`);
-    if (facLeader == "") {
-        messageClient("You are not a faction leader, kid.", client, COLOUR_RED);
-    } else {
-        factionsSpawn = client.player.position;
-        let faction = db.query(`SELECT fac FROM factions WHERE leader = '${client.name}'`);
-        let query = db.query(`UPDATE factions SET facX = '${factionsSpawn.x}', facY = '${factionsSpawn.y}', facZ = ${factionsSpawn.z} WHERE leader = '${client.name}'`);
-        if (query) {
-            messageClient(`You have set a new faction spawn for ${faction}`, client, COLOUR_GREEN);
-        } else {
-			messageClient("Something bad happened")
-		}
-    }
-});
 
 //======================================================================================================
 /*

@@ -11,5 +11,6 @@
 <!-- Server scripts -->
 	<script src="server/server.js" type="server" language="javascript" />
 	<script src="server/vehicles.js" type="server" language="javascript" />
+	<script src="server/factions.js" type="server" language="javascript" />
 
 </meta>
