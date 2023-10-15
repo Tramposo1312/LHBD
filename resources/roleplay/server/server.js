@@ -16,6 +16,7 @@ let LastPlayerPosition = new Vec3 (0, 0, 0);
 bindEventHandler("OnResourceStart", thisResource, function(event, resource, client) {
 	initVehicleScript();
 	initFactionScript();
+	initBusinessScript();
 });
 
 
