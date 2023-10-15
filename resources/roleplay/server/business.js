@@ -1,3 +1,5 @@
+const businessInvitations = [];
+
 class Business {
     constructor(name, type, owner = null, employees = [], posX, posY, posZ, items, money) {
         this.name = name;
@@ -100,4 +102,44 @@ function initBusinessScript() {
     }
 }
 
-  
+
+//COMMANDS
+addCommandHandler("binvite", (command, params, client) => {
+
+    let targetClient = getClientFromParams(params);
+	let businessOwner = db.query(`SELECT bizOwner FROM biznizs WHERE bizOwner = '${client.name}'`);
+	let pBusiness = db.query(`SELECT bizName FROM biznizs WHERE bizOwner = '${client.name}'`);
+	let tpBusiness = db.query(`SELECT bizName FROM biznizs WHERE bizEmployees = '${targetClient.name}'`);
+
+
+    if (isLeader !== "") {
+        if(targetClient) {
+			if (targetClient.index !== client.index) {
+				if(tpBusiness !== "") {
+					messageClient("This player is already working for another business.", client, COLOUR_RED);
+					return;
+				} else {
+
+					const bInvitation = {
+                        inviter: client.name,
+                        invitee: targetClient.name,
+                        business: String(pBusiness),
+                    };
+
+                    businessInvitations.push(invitation);
+
+					messageClient(`You've sent an invitation to ${targetClient.name}`, client, COLOUR_ORANGE);
+					messageClient(`${client.name} has sent you an invitation to work for ${pFaction}. Use /accbiz to accept.`, targetClient, COLOUR_YELLOW);
+				}
+			} else {
+				message(`This kid ${client.name} from ${pBusiness} tried to send a work invitation to himself. Laugh at this fucking autistic.`);
+			}
+		} else {
+			message(`This kid ${client.name} from ${pBusiness} tried to send a work invitation to an offline player, laugh at this blindfuck.`);
+		}
+	} else {
+		messageClient("You are not a business owner, fucking autistic.", client, COLOUR_RED);
+		return;
+	}
+
+})  

@@ -2076,7 +2076,7 @@ addCommandHandler("invfac", (command, params, client) => {
 					const invitation = {
                         inviter: client.name,
                         invitee: targetClient.name,
-                        faction: pFaction,
+                        faction: String(pFaction),
                     };
 
                     pendingInvitations.push(invitation);
