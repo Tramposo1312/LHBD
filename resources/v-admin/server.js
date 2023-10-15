@@ -126,6 +126,27 @@ addCommandHandler("unban", (command, params, client) => {
 });
 
 // ----------------------------------------------------------------------------
+addCommandHandler("goto", (command, params, client) => {
+	
+	let targetP = getClientFromParams(params);
+
+	if(client.administrator) {
+		if(targetP.index !== client.index) {
+			if(targetP) {
+				client.player.position = targetP.player.position;
+				if(client.player.position = targetP.player.position) {
+					messageClient(`"You teleported to ${targetP.name}"`, client, COLOUR_ORANGE);
+				}
+			} else {
+				messageClient("Player not found.", client, COLOUR_RED);
+			}
+		} else {
+			messageClient("You can't teleport to yourself.", client, COLOUR_RED)
+		}
+	} else {
+		messageClient("You're not an admin.", client, COLOUR_RED);
+	}
+})
 
 addCommandHandler("a", (command, params, client) => {
 	if (client.administrator) {
