@@ -1,5 +1,30 @@
-//FUNCTIONS
+//DEFINES
 
+
+//NETWORK HANDLERS
+addNetworkHandler("OnServerVehicle", function(playerVeh) {
+	playerVeh = client.player.vehicle;
+	let vehCheck = getVehicleData(playerVeh, "forRent");
+	if(vehCheck == true) {
+		console.log("[TRMPOSO] PLayer's vehicle is server's. Success")
+	} else {
+		console.log("[TRMPOSO] Player's vehicle is not a server's. Failure")
+	}
+})
+//EVENT HANDLERS
+
+addEventHandler("OnPedEnteredVehicle", function(event, client, vehicle, seat) {
+    message(`${client.name} has entered vehicle ${vehicle.id} seat ${seat}`);
+	let vDebugS = getVehicleData(vehicle);
+	if(vDebugS == true) {
+		messageClient("You need to rent this vehicle. use /rentveh", client, COLOUR_ORANGE);
+	} else {
+		messageClient("You don't need to rent this vehicle.", client, COLOUR_GREEN);
+	}
+});
+
+
+//FUNCTIONS
 function getVehicleData(vehicle, dataName) {
     if (vehicle != null) {
         if (vehicle.getData != null) {
@@ -59,14 +84,18 @@ addCommandHandler("engine", (command, params, client) => {
 		return false;
 	}
     let vDebug = getVehicleData(client.player.vehicle, 'forRent');
-    message(`${vDebug}`);
-	client.player.vehicle.engine = !client.player.vehicle.engine;
+    if(vDebug == true) {
+		messageClient("You need to rent this vehicle before starting its engine.", client, COLOUR_RED);
+	} else {
+		client.player.vehicle.engine = !client.player.vehicle.engine;
+		messageInfo(`${client.name} turned their vehicle engine ${(client.player.vehicle.engine) ? "on" : "off"}`);
+	}
 
 	if(game.mapName == "FREERIDENOC") {
 		client.player.vehicle.lights = !client.player.vehicle.lights;
 		return;
 	}
-	messageInfo(`${client.name} turned their vehicle engine ${(client.player.vehicle.engine) ? "on" : "off"}`);
+
 });
 
 
@@ -97,3 +126,6 @@ addCommandHandler("sveh", (command, params, client) => {
 			messageClient('Youre not an admin.', client, COLOUR_ORANGE);
 	}
 });
+
+
+//FACTION VEHS

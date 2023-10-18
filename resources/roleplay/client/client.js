@@ -34,7 +34,7 @@ addNetworkHandler("IntroPlayAudio", function() {
 addEventHandler("OnPedDeath", function(event, ped) {
     if(ped.name != localPlayer.name) {
         ped.playAnimation(`game12 sara01 chyceni f.i3d`);
-        ped.kill();        
+        ped.kill();
     } else {
         let deathCam = new Vec3 (0, 0, 0);
         deathCam.x = localPlayer.position.x + 3;
@@ -68,6 +68,11 @@ addEventHandler("OnAddActor", function(event, actorType, actorName, model) {
     event.preventDefault();
 });
 // ===========================================================================
+
+addEventHandler("OnPedEnteredVehicle", function(event, ped, vehicle, seat) {
+    message(`${ped.name} has entered vehicle ${vehicle.id} seat ${seat}`);
+	triggerNetworkEvent("OnServerVehicle", client, vehicle);
+});
 
 // ===========================================================================
 

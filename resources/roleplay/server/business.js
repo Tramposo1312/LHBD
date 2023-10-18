@@ -143,7 +143,7 @@ addCommandHandler("binvite", (command, params, client) => {
                     businessInvitations.push(bInvitation);
 
 					messageClient(`You've sent an invitation to ${targetClient.name}`, client, COLOUR_ORANGE);
-					messageClient(`${client.name} has sent you an invitation to work for ${pFaction}. Use /accbiz to accept.`, targetClient, COLOUR_YELLOW);
+					messageClient(`${client.name} has sent you an invitation to work for ${pbusiness}. Use /accbiz to accept.`, targetClient, COLOUR_YELLOW);
 				}
 			} else {
 				message(`This kid ${client.name} from ${pBusiness} tried to send a work invitation to himself. Laugh at this fucking autistic.`);
@@ -160,20 +160,20 @@ addCommandHandler("binvite", (command, params, client) => {
 
 
 
-addCommandHandler("accfam", (command, params, client) => {
+addCommandHandler("accbiz", (command, params, client) => {
     const businessInvitation = businessInvitations.find((bInvitation) => bInvitation.invitee === client.name);
 
     if (businessInvitation) {
-        db.query(`INSERT INTO factions (fac, soldiers) VALUES('${businessInvitation.faction}', '${client.name}')`)
-        messageClient(`You've accepted the invitation to join ${businessInvitation.faction} family.`, client, COLOUR_GREEN);
+        db.query(`INSERT INTO businesss (fac, soldiers) VALUES('${businessInvitation.business}', '${client.name}')`)
+        messageClient(`You've accepted the invitation to work for ${businessInvitation.business} business.`, client, COLOUR_GREEN);
 
         const inviterClient = businessInvitation.inviter;
         if (inviterClient) {
-            messageClient(`${client.name} has accepted your invitation to join ${businessInvitation.faction} family.`, inviterClient, COLOUR_GREEN);
+            messageClient(`${client.name} has accepted your invitation to work for ${businessInvitation.business} business.`, inviterClient, COLOUR_GREEN);
         }
 
         businessInvitations.splice(businessInvitations.indexOf(businessInvitation), 1);
     } else {
-        messageClient("You don't have any pending family invitations.", client, COLOUR_RED);
+        messageClient("You don't have any pending business jobs invitations.", client, COLOUR_RED);
     }
 });
