@@ -14,7 +14,7 @@ let LastPlayerPosition = new Vec3 (0, 0, 0);
 // ===========================================================================
 
 bindEventHandler("OnResourceStart", thisResource, function(event, resource, client) {
-	
+
 	if(game.mapName == "FREERIDENOC" || game.mapName == "FREERIDE") {
 		initVehicleScript();
 	}
@@ -161,6 +161,7 @@ addCommandHandler("dummy", (command, params, client) => {
 		messageInfo("Failed to create a dummy.");
 	}
 })
+
 addCommandHandler("audio", (command, params, client) => {
 	triggerNetworkEvent("playAudio", client)
 })
@@ -2119,140 +2120,6 @@ addCommandHandler("accfam", (command, params, client) => {
     }
 });
 
-//===========================================================================================================
-// ANIMAIONS
-addCommandHandler("talk", (command, params, client) => {
-	playClientAnimation(`Gestikulace05.i3d`);
-});
-
-addCommandHandler("point", (command, params, client) => {
-	playClientAnimation(`GestoPojdSem02.i3d`);
-})
-
-addCommandHandler("drink", (command, params, client) => {
-	playClientAnimation(`GestSklNapitise.i3d`);
-})
-addCommandHandler("wound", (command, params, client) => {
-	playClientAnimation(`game12 sara01 chyceni f.i3d`);
-})
-
-//===========================================================================================================
-// HANDLING ALL THE BUSINESS SHIT
-/*class LiquorType {
-	constructor(name, description, pricePerUnit) {
-	  this.name = name;
-	  this.description = description;
-	  this.pricePerUnit = pricePerUnit;
-	}
-  }
-
-  const whiskey = new LiquorType("Whiskey", "A strong and aged spirit.", 10.0);
-  const vodka = new LiquorType("Vodka", "A clear and neutral spirit.", 8.0);
-  const rum = new LiquorType("Rum", "A sweet and spiced spirit.", 12.0);
-  const gin = new LiquorType("Gin", "A herbal and aromatic spirit.", 9.0);
-  const tequila = new LiquorType("Tequila", "A Mexican agave spirit.", 11.0);
-
-  const liquorTypes = {
-	whiskey,
-	vodka,
-	rum,
-	gin,
-	tequila,
-  };
-
-class Business {
-	constructor(name, owner, location, employees, inventory) {
-	  this.name = name;
-	  this.owner = owner;
-	  this.location = location;
-	  this.employees = employees;
-	  this.inventory = inventory;
-	  this.profit = 0;
-	}
-
-	calculateInventoryValue() {
-	  let totalValue = 0;
-	  for (const item of this.inventory) {
-		totalValue += item.price * item.quantity;
-	  }
-	  return totalValue;
-	}
-
-
-	runBusinessDay() {
-	  // Simulate various business operations, such as serving customers, restocking inventory, and more
-	  // Update profit based on daily transactions
-	  const dailyIncome = /* Calculate daily income based on sales /
-	  this.profit += dailyIncome;
-	}
-  }
-
-  // Example usage:
-  const speakeasy = new Business(
-	"Speakeasy Bar",
-	"Al Capone",
-	"123 Gangster Street",
-	["Bartender1", "Bartender2", "SecurityGuard"],
-	[
-	  { name: "Whiskey", price: 10.0, quantity: 100 },
-	  { name: "Vodka", price: 8.0, quantity: 80 },
-	  // ...other inventory items
-	]
-  );
-
-  // Calculate the value of the inventory
-  const inventoryValue = speakeasy.calculateInventoryValue();
-  console.log(`Inventory value: $${inventoryValue}`);
-
-  // Simulate a day of business operations
-  speakeasy.runBusinessDay();
-  console.log(`Today's profit: $${speakeasy.profit}`);
-
-
-let businessTypesNames = {
-	1: "Bar",
-	2: "Restaurant",
-	3: "Warehouse",
-	4: "Waste Management"
-}
-
- addCommandHandler("createbiz", (command, params, client) => {
-	if (client.administrator) {
-		let splitParams = params.split(" ");
-		let bizName = splitParams[0];
-		let bizType = parseInt(splitParams.slice(1).join(" "), 10);
-        if (bizName === "" || bizType === "") {
-            messageClient('Usage: /createbiz <businessname> <businesstype ID>', client, COLOUR_GREEN);
-			messageClient('1: Bar', client, COLOUR_SILVER);
-			messageClient('2: Restaurant', client, COLOUR_SILVER);
-			messageClient('3: Warehouse', client, COLOUR_SILVER);
-			messageClient('4: Waste Management', client, COLOUR_SILVER);
-            return;
-        }
-
-       	db.query(`INSERT INTO businesses (biz, bizTypen, bizOwner) VALUES ('${bizName}', '${businessTypesNames[bizType]}', '${client.name}')`);
-        messageClient(`Business "${bizName}" has been created.`, client, COLOUR_GREEN);
-    } else {
-        messageClient("You are not authorized to make businesses.", client, COLOUR_ORANGE);
-    }
- });
-*/
-
-
-
-
-
-
-//==========================================================================================================================
-//HANDLING INVENTORY SYSTEM
-
-
-
-
-//==========================================================================================================================
-//FACTION SYSTEM
-
-//======================================================================================================
 /*
 addCommandHandler("caparts", (command, params, client) => {
 	if(client.administrator) {
@@ -2268,21 +2135,3 @@ addCommandHandler("enter", (command, params, client) => {
 	let entryRadius = 2.0;
 })
 */
-//======================================================================================================
-//BUSINESS SYSTEM
-
-function getBusinessTypeName(type) {
-    const businessTypes = {
-        1: "Clothing Store",
-        2: "Restaurant",
-        3: "Bar",
-        4: "New Car Dealership",
-        5: "Used Car Dealership",
-        6: "24/7",
-        7: "Gun Shop",
-    };
-
-    return businessTypes[type] || "Undefined";
-}
-// ===================================================================================================
-//SERVERVEHICLES

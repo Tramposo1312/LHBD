@@ -3,12 +3,12 @@ const businessInvitations = [];
 class Business {
     constructor(name, type, owner = null, employees = [], posX, posY, posZ, items, money) {
         this.name = name;
-        this.type = type; 
-        this.owner = owner; 
+        this.type = type;
+        this.owner = owner;
         this.employees = employees;
         this.posX = posX;
         this.posY = posY;
-        this.posZ = posZ;      
+        this.posZ = posZ;
         this.items = items;
         this.money = money;
     }
@@ -20,14 +20,14 @@ class Business {
     hireEmployee(employee) {
       this.employees.push(employee);
     }
-  
+
     fireEmployee(employee) {
       const index = this.employees.indexOf(employee);
       if (index !== -1) {
         this.employees.splice(index, 1);
       }
     }
-  
+
     changeOwner(newOwner) {
       this.owner = newOwner;
     }
@@ -60,8 +60,8 @@ class Business {
 
 function retrieveBusinessesFromDatabase() {
     const businesses = [];
-  
-    for (let bizID = 1; bizID <= 10; bizID++) { 
+
+    for (let bizID = 1; bizID <= 10; bizID++) {
     const nameQuery = db.query(`SELECT bizName FROM biznizs WHERE id = '${bizID}'`);
     const itemsQuery = db.query(`SELECT bizItems FROM biznizs WHERE id = '${bizID}'`);
     const xPosQuery = db.query(`SELECT bizposX FROM biznizs WHERE id = '${bizID}'`);
@@ -74,13 +74,13 @@ function retrieveBusinessesFromDatabase() {
 
     if (String(nameQuery).length > 1) {
         const name = String(nameQuery);
-        const items = String(itemsQuery); 
+        const items = String(itemsQuery);
         const xPos = parseFloat(xPosQuery);
         const yPos = parseFloat(yPosQuery);
         const zPos = parseFloat(zPosQuery);
         const owner = String(ownerQuery);
         const type = String(typeQuery);
-        const employees = String(employeesQuery); 
+        const employees = String(employeesQuery);
         const money = parseFloat(moneyQuery);
 
         const business = new Business(name, type, owner, employees, xPos, yPos, zPos, items, money);
@@ -102,8 +102,22 @@ function initBusinessScript() {
     }
 }
 
+function getBusinessTypeName(type) {
+    const businessTypes = {
+        1: "Clothing Store",
+        2: "Restaurant",
+        3: "Bar",
+        4: "New Car Dealership",
+        5: "Used Car Dealership",
+        6: "24/7",
+        7: "Gun Shop",
+    };
+
+    return businessTypes[type] || "Undefined";
+}
 
 //COMMANDS
+
 addCommandHandler("binvite", (command, params, client) => {
 
     let targetClient = getClientFromParams(params);
@@ -126,7 +140,7 @@ addCommandHandler("binvite", (command, params, client) => {
                         business: String(pBusiness),
                     };
 
-                    businessInvitations.push(invitation);
+                    businessInvitations.push(bInvitation);
 
 					messageClient(`You've sent an invitation to ${targetClient.name}`, client, COLOUR_ORANGE);
 					messageClient(`${client.name} has sent you an invitation to work for ${pFaction}. Use /accbiz to accept.`, targetClient, COLOUR_YELLOW);
@@ -142,4 +156,24 @@ addCommandHandler("binvite", (command, params, client) => {
 		return;
 	}
 
-})  
+})
+
+
+
+addCommandHandler("accfam", (command, params, client) => {
+    const businessInvitation = businessInvitations.find((bInvitation) => bInvitation.invitee === client.name);
+
+    if (businessInvitation) {
+        db.query(`INSERT INTO factions (fac, soldiers) VALUES('${businessInvitation.faction}', '${client.name}')`)
+        messageClient(`You've accepted the invitation to join ${businessInvitation.faction} family.`, client, COLOUR_GREEN);
+
+        const inviterClient = businessInvitation.inviter;
+        if (inviterClient) {
+            messageClient(`${client.name} has accepted your invitation to join ${businessInvitation.faction} family.`, inviterClient, COLOUR_GREEN);
+        }
+
+        businessInvitations.splice(businessInvitations.indexOf(businessInvitation), 1);
+    } else {
+        messageClient("You don't have any pending family invitations.", client, COLOUR_RED);
+    }
+});
