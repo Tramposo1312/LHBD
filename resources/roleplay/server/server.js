@@ -53,9 +53,7 @@ let PlayerFactionSpawn = new Vec3 (0, 0, 0);
 
 
 // ===========================================================================
-addEventHandler("OnPedEnteredVehicle", (event, client, vehicle) => {
 
-})
 
 addCommandHandler("vdbg", (command, params, client) => {
 	if(client.player.vehicle) {
@@ -182,9 +180,6 @@ addCommandHandler("mymoney", (command, params, client) => {
 
 function hudClientMoney(ClientMoney, client) {
     triggerNetworkEvent("hudMoney", client, ClientMoney);
-}
-function playClientAnimation(anAnimation, client) {
-	triggerNetworkEvent("AnimationPlay", client, anAnimation);
 }
 
 
@@ -426,7 +421,6 @@ addEventHandler("OnPlayerQuit", (event, client, reasonId) => {
     if(loggedIn){
 		db.query(`UPDATE users SET lastX = '${client.player.position.x}', lastY = '${client.player.position.y}', lastZ = '${client.player.position.z}' WHERE username = '${client.name}'`);
 		db.query(`UPDATE users SET weapon1 = '', weapon2 = '', weapon3 = '' WHERE username = '${client.name}'`)
-
 	}
 	loggedIn = false;
 });

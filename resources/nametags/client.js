@@ -60,8 +60,8 @@ function drawLabel(x, y, text, distance, colour) {
 	y -= 2;
 
 	if (labelFont != null) {
-		let lSize = labelFont.measure(text, game.width, 0.0, 0.0, labelFont.size, false, false);
-		nametagFont.render(text, [x - lSize[0] / 2, y - lSizeize[1] / 2], game.width, 0.0, 0.0, labelFont.size, colour, false, false, false, true);
+		let lSize = labelFont.measure(text, game.width, labelFont.size);
+		labelFont.render(text, [x - lSize[0] / 2, y - lSizeize[1] / 2], game.width, labelFont.size, colour);
 	}
 }
 
@@ -148,11 +148,10 @@ function updateLabel(element) {
 		let ScreenPosition = getScreenFromWorldPosition(elementPosition);
 		if (ScreenPosition[2] >= 0.0) {
 			let theDistance = getDistance(playerPosition, elementPosition);
-			if (distance < labelDistance) {
+			if (theDistance < labelDistance) {
 				if (element.type == ELEMENT_PED) {
 					let theColour = COLOUR_YELLOW;
-					let theText = "EY COME HERE FOO!"
-					drawLabel(ScreenPosition.x, ScreenPosition.y, theText, theDistance, theColour);
+					drawLabel(ScreenPosition.x, ScreenPosition.y, element.name, theDistance, theColour);
 				}
 			}
 		}
@@ -190,14 +189,7 @@ function updateNametags(element) {
 					}
 					drawNametag(screenPos.x, screenPos.y, health, armour, element.name, 0, 1.0 - distance / nametagDistance, distance, colour, afk, element.skin);
 				}
-				if (element.type == ELEMENT_PED) {
-					let colour = COLOUR_WHITE;
-					let afk = false;
-					if (element.getData("v.afk") > 0) {
-						afk = true;
-					}
-					drawNametag(screenPos.x, screenPos.y, false, false, "TEST TEST", 0, 1.0 - distance / nametagDistance, distance, colour, afk, element.skin);
-				}
+				
 			}
 		}
 	}

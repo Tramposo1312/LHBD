@@ -69,10 +69,6 @@ addEventHandler("OnAddActor", function(event, actorType, actorName, model) {
 });
 // ===========================================================================
 
-addEventHandler("OnPedEnteredVehicle", function(event, ped, vehicle, seat) {
-    message(`${ped.name} has entered vehicle ${vehicle.id} seat ${seat}`);
-	triggerNetworkEvent("OnServerVehicle", client, vehicle);
-});
 
 // ===========================================================================
 
@@ -109,6 +105,19 @@ addNetworkHandler("playAudio", function() {
     }
 
 })
+
+addEventHandler("OnPedEnteringVehicle", function(event, ped, vehicle, seat) {
+    message(`${ped.name} is entering THE AHAHA FUCKING vehicle ${vehicle.id} seat ${seat}`);
+    let vehCheck = getVehicleData(vehicle, "forRent");
+    if(vehCheck == true) {
+        message("True Veh");
+	} else {
+        message("False Veh");
+    }
+});
+
+
+
 /*
 const loginDialog = new GUIWindow("LoginDialog", "Login/Register", 100, 100, 400, 200);
 

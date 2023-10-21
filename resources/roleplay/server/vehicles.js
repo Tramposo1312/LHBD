@@ -2,25 +2,16 @@
 
 
 //NETWORK HANDLERS
-addNetworkHandler("OnServerVehicle", function(playerVeh) {
-	playerVeh = client.player.vehicle;
-	let vehCheck = getVehicleData(playerVeh, "forRent");
-	if(vehCheck == true) {
-		console.log("[TRMPOSO] PLayer's vehicle is server's. Success")
-	} else {
-		console.log("[TRMPOSO] Player's vehicle is not a server's. Failure")
-	}
-})
-//EVENT HANDLERS
 
-addEventHandler("OnPedEnteredVehicle", function(event, client, vehicle, seat) {
-    message(`${client.name} has entered vehicle ${vehicle.id} seat ${seat}`);
-	let vDebugS = getVehicleData(vehicle);
-	if(vDebugS == true) {
-		messageClient("You need to rent this vehicle. use /rentveh", client, COLOUR_ORANGE);
+//EVENT HANDLERS
+addEventHandler("OnPedEnteringVehicle", function(event, ped, vehicle, seat) {
+    message(`${ped.name} is entering THE AHAHA FUCKING vehicle ${vehicle.id} seat ${seat}`);
+    let vehCheck = getVehicleData(vehicle, "forRent");
+    if(vehCheck == true) {
+        message("True Veh");
 	} else {
-		messageClient("You don't need to rent this vehicle.", client, COLOUR_GREEN);
-	}
+        message("False Veh");
+    }
 });
 
 
@@ -76,9 +67,10 @@ function initVehicleScript() {
 	console.log('[TRMPOSO] Vehicle script initialised successfully.');
 }
 
-//COMANDS
+//COMMANDS
 
 addCommandHandler("engine", (command, params, client) => {
+	
 	if (!client.player.vehicle) {
 		messageClient("You need to be in a vehicle!", client, COLOUR_RED);
 		return false;
@@ -89,11 +81,6 @@ addCommandHandler("engine", (command, params, client) => {
 	} else {
 		client.player.vehicle.engine = !client.player.vehicle.engine;
 		messageInfo(`${client.name} turned their vehicle engine ${(client.player.vehicle.engine) ? "on" : "off"}`);
-	}
-
-	if(game.mapName == "FREERIDENOC") {
-		client.player.vehicle.lights = !client.player.vehicle.lights;
-		return;
 	}
 
 });
@@ -124,6 +111,25 @@ addCommandHandler("sveh", (command, params, client) => {
 		}
 	} else {
 			messageClient('Youre not an admin.', client, COLOUR_ORANGE);
+	}
+});
+
+
+addCommandHandler("veh", (command, params, client) => {
+	let model = getVehicleModelFromParams(params);
+
+	if (!model) {
+		message("That vehicle model is invalid!");
+		return false;
+	}
+
+	let frontOfPlayer = getPosInFrontOfPos(client.player.position, client.player.heading, 5);
+	let vehicle = game.createVehicle(`${model}.i3d`, frontOfPlayer, client.player.heading);
+
+	if (vehicle) {
+		message(`${client.name} spawned a ${vehicleNames[vehicleModels.indexOf(model)]} vehicle`, COLOUR_YELLOW);
+	} else {
+		messageClient(`Vehicle failed to create!`, COLOUR_ORANGE);
 	}
 });
 

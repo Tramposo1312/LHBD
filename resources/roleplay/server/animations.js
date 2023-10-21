@@ -1,3 +1,8 @@
+function playClientAnimation(anAnimation, client) {
+	triggerNetworkEvent("AnimationPlay", client, anAnimation);
+}
+
+
 addCommandHandler("talk", (command, params, client) => {
 	playClientAnimation(`Gestikulace05.i3d`);
 });

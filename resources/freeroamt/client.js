@@ -14,7 +14,7 @@
 // ===========================================================================
 
 addEventHandler("OnPedEnteringVehicle", function(event, ped, vehicle, seat) {
-    message(`${ped.name} is entering vehicle ${vehicle.id} seat ${seat}`);
+    message(`${ped.name} is entering THE FYCJUBG vehicle ${vehicle.id} seat ${seat}`);
 });
 
 // ===========================================================================
