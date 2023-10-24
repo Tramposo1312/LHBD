@@ -3,13 +3,9 @@
 // ----------------------------------------------------------------------------
 
 // Configuration
-let labelFont = null;
 let nametagFont = null;
 let afkStatusFont = null;
 let pingFont = null;
-let labelDistance = 20;
-let labelWidth = 70;
-let labelColour = [255, 195, 0];
 let nametagDistance = 50.0;
 let nametagWidth = 70;
 let nametagColour = [
@@ -52,18 +48,7 @@ function getDistance(pos1, pos2) {
 }
 
 // ----------------------------------------------------------------------------
-function drawLabel(x, y, text, distance, colour) {
-	if (labelFont == null) {
-		return false;
-	}
 
-	y -= 2;
-
-	if (labelFont != null) {
-		let lSize = labelFont.measure(text, game.width, labelFont.size);
-		labelFont.render(text, [x - lSize[0] / 2, y - lSizeize[1] / 2], game.width, labelFont.size, colour);
-	}
-}
 
 function drawNametag(x, y, health, armour, text, ping, alpha, distance, colour, afk, skin) {
 	if (nametagFont == null) {
@@ -112,7 +97,7 @@ function drawNametag(x, y, health, armour, text, ping, alpha, distance, colour, 
 		let colourT = createColour(Math.floor(255.0 * alpha), 255, 255, 255);
 		nametagFont.render(text, [x - size[0] / 2, y - size[1] / 2], game.width, 0.0, 0.0, nametagFont.size, colour, false, false, false, true);
 	}
-
+	
 	// Go up another 10 pixels for the next part
 	y -= 30;
 
@@ -137,26 +122,7 @@ function drawNametag(x, y, health, armour, text, ping, alpha, distance, colour, 
 }
 
 // ----------------------------------------------------------------------------
-function updateLabel(element) {
-	if(localPlayer != null) {
-		let playerPosition = localPlayer.position;
-		let elementPosition = element.position;
-		let thePeds = getElementsByType(ELEMENT_PED);
 
-		elementPosition.y += 2;
-
-		let ScreenPosition = getScreenFromWorldPosition(elementPosition);
-		if (ScreenPosition[2] >= 0.0) {
-			let theDistance = getDistance(playerPosition, elementPosition);
-			if (theDistance < labelDistance) {
-				if (element.type == ELEMENT_PED) {
-					let theColour = COLOUR_YELLOW;
-					drawLabel(ScreenPosition.x, ScreenPosition.y, element.name, theDistance, theColour);
-				}
-			}
-		}
-	}
-}
 function updateNametags(element) {
 	if (localPlayer != null) {
 		let playerPos = localPlayer.position;
@@ -223,13 +189,6 @@ addEventHandler("OnDrawnHUD", function (event) {
 			updateNametags(peds[i]);
 		}
 	}
-	let namedPeds = getElementsByType(ELEMENT_PED);
-	for (let i in namedPeds) {
-		if (namedPeds[i] != localPlayer) {
-			updateLabel(namedPeds[i]);
-		}
-	}
-	
 });
 
 // ----------------------------------------------------------------------------

@@ -1,18 +1,8 @@
 //DEFINES
 
-
 //NETWORK HANDLERS
 
 //EVENT HANDLERS
-addEventHandler("OnPedEnteringVehicle", function(event, ped, vehicle, seat) {
-    message(`${ped.name} is entering THE AHAHA FUCKING vehicle ${vehicle.id} seat ${seat}`);
-    let vehCheck = getVehicleData(vehicle, "forRent");
-    if(vehCheck == true) {
-        message("True Veh");
-	} else {
-        message("False Veh");
-    }
-});
 
 
 //FUNCTIONS
@@ -70,7 +60,7 @@ function initVehicleScript() {
 //COMMANDS
 
 addCommandHandler("engine", (command, params, client) => {
-	
+
 	if (!client.player.vehicle) {
 		messageClient("You need to be in a vehicle!", client, COLOUR_RED);
 		return false;
@@ -135,3 +125,30 @@ addCommandHandler("veh", (command, params, client) => {
 
 
 //FACTION VEHS
+addCommandHandler("sveh", (command, params, client) => {
+	if(client.administrator) {
+		let model = getVehicleModelFromParams(params);
+
+		if (!model) {
+			messageClient("That vehicle model is invalid!");
+			return false;
+		}
+
+		let frontOfPlayer = getPosInFrontOfPos(client.player.position, client.player.heading, 5);
+		let sVehicle = game.createVehicle(`${model}.i3d`, frontOfPlayer, client.player.heading);
+
+		if (sVehicle) {
+			messageClient(`${client.name} spawned a ${vehicleNames[vehicleModels.indexOf(model)]} vehicle`, client, COLOUR_YELLOW);
+			let sVehDebug = db.query(`INSERT INTO svehs (model, posX, posY, posZ, heading) VALUES ('${model}', '${frontOfPlayer.x}', '${frontOfPlayer.y}', '${frontOfPlayer.z}', '${client.player.heading}')`);
+			if(sVehDebug) {
+				messageClient('Vehicle saved successfully.', client, COLOUR_GREEN)
+			} else {
+				messageClient('Something wrong happened', client, COLOUR_ORANGE);
+			}
+		} else {
+			messageClient(`Vehicle failed to create!`, client, COLOUR_ORANGE);
+		}
+	} else {
+			messageClient('Youre not an admin.', client, COLOUR_ORANGE);
+	}
+});

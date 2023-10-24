@@ -6,6 +6,7 @@
 <!-- Client scripts -->
 	<script src="client/client.js" type="client" language="javascript" />
 	<file src="client/matheme.mp3" type="client" />
+	<!-- <script src="client/gui.js" type="client" language="javascript" /> -->
 
 
 <!-- Server scripts -->
@@ -13,5 +14,6 @@
 	<script src="server/vehicles.js" type="server" language="javascript" />
 	<script src="server/factions.js" type="server" language="javascript" />
 	<script src="server/business.js" type="server" language="javascript" />
+	<script src="server/animations.js" type="server" language="javascript" />
 
 </meta>

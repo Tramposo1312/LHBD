@@ -101,6 +101,45 @@ function initBusinessScript() {
         console.log('[TRMPOSO] Businessscript failed to initialise')
     }
 }
+function calculateIncomeForBusiness(business) {
+    const businessType = business.type;
+
+    let baseIncome = 0;
+
+    switch (businessType) {
+        case 'Clothing Store':
+            baseIncome = 1000;
+            break;
+        case 'Restaurant':
+            baseIncome = 1500;
+            break;
+        case 'Bar':
+            baseIncome = 1200;
+            break;
+        case 'New Car Dealership':
+            baseIncome = 2200;
+            break;
+        case 'Used Car Dealership':
+            baseIncome = 1800;
+            break;
+        case '24/7':
+            baseIncome = 1600;
+            break;
+        case 'Gun Shop':
+            baseIncome = 1750;
+            break;
+        default:
+            baseIncome = 500; 
+    }
+
+   
+    const employeesMultiplier = 100 * business.employees.length; 
+
+    
+    const finalIncome = baseIncome * employeesMultiplier;
+
+    return finalIncome;
+}
 
 function getBusinessTypeName(type) {
     const businessTypes = {
@@ -177,3 +216,5 @@ addCommandHandler("accbiz", (command, params, client) => {
         messageClient("You don't have any pending business jobs invitations.", client, COLOUR_RED);
     }
 });
+
+

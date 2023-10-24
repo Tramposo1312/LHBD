@@ -11,16 +11,35 @@ const pendingInvitations = [];
 let dyncbuilds = [];
 let LastPlayerPosition = new Vec3 (0, 0, 0);
 
+const VehicleOwnerType = {
+	None: 0,
+	Player: 1,
+	Faction: 2,
+	PublicJob: 3,
+	Temp: 4
+};
+
+
 // ===========================================================================
 
 bindEventHandler("OnResourceStart", thisResource, function(event, resource, client) {
-
+	//INIT FUNCTIONS
 	if(game.mapName == "FREERIDENOC" || game.mapName == "FREERIDE") {
 		initVehicleScript();
 	}
-
 	initFactionScript();
-	initBusinessScript();
+	initBusinessScript(); 
+	
+	//GLOBAL CONFIGS
+	const PedSkins = {
+		Detectives: [52, 53, 54],
+		Police: [34, 35, 36, 127, 128, 240, 241, 242, 243, 244, 245, 246],
+		Normal: [3, 4, 8, 14, 16, 20, 21, 23, 24, 25, 26, 27, 29, 30, 32, 33, 37, 38, 39, 40, 41, 44, 46, 47, 48, 49, 50, 51, 55, 56, 57, 58, 59, 60, 61, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 75, 76, 79, 81, 88, 90, 91, 92, 93, 94, 95, 96, 97, 99, 101, 102, 103, 104, 105, 106, 107, 108, 110, 111, 113, 114, 115, 116, 118, 119, 120, 121, 122, 126, 129, 130, 131, 133, 134, 135, 136, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 151, 152, 153, 160, 162, 165, 167, 168, 169, 171, 172, 173, 174, 175, 181, 182, 183, 184, 185, 186, 188, 189, 190, 191, 192, 194, 195, 196, 198, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 215, 216, 217, 219, 220, 221, 223, 225, 227, 229, 230, 231, 232, 233, 235, 236, 237, 239, 247, 248, 249, 251, 253, 254, 256, 258, 260, 261, 262, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 277, 279, 281, 282, 283, 284, 285, 287, 288, 290, 291, 292, 294, 295, 296],
+		Blocked: [1, 2, 5, 6, 7, 9, 10, 11, 12, 13, 15, 17, 18, 19, 22, 28, 31, 42, 43, 45, 62, 63, 74, 77, 78, 80, 82, 83, 84, 85, 86, 87, 89, 98, 100, 109, 112, 117, 123, 124, 125, 132, 137, 149, 150, 154, 155, 156, 157, 158, 159, 161, 163, 164, 166, 170, 176, 177, 178, 179, 170, 187, 193, 197, 199, 214, 218, 222, 224, 226, 228, 234, 238, 250, 252, 255, 257, 259, 263, 279, 278, 280, 286, 289, 293, 297, 298, 299, 300, 301, 302, 303],
+		Gangsters: [],
+	  };
+
+
 });
 
 
@@ -45,6 +64,59 @@ let vila = [106.33, -5.11, 171.22];
 //SPAWNS
 let PlayerFactionSpawn = new Vec3 (0, 0, 0);
 
+//FUNCTIONS
+function getCardinalDirection(fX1, fZ1, fX2, fZ2) {
+    const a = fX1 - fX2;
+    const b = fZ1 - fZ2;
+    const x = Math.abs(a);
+    const y = Math.abs(b);
+
+    const no = 0;
+    const ne = 1;
+    const ea = 2;
+    const se = 3;
+    const so = 4;
+    const sw = 5;
+    const we = 6;
+    const nw = 7;
+    const na = 8; // Unknown (not available)
+
+    if (b < 0 && a < 0) {
+        if (x < y / 2) {
+            return no;
+        } else if (y < x / 2) {
+            return ea;
+        } else {
+            return ne;
+        }
+    } else if (b < 0 && a >= 0) {
+        if (x < y / 2) {
+            return no;
+        } else if (y < x / 2) {
+            return we;
+        } else {
+            return nw;
+        }
+    } else if (b >= 0 && a >= 0) {
+        if (x < y / 2) {
+            return so;
+        } else if (y < x / 2) {
+            return we;
+        } else {
+            return sw;
+        }
+    } else if (b >= 0 && a < 0) {
+        if (x < y / 2) {
+            return so;
+        } else if (y < x / 2) {
+            return ea;
+        } else {
+            return se;
+        }
+    } else {
+        return na;
+    }
+}
 
 
 
@@ -455,23 +527,7 @@ addEventHandler("OnPlayerChat", (event, client, messageText) => {
 		})
  	}
 	messageClient(`${client.name} says: ${messageText}`, client, COLOUR_WHITE);
-	addToLog(`'${client.name} said: ${messageText}'`);
 });
-
-function addToLog(text)
-{
-	var file2 = openFile('chatlog.txt', false);
-	if(!file2)
-		return;
-	var filePreviousData = file2.readBytes(file2.length);
-	file2.close();
-
-	var file = openFile('chatlog.txt', true);
-	if(!file)
-		return;
-	file.writeBytes(filePreviousData+text+"\r\n");
-	file.close();
-}
 
 
 
