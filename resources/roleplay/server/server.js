@@ -28,8 +28,9 @@ bindEventHandler("OnResourceStart", thisResource, function(event, resource, clie
 		initVehicleScript();
 	}
 	initFactionScript();
-	initBusinessScript(); 
-	
+	initBusinessScript();
+
+
 	//GLOBAL CONFIGS
 	const PedSkins = {
 		Detectives: [52, 53, 54],
@@ -38,7 +39,7 @@ bindEventHandler("OnResourceStart", thisResource, function(event, resource, clie
 		Blocked: [1, 2, 5, 6, 7, 9, 10, 11, 12, 13, 15, 17, 18, 19, 22, 28, 31, 42, 43, 45, 62, 63, 74, 77, 78, 80, 82, 83, 84, 85, 86, 87, 89, 98, 100, 109, 112, 117, 123, 124, 125, 132, 137, 149, 150, 154, 155, 156, 157, 158, 159, 161, 163, 164, 166, 170, 176, 177, 178, 179, 170, 187, 193, 197, 199, 214, 218, 222, 224, 226, 228, 234, 238, 250, 252, 255, 257, 259, 263, 279, 278, 280, 286, 289, 293, 297, 298, 299, 300, 301, 302, 303],
 		Gangsters: [],
 	  };
-
+	//DECLARES
 
 });
 
@@ -166,6 +167,13 @@ addEventHandler("OnPlayerJoined", (event, client) => {
 				const paycheckInterval = 3600000;
 
 				setInterval(() => {
+					let PlayerMoney = db.query(`SELECT money FROM users WHERE username = '${client.name}'`);
+					PlayerMoney = parseInt(PlayerMoney, 10) | 0;
+					hudClientMoney(PlayerMoney)
+				}, 1000)
+
+
+				setInterval(() => {
 
 					ClientMoney = ClientMoney + PaycheckMoney;
 					db.query(`UPDATE users SET money = ${ClientMoney} WHERE username = '${client.name}'`);
@@ -186,6 +194,8 @@ addEventHandler("OnPlayerJoined", (event, client) => {
 		PlayerFactionSpawn.y = parseFloat(db.query(`SELECT facY FROM factions WHERE soldiers= '${client.name}'`));
 		PlayerFactionSpawn.z = parseFloat(db.query(`SELECT facZ FROM factions WHERE soldiers= '${client.name}'`));
 	}
+
+
 	//GUNS
 
 });

@@ -19,6 +19,7 @@ addEventHandler("OnResourceReady", function(event, resource) {
         IntroSong = audio.createSound(audioFile, false);
     }
     message(`${IntroSong}`);
+    initLoginGUI();
 });
 
 addNetworkHandler("IntroPlayAudio", function() {
@@ -35,28 +36,15 @@ addNetworkHandler("IntroPlayAudio", function() {
 addEventHandler("OnPedDeath", function(event, ped) {
     if(ped.name != localPlayer.name) {
         ped.playAnimation(`game12 sara01 chyceni f.i3d`);
-        ped.kill();
+        ped.despawnPlayer();
     } else {
-        let pos = localPlayer.position;
-        let rotation = localPlayer.heading;
-
-        // Calculate the camera's position
-        let result = atan2(rotation.z, rotation.x) * 180.0 / PI;
-        result = (360.0 - 90.0) - result;
-
-        // Define camera offsets
-        let cameraDistance = 4.0; // Adjust this value for the camera distance
-        let cameraHeight = 3.0; // Adjust this value for the camera height
-
-        // Calculate camera position and look-at position
-        let behind = getPosBehindPos(pos.x, pos.y, pos.z, degreesToRadians(result), cameraDistance);
-        let cameraLookFrom = new Vec3(behind.x, behind.y + cameraHeight, behind.z);
-        let cameraLookAtPos = new Vec3(pos.x, pos.y + 2.5, pos.z);
-
-        // Smoothly transition the camera view
-
-
-        game.setCameraLookAt(cameraLookFrom, cameraLookAtPos, true);
+        let deathCam = new Vec3 (0, 0, 0);
+        deathCam.x = localPlayer.position.x + 3;
+        deathCam.y = localPlayer.position.y + 3;
+        deathCam.z = localPlayer.position.z;
+        game.setCameraLookAt(deathCam, localPlayer.position, true);
+        localPlayer.playAnimation(`game12 sara01 chyceni f.i3d`);
+        localPlayer.respawn(Hospital);
     }});
 // ===========================================================================
 addEventHandler("OnMapLoaded", function(event, mapName) {
@@ -73,26 +61,7 @@ addEventHandler('onPedInflictDamage', function(event, ped, responsibleEntity, we
 
 });
 addEventHandler("OnRender", function() {
-    let pos = localPlayer.position;
-    let rotation = localPlayer.heading;
 
-    // Calculate the camera's position
-    let result = atan2(rotation.z, rotation.x) * 180.0 / PI;
-    result = (360.0 - 90.0) - result;
-
-    // Define camera offsets
-    let cameraDistance = 4.0; // Adjust this value for the camera distance
-    let cameraHeight = 3.0; // Adjust this value for the camera height
-
-    // Calculate camera position and look-at position
-    let behind = getPosBehindPos(pos.x, pos.y, pos.z, degreesToRadians(result), cameraDistance);
-    let cameraLookFrom = new Vec3(behind.x, behind.y + cameraHeight, behind.z);
-    let cameraLookAtPos = new Vec3(pos.x, pos.y + 2.5, pos.z);
-
-    // Smoothly transition the camera view
-
-
-    game.setCameraLookAt(cameraLookFrom, cameraLookAtPos, true);
 });
 
 addEventHandler("OnDrawnHUD", function () {
@@ -122,7 +91,7 @@ addEventHandler("onPedSpawn", (event, ped) => {
     if(ped.name == "Charles Guiliano") {
         ped.playAnimation(`Gestikulace05.i3d`);
     }
-    createLoginGUI();
+    // createLoginGUI();
 });
 
 addNetworkHandler("mapChanging", function(newMap) {

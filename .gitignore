@@ -8,3 +8,4 @@
 *.log
 /htdocs
 logs/ServerLog.log
+*.log

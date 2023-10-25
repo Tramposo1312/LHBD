@@ -66,6 +66,7 @@
 		<resource src="scoreboard" />
 		<resource src="v-servernames" />
 		<resource src="v-help" />
+		<!-- <resource src="MexUI" /> -->
 
 	</resources>
 </server>

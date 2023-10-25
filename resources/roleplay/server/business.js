@@ -1,4 +1,6 @@
 const businessInvitations = [];
+const ServerBusinesses = [];
+let playerBusinessPos = new Vec3(0, 0, 0);
 
 class Business {
     constructor(name, type, owner = null, employees = [], posX, posY, posZ, items, money) {
@@ -28,6 +30,11 @@ class Business {
       }
     }
 
+    getEmployees() {
+        return this.employees;
+    }
+
+
     changeOwner(newOwner) {
       this.owner = newOwner;
     }
@@ -50,16 +57,105 @@ class Business {
         }
     }
 
-    generateIncome(income) {
-        this.money += income;
+    generateIncome() {
+        let baseIncome = 0;
+
+        switch (this.type) {
+            case 'Clothing Store':
+                baseIncome = 1000;
+                break;
+            case 'Restaurant':
+                baseIncome = 1500;
+                break;
+            case 'Bar':
+                baseIncome = 1200;
+                break;
+            case 'New Car Dealership':
+                baseIncome = 2200;
+                break;
+            case 'Used Car Dealership':
+                baseIncome = 1800;
+                break;
+            case '24/7':
+                baseIncome = 1600;
+                break;
+            case 'Gun Shop':
+                baseIncome = 1750;
+                break;
+            default:
+                baseIncome = 500;
+        }
     }
-
-
 }
 
+const businessTypes = {
+    1: "Clothing Store",
+    2: "Restaurant",
+    3: "Bar",
+    4: "24/7",
+    5: "Used Car Dealership",
+    6: "New Car Dealership",
+    7: "Gun Shop",
+};
 
+function getBusinessTypeName(type) {
+    return businessTypes[type] || "Undefined";
+}
+
+addCommandHandler("cbiz", (command, params, client) => {
+
+    let splitParams = params.split(" ");
+    let tmpBusinessName = splitParams[0];
+    let tmpBusinessType = parseInt(splitParams[1]);
+
+
+    if(tmpBusinessName == "" || !tmpBusinessName) {
+        messageClient("Name your business using /cbiz <name> <type id>", client, COLOUR_ORANGE);
+        messageClient("1: Clothing Store, 2: Restaurant, 3: Bar, 4: 24/7", client, COLOUR_ORANGE);
+    }
+    if(tmpBusinessType == "" || !tmpBusinessType) {
+        messageClient("Name your business using /cbiz <name> <type id>", client, COLOUR_ORANGE);
+    } else {
+        const tempBusiness = new Business();
+
+        tempBusiness.name = tmpBusinessName;
+        tempBusiness.type = getBusinessTypeName(tmpBusinessType);
+        tempBusiness.owner = owner;
+        tempBusiness.employees = employees;
+        tempBusiness.posX = client.player.position.x;
+        tempBusiness.posY = client.player.position.y;
+        tempBusiness.posZ = client.player.position.z;
+        tempBusiness.items = items;
+        tempBusiness.money = 0;
+
+        ServerBusinesses.push(tempBusiness);
+
+        messageClient(`Business ${tmpBusinessName} (${tempBusiness.type}) created successfully.`, client, COLOUR_GREEN);
+    }
+
+})
+
+function saveBusinessesToDatabase(businesses) {
+    businesses.forEach((business, index) => {
+        const bizID = index + 1;
+        const updateQueries = [
+            `UPDATE biznizs SET bizName = '${business.name}' WHERE id = ${bizID}`,
+            `UPDATE biznizs SET bizItems = '${business.items}' WHERE id = ${bizID}`,
+            `UPDATE biznizs SET bizposX = ${business.posX} WHERE id = ${bizID}`,
+            `UPDATE biznizs SET bizposY = ${business.posY} WHERE id = ${bizID}`,
+            `UPDATE biznizs SET bizposZ = ${business.posZ} WHERE id = ${bizID}`,
+            `UPDATE biznizs SET bizOwner = '${business.owner}' WHERE id = ${bizID}`,
+            `UPDATE biznizs SET bizType = '${business.type}' WHERE id = ${bizID}`,
+            `UPDATE biznizs SET bizEmployees = '${business.employees}' WHERE id = ${bizID}`,
+            `UPDATE biznizs SET bizMoney = ${business.money} WHERE id = ${bizID}`,
+        ];
+        updateQueries.forEach(query => {
+            db.query(query);
+        })
+    })
+}
 function retrieveBusinessesFromDatabase() {
-    const businesses = [];
+
 
     for (let bizID = 1; bizID <= 10; bizID++) {
     const nameQuery = db.query(`SELECT bizName FROM biznizs WHERE id = '${bizID}'`);
@@ -83,13 +179,13 @@ function retrieveBusinessesFromDatabase() {
         const employees = String(employeesQuery);
         const money = parseFloat(moneyQuery);
 
-        const business = new Business(name, type, owner, employees, xPos, yPos, zPos, items, money);
+        const serverbusiness = new Business(name, type, owner, employees, xPos, yPos, zPos, items, money);
 
-        businesses.push(business);
-        console.log(`${business}`);
+        ServerBusinesses.push(serverbusiness);
+        console.log(`${serverbusiness.name} retrieved successfully.`);
     }
 }
-return businesses;
+return ServerBusinesses;
 }
 
 function initBusinessScript() {
@@ -101,59 +197,8 @@ function initBusinessScript() {
         console.log('[TRMPOSO] Businessscript failed to initialise')
     }
 }
-function calculateIncomeForBusiness(business) {
-    const businessType = business.type;
 
-    let baseIncome = 0;
 
-    switch (businessType) {
-        case 'Clothing Store':
-            baseIncome = 1000;
-            break;
-        case 'Restaurant':
-            baseIncome = 1500;
-            break;
-        case 'Bar':
-            baseIncome = 1200;
-            break;
-        case 'New Car Dealership':
-            baseIncome = 2200;
-            break;
-        case 'Used Car Dealership':
-            baseIncome = 1800;
-            break;
-        case '24/7':
-            baseIncome = 1600;
-            break;
-        case 'Gun Shop':
-            baseIncome = 1750;
-            break;
-        default:
-            baseIncome = 500; 
-    }
-
-   
-    const employeesMultiplier = 100 * business.employees.length; 
-
-    
-    const finalIncome = baseIncome * employeesMultiplier;
-
-    return finalIncome;
-}
-
-function getBusinessTypeName(type) {
-    const businessTypes = {
-        1: "Clothing Store",
-        2: "Restaurant",
-        3: "Bar",
-        4: "New Car Dealership",
-        5: "Used Car Dealership",
-        6: "24/7",
-        7: "Gun Shop",
-    };
-
-    return businessTypes[type] || "Undefined";
-}
 
 //COMMANDS
 
@@ -165,7 +210,7 @@ addCommandHandler("binvite", (command, params, client) => {
 	let tpBusiness = db.query(`SELECT bizName FROM biznizs WHERE bizEmployees = '${targetClient.name}'`);
 
 
-    if (isLeader !== "") {
+    if (businessOwner !== "") {
         if(targetClient) {
 			if (targetClient.index !== client.index) {
 				if(tpBusiness !== "") {
@@ -218,3 +263,42 @@ addCommandHandler("accbiz", (command, params, client) => {
 });
 
 
+addCommandHandler("claimmoney", (command, params, client) => {
+    const playerLocation = client.player.position;
+    const claimBizMoneyDistance = 5.0;
+    let playerBusiness = db.query(`SELECT bizName FROM biznizs WHERE bizOwner = '${client.name}'`);
+    if(playerBusiness == "" || !playerBusiness) {
+        messageClient("You don't own any business.", client, COLOUR_RED);
+    } else {
+
+        let playerBusinessType = String(db.query(`SELECT bizType FROM biznizs WHERE bizOwner = '${client.name}'`));
+
+
+        let playerBusinessX = db.query(`SELECT bizposX FROM biznizs WHERE bizName = "${String(playerBusiness)}"`);
+        let playerBusinessY = db.query(`SELECT bizposY FROM biznizs WHERE bizName = "${String(playerBusiness)}"`);
+        let playerBusinessZ = db.query(`SELECT bizposZ FROM biznizs WHERE bizName = "${String(playerBusiness)}"`);
+
+        playerBusinessPos.x = parseFloat(playerBusinessX);
+        playerBusinessPos.y = parseFloat(playerBusinessY);
+        playerBusinessPos.z = parseFloat(playerBusinessZ);
+
+        let playerAtClaimPos = getDistance(playerBusinessPos, playerLocation)
+
+        if(playerAtClaimPos <= claimBizMoneyDistance) {
+            const targetBusiness = ServerBusinesses.find(serverbusiness => serverbusiness.name === String(playerBusiness));
+            const generatedIncome = targetBusiness.generateIncome();
+
+            if(!generatedIncome) {
+                messageClient(`Business name is: ${playerBusiness}, type is: ${playerBusinessType}, x: ${playerBusinessPos.x}, y: ${playerBusinessPos.y}, z: ${playerBusinessPos.z}`, client, COLOUR_ORANGE);
+                message(`${playerBusinessPos.x}, ${playerBusinessPos.y}, ${playerBusinessPos.z}`)
+            } else {
+                messageClient(`Generated income is ${generatedIncome}, finalPlay is ${finalPay}`)
+                message(`${playerBusinessPos.x}, ${playerBusinessPos.y}, ${playerBusinessPos.z}`)
+            }
+
+        } else {
+            messageClient("You are not at your business location or you don't own a business here.", client, COLOUR_RED);
+        }
+    }
+
+});
