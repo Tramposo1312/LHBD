@@ -73,25 +73,25 @@ class Business {
     
             switch (this.type) {
                 case 'Clothing Store':
-                    baseIncome = 1000;
+                    baseIncome = 300;
                     break;
                 case 'Restaurant':
-                    baseIncome = 1500;
+                    baseIncome = 600;
                     break;
                 case 'Bar':
-                    baseIncome = 1200;
+                    baseIncome = 800;
                     break;
                 case 'New Car Dealership':
-                    baseIncome = 2200;
+                    baseIncome = 1200;
                     break;
                 case 'Used Car Dealership':
-                    baseIncome = 1800;
+                    baseIncome = 1000;
                     break;
                 case '24/7':
-                    baseIncome = 1600;
+                    baseIncome = 1000;
                     break;
                 case 'Gun Shop':
-                    baseIncome = 1750;
+                    baseIncome = 1500;
                     break;
                 default:
                     baseIncome = 500;
@@ -99,14 +99,15 @@ class Business {
     
             this.money += baseIncome;
             this.lastIncomeTime = currentTime;
-            return baseIncome;
+            return this.money;
         } else {
-            return 0; 
+            return 0; // No income generated yet within the interval
         }
     }
-    
-    
 }
+    
+   
+
 
 const businessTypes = {
     1: "Clothing Store",
@@ -314,9 +315,8 @@ addCommandHandler("claimmoney", (command, params, client) => {
         
                 // Reset the business's money to 0 after claiming
                 targetBusiness.money = 0;
-        
-                // Update the player's money in the database (you need to implement this)
-                db.query(`UPDATE users SET money = '${finalPay}'`);
+                db.query(`UPDATE users SET money = '${finalPay}' WHERE username = '${client.name}'`);
+                db.query(`UPDATE biznizs SET bizMoney = 0 WHERE bizName = "${String(playerBusiness)}"`);
             } else {
                 messageClient(`No income available to claim from your ${playerBusinessType}.`, client, COLOUR_ORANGE);
             }
@@ -402,3 +402,4 @@ addCommandHandler("claimmoney", (command, params, client) => {
     messageClient(`You've claimed $${claimedIncome} from your ${business.type}.`, client, COLOUR_GREEN);
 });
 */
+

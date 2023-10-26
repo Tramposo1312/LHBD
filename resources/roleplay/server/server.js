@@ -57,7 +57,7 @@ let factionsSpawn = null;
 //LOCATIONS
 let motorest  = [-7.22, 2.4, 20.15];
 let littleitaly = [-1980.949, -4.982666, 23.199167];
-let saliery = [-1774.30, -5.56, 7.62];
+let saliery = [-1774.30, -5.56, 4.35];
 let bartest = [-387.11, 15.47, -515];
 let kingbed = [-545.79, 15.38, -436.02];
 let vila = [106.33, -5.11, 171.22];
@@ -460,7 +460,6 @@ addCommandHandler("exit", (command, params, client) => {
 addCommandHandler("spawn", (command, params, client) => {
 	let Hospital = [-758.792, 13.2488, 761.116];
 	let hoboken = [328.71826, -3.187930, 267.53866];
-	let saliery = [-1774.30, -5.56, 7.62];
 	let asalier = [-1774.0, -3.93, 7.32];
 	let salieryDoor = [-1774.6744384765625, -5.628890037536621, 3.844797372817993];
 	let hoboApart = [453.92, -3.66, 297];
