@@ -1,6 +1,10 @@
 const businessInvitations = [];
 const ServerBusinesses = [];
+
 let playerBusinessPos = new Vec3(0, 0, 0);
+
+const claimBizMoneyDistance = 5.0;
+
 
 class Business {
     constructor(name, type, owner = null, employees = [], posX, posY, posZ, items, money) {
@@ -13,6 +17,8 @@ class Business {
         this.posZ = posZ;
         this.items = items;
         this.money = money;
+        this.lastIncomeTime = Date.now(); 
+        this.incomeInterval = 3600000;
     }
 
     toString() {
@@ -56,36 +62,50 @@ class Business {
             }
         }
     }
+    //GENERATING INCOME STUFF
 
     generateIncome() {
-        let baseIncome = 0;
-
-        switch (this.type) {
-            case 'Clothing Store':
-                baseIncome = 1000;
-                break;
-            case 'Restaurant':
-                baseIncome = 1500;
-                break;
-            case 'Bar':
-                baseIncome = 1200;
-                break;
-            case 'New Car Dealership':
-                baseIncome = 2200;
-                break;
-            case 'Used Car Dealership':
-                baseIncome = 1800;
-                break;
-            case '24/7':
-                baseIncome = 1600;
-                break;
-            case 'Gun Shop':
-                baseIncome = 1750;
-                break;
-            default:
-                baseIncome = 500;
+        const currentTime = Date.now();
+        const timeSinceLastIncome = currentTime - this.lastIncomeTime;
+    
+        if (timeSinceLastIncome >= this.incomeInterval) {
+            let baseIncome = 0;
+    
+            switch (this.type) {
+                case 'Clothing Store':
+                    baseIncome = 1000;
+                    break;
+                case 'Restaurant':
+                    baseIncome = 1500;
+                    break;
+                case 'Bar':
+                    baseIncome = 1200;
+                    break;
+                case 'New Car Dealership':
+                    baseIncome = 2200;
+                    break;
+                case 'Used Car Dealership':
+                    baseIncome = 1800;
+                    break;
+                case '24/7':
+                    baseIncome = 1600;
+                    break;
+                case 'Gun Shop':
+                    baseIncome = 1750;
+                    break;
+                default:
+                    baseIncome = 500;
+            }
+    
+            this.money += baseIncome;
+            this.lastIncomeTime = currentTime;
+            return baseIncome;
+        } else {
+            return 0; 
         }
     }
+    
+    
 }
 
 const businessTypes = {
@@ -265,7 +285,6 @@ addCommandHandler("accbiz", (command, params, client) => {
 
 addCommandHandler("claimmoney", (command, params, client) => {
     const playerLocation = client.player.position;
-    const claimBizMoneyDistance = 5.0;
     let playerBusiness = db.query(`SELECT bizName FROM biznizs WHERE bizOwner = '${client.name}'`);
     if(playerBusiness == "" || !playerBusiness) {
         messageClient("You don't own any business.", client, COLOUR_RED);
@@ -284,21 +303,102 @@ addCommandHandler("claimmoney", (command, params, client) => {
 
         let playerAtClaimPos = getDistance(playerBusinessPos, playerLocation)
 
-        if(playerAtClaimPos <= claimBizMoneyDistance) {
-            const targetBusiness = ServerBusinesses.find(serverbusiness => serverbusiness.name === String(playerBusiness));
+        if (playerAtClaimPos <= claimBizMoneyDistance) {
+            const targetBusiness = ServerBusinesses.find((serverbusiness) => serverbusiness.name == playerBusiness);
             const generatedIncome = targetBusiness.generateIncome();
-
-            if(!generatedIncome) {
-                messageClient(`Business name is: ${playerBusiness}, type is: ${playerBusinessType}, x: ${playerBusinessPos.x}, y: ${playerBusinessPos.y}, z: ${playerBusinessPos.z}`, client, COLOUR_ORANGE);
-                message(`${playerBusinessPos.x}, ${playerBusinessPos.y}, ${playerBusinessPos.z}`)
+            
+            if (generatedIncome > 0) {
+                let PlayerMoney = db.query(`SELECT money FROM users WHERE username = '${client.name}'`)
+                const finalPay = generatedIncome + parseInt(PlayerMoney);
+                messageClient(`You've claimed $${generatedIncome} from your ${playerBusinessType}.`, client, COLOUR_GREEN);
+        
+                // Reset the business's money to 0 after claiming
+                targetBusiness.money = 0;
+        
+                // Update the player's money in the database (you need to implement this)
+                db.query(`UPDATE users SET money = '${finalPay}'`);
             } else {
-                messageClient(`Generated income is ${generatedIncome}, finalPlay is ${finalPay}`)
-                message(`${playerBusinessPos.x}, ${playerBusinessPos.y}, ${playerBusinessPos.z}`)
+                messageClient(`No income available to claim from your ${playerBusinessType}.`, client, COLOUR_ORANGE);
             }
-
         } else {
             messageClient("You are not at your business location or you don't own a business here.", client, COLOUR_RED);
+        }     
+    }
+});
+
+
+/*
+// Advanced Income Generation and Claiming Code
+  // Distance for claiming money
+
+// Create a timer to periodically check businesses for income generation
+setInterval(() => {
+    const currentTime = new Date().getTime();
+
+    // Iterate through each business
+    for (const business of ServerBusinesses) {
+        const lastIncomeGenerationTime = business.lastIncomeGenerationTime;
+        const incomeGenerationInterval = business.incomeGenerationInterval;
+
+        // Check if it's time to generate income
+        if (currentTime >= lastIncomeGenerationTime + incomeGenerationInterval) {
+            // Generate income and update the business's state
+            const generatedIncome = business.generateIncome();
+            business.money += generatedIncome;
+            business.lastIncomeGenerationTime = currentTime;
+
+            // Update the database with the new income and time
+            db.query(`UPDATE biznizs SET bizMoney = '${business.money}', lastIncomeGenerationTime = '${currentTime}' WHERE bizName = '${business.name}'`);
         }
     }
+}, 1000); // Check every second, adjust the interval as needed
 
+// Command to claim business income
+addCommandHandler("claimmoney", (command, params, client) => {
+    const playerLocation = client.player.position;
+    const playerName = client.name;
+
+    // Query the database to get the player's business
+    const playerBusinessData = db.query(`SELECT bizName, bizType, bizposX, bizposY, bizposZ, bizMoney, lastIncomeGenerationTime FROM biznizs WHERE bizOwner = '${playerName}'`);
+
+    if (!playerBusinessData || playerBusinessData.length === 0) {
+        messageClient("You don't own any business.", client, COLOUR_RED);
+        return;
+    }
+
+    const business = new Business(
+        playerBusinessData.bizName,
+        playerBusinessData.bizType,
+        playerName,
+        [],
+        playerBusinessData.bizposX,
+        playerBusinessData.bizposY,
+        playerBusinessData.bizposZ,
+        playerBusinessData.bizMoney,
+        playerBusinessData.lastIncomeGenerationTime
+    );
+
+    // Calculate the claimed income
+    const currentTime = new Date().getTime();
+    const lastIncomeGenerationTime = business.lastIncomeGenerationTime;
+    const incomeGenerationInterval = business.incomeGenerationInterval;
+
+    if (currentTime < lastIncomeGenerationTime + incomeGenerationInterval) {
+        messageClient("It's not yet time to claim income from your business.", client, COLOUR_ORANGE);
+        return;
+    }
+
+    const claimedIncome = business.money;
+    business.money = 0;
+    business.lastIncomeGenerationTime = currentTime;
+
+    // Update the database with the new income and time
+    db.query(`UPDATE biznizs SET bizMoney = 0, lastIncomeGenerationTime = '${currentTime}' WHERE bizName = '${business.name}'`);
+
+    // Add the claimed income to the player's account
+    const playerMoney = parseInt(PlayerMoney) + claimedIncome;
+    db.query(`UPDATE users SET money = '${playerMoney}' WHERE name = '${playerName}'`);
+
+    messageClient(`You've claimed $${claimedIncome} from your ${business.type}.`, client, COLOUR_GREEN);
 });
+*/

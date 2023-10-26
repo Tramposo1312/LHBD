@@ -232,6 +232,18 @@ addCommandHandler("spawntype", (command, params, client) => {
 	}
 })
 
+
+addNetworkHandler("AudioDownloaded", function(song) {
+	if(song != null) {
+		console.log(`${song}`);
+		console.log("Audio downloaded");
+	} else {
+		console.log(`${song}`);
+		console.log("Audio is NOT DOWNLOADED!!!!");
+	}
+})
+
+
 addCommandHandler("dummy", (command, params, client) => {
 	let dummyPos = client.player.position;
 	let dummy = game.createDummyElement(dummyPos);
@@ -434,6 +446,7 @@ addCommandHandler("cmap", (command, params, client) => {
 	client.despawnPlayer();
 	updateMapPlayer(ToMap);
 	Teleported = true;
+	spawnPlayer(client, vila, 0.0, "TommyHighHAT.i3d");
 });
 addCommandHandler("exit", (command, params, client) => {
 

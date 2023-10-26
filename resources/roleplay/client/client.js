@@ -12,24 +12,23 @@ let IntroSongPath = 'matheme.mp3';
 let deathCam = new Vec3 (0, 0, 0);
 
 
-
-addEventHandler("OnResourceReady", function(event, resource) {
+function CreateAudio() {
     let audioFile = openFile(IntroSongPath);
+    let tempIntroSong = null;
     if(audioFile != null) {
-        IntroSong = audio.createSound(audioFile, false);
+        tempIntroSong = audio.createSound(audioFile, false);
     }
-    message(`${IntroSong}`);
-    initLoginGUI();
-});
 
-addNetworkHandler("IntroPlayAudio", function() {
+    return tempIntroSong;
+}
 
-    if(IntroSong != null) {
-       IntroSong.play();
-    } else {
-        message('IntroSong is null')
-    }
+bindEventHandler("OnResourceReady", thisResource, function(event, resource) {
+    IntroSong = CreateAudio();
+    triggerNetworkEvent("AudioDownloaded", IntroSong);
 })
+
+
+
 
 
 // ===========================================================================
@@ -96,6 +95,7 @@ addEventHandler("onPedSpawn", (event, ped) => {
 
 addNetworkHandler("mapChanging", function(newMap) {
     game.changeMap(newMap, true);
+    
 })
 
 addNetworkHandler("hudMoney", function(newMoney) {
