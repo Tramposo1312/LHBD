@@ -5,6 +5,15 @@ let playerBusinessPos = new Vec3(0, 0, 0);
 
 const claimBizMoneyDistance = 5.0;
 
+// ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+class Item {
+    constructor(name, price, type) {
+        this.name = name;
+        this.price = price;
+        this.type = type;
+    }
+}
 
 class Business {
     constructor(name, type, owner = null, employees = [], posX, posY, posZ, items, money) {
@@ -47,10 +56,12 @@ class Business {
 
     //ITEMS + MONEY
     addItem(item, quantity) {
-        if (this.items[item]) {
-            this.items[item] += quantity;
-        } else {
-            this.items[item] = quantity;
+        if (item instanceof Item) {
+            if (!this.items[item.name]) {
+                this.items[item.name] = { item, quantity };
+            } else {
+                this.items[item.name].quantity += quantity;
+            }
         }
     }
 
@@ -96,17 +107,45 @@ class Business {
                 default:
                     baseIncome = 500;
             }
-    
+
+            let totalItemValue = 0;
+            for (const itemName in this.items) {
+                if (itemValues[itemName]) {
+                    totalItemValue += this.items[itemName].quantity * itemValues[itemName];
+                }
+            }
+
+            
+            baseIncome += Math.floor(totalItemValue * 0.1); 
+
             this.money += baseIncome;
             this.lastIncomeTime = currentTime;
             return this.money;
         } else {
-            return 0; // No income generated yet within the interval
+            return 0; 
         }
     }
 }
     
-   
+const itemValues = {
+    'Clothing Store': {
+        'clothes': 20,
+        'shoes': 15,
+    },
+    'Restaurant': {
+        'food': 50,
+        'drinks': 30,
+    },
+    'Bar': {
+        'drinks': 40,
+        'snacks': 20,
+    },
+    '24/7': {
+        'food': 30,
+        'beverages': 25,
+    }
+};
+
 
 
 const businessTypes = {
@@ -175,6 +214,7 @@ function saveBusinessesToDatabase(businesses) {
         })
     })
 }
+
 function retrieveBusinessesFromDatabase() {
 
 

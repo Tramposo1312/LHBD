@@ -1,77 +1,64 @@
 "use strict";
 
-
+// Configuration
 let labelFont = null;
-let labelDistance = 30.0;
-let labelWidth = 70;
-let labelColour = [255, 255, 255];
+let labelDistance = 10; 
 
-
-// ----------------------------------------------------------------------------
-
+// Define label properties
+let labeledObjects = [
+    {
+        position: [-1980.949, -4.982666, 23.199167],
+        labelText: "Label 1",
+        labelColor: COLOUR_WHITE,
+    },
+    {
+        position: [-1774.30, -5.56, 4.35],
+        labelText: "Label 2",
+        labelColor: COLOUR_WHITE,
+    },
+    // Add more labeled objects here
+];
 
 addEventHandler("OnResourceReady", function (event, resource) {
     if (resource == thisResource) {
         labelFont = lucasFont.createDefaultFont(12.0, "Roboto", "Light");
     }
-})
-
-// ----------------------------------------------------------------------------
+});
 
 function createColour(alpha, red, green, blue) {
-	return alpha << 24 | red << 16 | green << 8 | blue;
+    return alpha << 24 | red << 16 | green << 8 | blue;
 }
 
-// ----------------------------------------------------------------------------
+function drawLabel(x, y, text, color) {
+    if (labelFont != null) {
+        labelFont.render(text, [x, y], game.width, 0.0, 0.0, labelFont.size, color, false, false, false, true);
+    }
+}
 
 function getDistance(pos1, pos2) {
-	let dx = pos1[0] - pos2[0];
-	let dy = pos1[1] - pos2[1];
-	let dz = pos1[2] - pos2[2];
-	return Math.sqrt(dx * dx + dy * dy + dz * dz);
+    let dx = pos1[0] - pos2[0];
+    let dy = pos1[1] - pos2[1];
+    let dz = pos1[2] - pos2[2];
+    return Math.sqrt(dx * dx + dy * dy + dz * dz);
 }
 
-// ----------------------------------------------------------------------------
-
-function drawLabel(x, y, text, distance, colour) {
-    if (labelFont == null) {
-        return false;
-    }
-
-    let width = labelWidth;
-
-    y -= 5;
-
-    if(labelFont != null) {
-        let size = labelFont.measure(text, game.width, 0.0, 0.0, labelFont.size, false, false);
-        labelFont.render(text, [x - size[0] / 2,y - size[1] / 2, game.width, labelFont.size, colour, false, false, false, true]);
-    }
-}
-
-function updateLabels(location) {
+function updateLabels() {
     if (localPlayer != null) {
         let playerPos = localPlayer.position;
+        
+        for (let i in labeledObjects) {
+            let objectPos = labeledObjects[i].position;
+            let distance = getDistance(playerPos, objectPos);
 
-        locationPos.y += 2;
-
-        let screenPos = getScreenFromWorldPosition(locationPos);
-        if(screenPos[2] >= 0.0) {
-            let distance = getDistance(playerPos, location);
-            if(distance < labelDistance) {
-                drawLabel(screenPos.x, screenPos.y, "LABEL", distance, COLOUR_WHITE);
+            if (distance < labelDistance) {
+                let screenPos = getScreenFromWorldPosition(objectPos);
+                let labelColor = labeledObjects[i].labelColor;
+                drawLabel(screenPos.x, screenPos.y, labeledObjects[i].labelText, labelColor);
             }
         }
     }
 }
-let salieryDoor = [-1774.6744384765625, -5.628890037536621, 3.844797372817993];
 
 addEventHandler("OnDrawnHUD", function (event) {
-    updateLabels(salieryDoor);
-    let debug = updateLabels(salieryDoor);
-    if(debug) {
-        message("Working!")
-    } else {
-        message("Not working")
-    }
-
+    updateLabels();
 });
