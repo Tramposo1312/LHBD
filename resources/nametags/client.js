@@ -23,7 +23,6 @@ let nametagColour = [
 addEventHandler("OnResourceReady", function (event, resource) {
 	if (resource == thisResource) {
 		//let fontFile = openFile("pricedown.ttf", false);
-		labelFont = lucasFont.createDefaultFont(12.0, "Roboto", "Light");
 		nametagFont = lucasFont.createDefaultFont(12.0, "Roboto", "Light");
 		afkStatusFont = lucasFont.createDefaultFont(18.0, "Roboto", "Light");
 		//nametagFont = lucasFont.createFont(fontFile, 16.0);

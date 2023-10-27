@@ -29,7 +29,7 @@ bindEventHandler("OnResourceStart", thisResource, function(event, resource, clie
 	}
 	initFactionScript();
 	initBusinessScript();
-
+	
 
 	//GLOBAL CONFIGS
 	const PedSkins = {
@@ -196,7 +196,8 @@ addEventHandler("OnPlayerJoined", (event, client) => {
 	}
 
 
-	//GUNS
+	//USERS
+
 
 });
 
@@ -1580,7 +1581,7 @@ addCommandHandler("pm", (command, params, client) => {
 			message(`Oi, ${client.name} tried to PM himself, laugh at this lonely fucking idiot.`, COLOUR_RED);
 		}
 	} else {
-		messageClient("The kid is not online.", client, COLOUR_RED);
+		messageClient("This kid is not online.", client, COLOUR_RED);
 	}
 });
 

@@ -23,6 +23,7 @@ function CreateAudio() {
 }
 
 bindEventHandler("OnResourceReady", thisResource, function(event, resource) {
+    initLoginGUI();
     IntroSong = CreateAudio();
     triggerNetworkEvent("AudioDownloaded", IntroSong);
 })
@@ -95,7 +96,7 @@ addEventHandler("onPedSpawn", (event, ped) => {
 
 addNetworkHandler("mapChanging", function(newMap) {
     game.changeMap(newMap, true);
-    
+
 })
 
 addNetworkHandler("hudMoney", function(newMoney) {
@@ -121,39 +122,17 @@ addNetworkHandler("playAudio", function() {
 
 })
 
-addEventHandler("OnPedEnteringVehicle", function(event, ped, vehicle, seat) {
+// addEventHandler("OnPedEnteringVehicle", function(event, ped, vehicle, seat) {
 
 
-    message(`${ped.name} is entering THE AHAHA FUCKING vehicle ${vehicle.id} seat ${seat}`);
-    let vehCheck = getVehicleData(vehicle, "forRent");
-    if(vehCheck == true) {
-        message("True Veh");
-	} else {
-        message("False Veh");
-    }
-});
-
-
-
-/*
-const loginDialog = new GUIWindow("LoginDialog", "Login/Register", 100, 100, 400, 200);
-
-const usernameLabel = new GUIText("UsernameLabel", "Username:", 20, 30);
-const usernameInput = new GUITextInput("UsernameInput", "", 120, 30, 200);
-const passwordLabel = new GUIText("PasswordLabel", "Password:", 20, 60);
-const passwordInput = new GUITextInput("PasswordInput", "", 120, 60, 200, "password");
-const loginButton = new GUIButton("LoginButton", "Login", 120, 100);
-const registerButton = new GUIButton("RegisterButton", "Register", 240, 100);
-
-loginDialog.addElement(usernameLabel);
-loginDialog.addElement(usernameInput);
-loginDialog.addElement(passwordLabel);
-loginDialog.addElement(passwordInput);
-loginDialog.addElement(loginButton);
-loginDialog.addElement(registerButton);
-*/
-
-
+//     message(`${ped.name} is entering THE AHAHA FUCKING vehicle ${vehicle.id} seat ${seat}`);
+//     let vehCheck = getVehicleData(vehicle, "forRent");
+//     if(vehCheck == true) {
+//         message("True Veh");
+// 	} else {
+//         message("False Veh");
+//     }
+// });
 
 
 

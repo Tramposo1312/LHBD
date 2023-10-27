@@ -16,7 +16,7 @@ class Item {
 }
 
 class Business {
-    constructor(name, type, owner = null, employees = [], posX, posY, posZ, items, money) {
+    constructor(name, type, posX, posY, posZ, owner = null, employees = [], items, money) {
         this.name = name;
         this.type = type;
         this.owner = owner;
@@ -26,12 +26,13 @@ class Business {
         this.posZ = posZ;
         this.items = items;
         this.money = money;
-        this.lastIncomeTime = Date.now(); 
+        this.lastIncomeTime = Date.now();
         this.incomeInterval = 3600000;
+        // this.position = new Vec3(this.posX, this.posY, this.posZ);
     }
 
     toString() {
-        return `Business: ${this.name}, Type: ${this.type}, Items: ${this.items}, Owner: ${this.owner}, Employees: ${this.employees}, Money: ${this.money}`;
+        return `Business: ${this.name}, Type: ${this.type}, Items: ${this.items}, Owner: ${this.owner}, Position: ${this.posX}, ${this.posY}, ${this.posZ}, Money: ${this.money}`;
     }
     //EMPLOYEES
     hireEmployee(employee) {
@@ -78,10 +79,10 @@ class Business {
     generateIncome() {
         const currentTime = Date.now();
         const timeSinceLastIncome = currentTime - this.lastIncomeTime;
-    
+
         if (timeSinceLastIncome >= this.incomeInterval) {
             let baseIncome = 0;
-    
+
             switch (this.type) {
                 case 'Clothing Store':
                     baseIncome = 300;
@@ -115,18 +116,18 @@ class Business {
                 }
             }
 
-            
-            baseIncome += Math.floor(totalItemValue * 0.1); 
+
+            baseIncome += Math.floor(totalItemValue * 0.1);
 
             this.money += baseIncome;
             this.lastIncomeTime = currentTime;
             return this.money;
         } else {
-            return 0; 
+            return 0;
         }
     }
 }
-    
+
 const itemValues = {
     'Clothing Store': {
         'clothes': 20,
@@ -158,10 +159,31 @@ const businessTypes = {
     7: "Gun Shop",
 };
 
+// ----------------------------------------------------------------------------------------------------------------------------------------
+function getBusinessData(businessName) {
+    const business = ServerBusinesses.find((serverbusiness) => serverbusiness.name === businessName);
+    if (business) {
+        const data = {
+            name: business.name,
+            type: business.type,
+            owner: business.owner,
+            employees: business.employees,
+            position: business.position,
+            items: business.items,
+            money: business.money,
+        };
+        return data;
+    } else {
+        return null; // Business not found
+    }
+}
+
 function getBusinessTypeName(type) {
     return businessTypes[type] || "Undefined";
 }
-
+addNetworkHandler("findBusiness", function(cBusiness) {
+    getBusinessData(cBusiness);
+})
 addCommandHandler("cbiz", (command, params, client) => {
 
     let splitParams = params.split(" ");
@@ -196,18 +218,18 @@ addCommandHandler("cbiz", (command, params, client) => {
 })
 
 function saveBusinessesToDatabase(businesses) {
-    businesses.forEach((business, index) => {
+    businesses.forEach((serverbusiness, index) => {
         const bizID = index + 1;
         const updateQueries = [
-            `UPDATE biznizs SET bizName = '${business.name}' WHERE id = ${bizID}`,
-            `UPDATE biznizs SET bizItems = '${business.items}' WHERE id = ${bizID}`,
-            `UPDATE biznizs SET bizposX = ${business.posX} WHERE id = ${bizID}`,
-            `UPDATE biznizs SET bizposY = ${business.posY} WHERE id = ${bizID}`,
-            `UPDATE biznizs SET bizposZ = ${business.posZ} WHERE id = ${bizID}`,
-            `UPDATE biznizs SET bizOwner = '${business.owner}' WHERE id = ${bizID}`,
-            `UPDATE biznizs SET bizType = '${business.type}' WHERE id = ${bizID}`,
-            `UPDATE biznizs SET bizEmployees = '${business.employees}' WHERE id = ${bizID}`,
-            `UPDATE biznizs SET bizMoney = ${business.money} WHERE id = ${bizID}`,
+            `UPDATE biznizs SET bizName = '${serverbusiness.name}' WHERE id = ${bizID}`,
+            `UPDATE biznizs SET bizItems = '${serverbusiness.items}' WHERE id = ${bizID}`,
+            `UPDATE biznizs SET bizposX = ${serverbusiness.posX} WHERE id = ${bizID}`,
+            `UPDATE biznizs SET bizposY = ${serverbusiness.posY} WHERE id = ${bizID}`,
+            `UPDATE biznizs SET bizposZ = ${serverbusiness.posZ} WHERE id = ${bizID}`,
+            `UPDATE biznizs SET bizOwner = '${serverbusiness.owner}' WHERE id = ${bizID}`,
+            `UPDATE biznizs SET bizType = '${serverbusiness.type}' WHERE id = ${bizID}`,
+            `UPDATE biznizs SET bizEmployees = '${serverbusiness.employees}' WHERE id = ${bizID}`,
+            `UPDATE biznizs SET bizMoney = ${serverbusiness.money} WHERE id = ${bizID}`,
         ];
         updateQueries.forEach(query => {
             db.query(query);
@@ -242,8 +264,10 @@ function retrieveBusinessesFromDatabase() {
 
         const serverbusiness = new Business(name, type, owner, employees, xPos, yPos, zPos, items, money);
 
+        serverbusiness.position = new Vec3(xPos, yPos, zPos)
+
         ServerBusinesses.push(serverbusiness);
-        console.log(`${serverbusiness.name} retrieved successfully.`);
+        console.log(`${serverbusiness} retrieved successfully.`);
     }
 }
 return ServerBusinesses;
@@ -347,12 +371,12 @@ addCommandHandler("claimmoney", (command, params, client) => {
         if (playerAtClaimPos <= claimBizMoneyDistance) {
             const targetBusiness = ServerBusinesses.find((serverbusiness) => serverbusiness.name == playerBusiness);
             const generatedIncome = targetBusiness.generateIncome();
-            
+
             if (generatedIncome > 0) {
                 let PlayerMoney = db.query(`SELECT money FROM users WHERE username = '${client.name}'`)
                 const finalPay = generatedIncome + parseInt(PlayerMoney);
                 messageClient(`You've claimed $${generatedIncome} from your ${playerBusinessType}.`, client, COLOUR_GREEN);
-        
+
                 // Reset the business's money to 0 after claiming
                 targetBusiness.money = 0;
                 db.query(`UPDATE users SET money = '${finalPay}' WHERE username = '${client.name}'`);
@@ -362,7 +386,7 @@ addCommandHandler("claimmoney", (command, params, client) => {
             }
         } else {
             messageClient("You are not at your business location or you don't own a business here.", client, COLOUR_RED);
-        }     
+        }
     }
 });
 

@@ -1,1 +1,1 @@
-INSERT INTO biznizs (bizOwner, bizType, bizItems, bizEmployees, bizMoney, bizName, bizposX, bizposY, bizposZ) VALUES ('Tramposo38', 'Bar', 'Beer', 'BigmERO', '3800', "Bongiovanni's Bar", '-1774.30', '-5.56', '7.62')
+UPDATE biznizs SET bizposZ = 4.35;

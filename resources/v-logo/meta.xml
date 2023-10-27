@@ -4,5 +4,4 @@
 	<script src="client.js" type="client" language="javascript" />
 
 	<file type="client" src="mafiac-logo.png" />
-	<file type="client" src="gtac-logo.png" />
 </meta>

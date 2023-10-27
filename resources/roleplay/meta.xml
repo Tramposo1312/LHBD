@@ -5,9 +5,9 @@
 
 <!-- Client scripts -->
 	<script src="client/client.js" type="client" language="javascript" />
-	<file src="client/matheme.mp3" type="client" />
-	<!-- <script src="client/gui/login.js" type="client" language="javascript" /> -->
+	<script src="client/gui/login.js" type="client" language="javascript" />
 	<script src="client/labels.js" type="client" language="javascript" />
+	<file src="client/matheme.mp3" type="client" />
 
 
 <!-- Server scripts -->
