@@ -16,5 +16,6 @@
 	<script src="server/factions.js" type="server" language="javascript" />
 	<script src="server/business.js" type="server" language="javascript" />
 	<script src="server/animations.js" type="server" language="javascript" />
+	<script src="server/transporter.js" type="server" language="javascript" />
 
 </meta>

@@ -30,28 +30,35 @@ addCommandHandler("truckbiz", (command, params, client) => {
 
 
 function createServerBizTrucks() {
-	for (let vehID = 1; vehID <= 23; vehID++) {
-		let modelQuery = db.query(`SELECT model FROM transporter_vehs WHERE truck_id = '${vehID}'`);
-		let posxQuery = db.query(`SELECT posX FROM transporter_vehs WHERE truck_id = '${vehID}'`);
-		let posyQuery = db.query(`SELECT posY FROM transporter_vehs WHERE truck_id = '${vehID}'`);
-		let poszQuery = db.query(`SELECT posZ FROM transporter_vehs WHERE truck_id = '${vehID}'`);
-		let headingQuery = db.query(`SELECT heading FROM transporter_vehs WHERE truck_id = '${vehID}'`);
-		if(modelQuery) {
-			let aModel = String(modelQuery);
-			let aposX = parseFloat(posxQuery);
-			let aposY = parseFloat(posyQuery);
-			let aposZ = parseFloat(poszQuery);
-			let aHeading = parseFloat(headingQuery);
-			let asVehPos = new Vec3(aposX, aposY, aposZ);
-			let tempBizTruck = game.createVehicle(`${aModel}.i3d`, asVehPos, aHeading)
-			if(tempBizTruck) {
-                setVehicleData(tempBizTruck, 'bizTruck', true)
-				console.log(`Truck ${vehID} created successfully`);
-			} else {
-				console.log(`Vehicle ${vehID} failed to create.`);
-			}
-		}
-	}
+    let queryTruck = parseInt(db.query(`SELECT truck_id FROM transporter_vehs WHERE truck_id = '1'`));
+    if (queryTruck == 1) {
+
+        for (let vehID = 1; vehID <= 23; vehID++) {
+            let modelQuery = db.query(`SELECT model FROM transporter_vehs WHERE truck_id = '${vehID}'`);
+            let posxQuery = db.query(`SELECT posX FROM transporter_vehs WHERE truck_id = '${vehID}'`);
+            let posyQuery = db.query(`SELECT posY FROM transporter_vehs WHERE truck_id = '${vehID}'`);
+            let poszQuery = db.query(`SELECT posZ FROM transporter_vehs WHERE truck_id = '${vehID}'`);
+            let headingQuery = db.query(`SELECT heading FROM transporter_vehs WHERE truck_id = '${vehID}'`);
+            if(modelQuery) {
+                let aModel = String(modelQuery);
+                let aposX = parseFloat(posxQuery);
+                let aposY = parseFloat(posyQuery);
+                let aposZ = parseFloat(poszQuery);
+                let aHeading = parseFloat(headingQuery);
+                let asBizTruckPos = new Vec3(aposX, aposY, aposZ);
+                let tempBizTruck = game.createVehicle(`${aModel}.i3d`, asBizTruckPos, aHeading)
+                if(tempBizTruck) {
+                    setVehicleData(tempBizTruck, 'bizTruck', true)
+                    console.log(`Truck ${vehID} created successfully`);
+                } else {
+                    console.log(`Vehicle ${vehID} failed to create.`);
+                }
+            }
+        }
+
+    } else {
+        console.log("No business trucks added yet.");
+    }
 }
 
 function initBizTrucksScript() {
