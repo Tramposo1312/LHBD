@@ -26,10 +26,11 @@ bindEventHandler("OnResourceStart", thisResource, function(event, resource, clie
 	//INIT FUNCTIONS
 	if(game.mapName == "FREERIDENOC" || game.mapName == "FREERIDE") {
 		initVehicleScript();
+		initBizTrucksScript();
 	}
 	initFactionScript();
 	initBusinessScript();
-	
+
 
 	//GLOBAL CONFIGS
 	const PedSkins = {

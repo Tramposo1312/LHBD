@@ -1094,3 +1094,236 @@
 <[28/10/2023 - 00:05:25]> [INFO]    SERVER LISTING: Pinging server...
 <[28/10/2023 - 00:05:30]> [ERROR]   SERVER LISTING: Failed to ping the server.
 <[28/10/2023 - 00:05:30]> [INFO]    Disconnected from server listing
+<[29/10/2023 - 13:42:03]> ------------------------------------------------------------
+<[29/10/2023 - 13:42:03]> --------------------- Logging Started ----------------------
+<[29/10/2023 - 13:42:03]> ------------------------------------------------------------
+<[29/10/2023 - 13:42:03]> Galactic 1.2.0
+<[29/10/2023 - 13:42:03]> Platform: Windows
+<[29/10/2023 - 13:42:03]> Windows NT 10.0 Build 19045 Win64; x64
+<[29/10/2023 - 13:42:03]> Intel(R) Core(TM) i5-4200U CPU @ 1.60GHz
+<[29/10/2023 - 13:42:03]> ------------------------------------------------------------
+<[29/10/2023 - 13:42:03]> [INFO]    Loading modules...
+<[29/10/2023 - 13:42:04]> [INFO]    Loaded module modules/mod_sqlite
+<[29/10/2023 - 13:42:06]> [INFO]    Loaded module modules/mod_hashing_x64
+<[29/10/2023 - 13:42:06]> [INFO]    2/2 Modules loaded, 0 failed
+<[29/10/2023 - 13:42:06]> [INFO]    Scanning resources...
+<[29/10/2023 - 13:42:06]> [INFO]    Loading resources...
+<[29/10/2023 - 13:42:12]> [INFO]    16 resources in the resource cache
+<[29/10/2023 - 13:42:12]> [INFO]    Server is starting...
+<[29/10/2023 - 13:42:12]> [INFO]    Server is now listening on port 22000 max players 120...
+<[29/10/2023 - 13:42:12]> [INFO]    Starting resources...
+<[29/10/2023 - 13:42:12]> [INFO]    START: Starting resource roleplay...
+<[29/10/2023 - 13:42:12]> [INFO]    [TRMPOSO] Initialising vehicle script...
+<[29/10/2023 - 13:42:12]> [INFO]    Vehicle 1 created successfully
+<[29/10/2023 - 13:42:12]> [INFO]    Vehicle 2 created successfully
+<[29/10/2023 - 13:42:12]> [INFO]    Vehicle 3 created successfully
+<[29/10/2023 - 13:42:12]> [INFO]    Vehicle 4 created successfully
+<[29/10/2023 - 13:42:12]> [INFO]    Vehicle 5 created successfully
+<[29/10/2023 - 13:42:12]> [INFO]    Vehicle 6 created successfully
+<[29/10/2023 - 13:42:12]> [INFO]    Vehicle 7 created successfully
+<[29/10/2023 - 13:42:12]> [INFO]    Vehicle 8 created successfully
+<[29/10/2023 - 13:42:12]> [INFO]    Vehicle 9 created successfully
+<[29/10/2023 - 13:42:12]> [INFO]    Vehicle 10 created successfully
+<[29/10/2023 - 13:42:12]> [INFO]    Vehicle 11 created successfully
+<[29/10/2023 - 13:42:12]> [INFO]    Vehicle 12 created successfully
+<[29/10/2023 - 13:42:12]> [INFO]    Vehicle 13 created successfully
+<[29/10/2023 - 13:42:12]> [INFO]    Vehicle 14 created successfully
+<[29/10/2023 - 13:42:12]> [INFO]    Vehicle 15 created successfully
+<[29/10/2023 - 13:42:12]> [INFO]    Vehicle 16 created successfully
+<[29/10/2023 - 13:42:12]> [INFO]    Vehicle 17 created successfully
+<[29/10/2023 - 13:42:12]> [INFO]    Vehicle 18 created successfully
+<[29/10/2023 - 13:42:12]> [INFO]    Vehicle 19 created successfully
+<[29/10/2023 - 13:42:12]> [INFO]    Vehicle 20 created successfully
+<[29/10/2023 - 13:42:12]> [INFO]    Vehicle 21 created successfully
+<[29/10/2023 - 13:42:12]> [INFO]    Vehicle 22 created successfully
+<[29/10/2023 - 13:42:12]> [INFO]    Vehicle 23 created successfully
+<[29/10/2023 - 13:42:12]> [INFO]    [TRMPOSO] Vehicle script initialised successfully.
+<[29/10/2023 - 13:42:12]> [INFO]    [TRMPOSO] Faction script initialising...
+<[29/10/2023 - 13:42:12]> [INFO]    Faction: Bongiovanni, Slots: 10, Vehicles: fordtTud01, Businesses: Bar, Soldiers: Tramposo38, Leader: Tramposo38
+<[29/10/2023 - 13:42:12]> [INFO]    Bongiovanni faction retrieved successfully
+<[29/10/2023 - 13:42:12]> [INFO]    [TRMPOSO] Faction script initialised successfully
+<[29/10/2023 - 13:42:12]> [INFO]    [TRMPOSO] Business script initialising...
+<[29/10/2023 - 13:42:12]> [INFO]    Business: Bongiovanni's Bar, Type: Bar, Items: drinks, Owner: -5.56, Position: Tramposo38, BigmERO, -1774.3, Money: 0 retrieved successfully.
+<[29/10/2023 - 13:42:12]> [INFO]    [TRMPOSO] Business script initialised successfully
+<[29/10/2023 - 13:42:12]> [INFO]    START: Resource roleplay started.
+<[29/10/2023 - 13:42:12]> [INFO]    START: Starting resource v-admin...
+<[29/10/2023 - 13:42:12]> [INFO]    ADMIN: Loaded config file contents successfully.
+<[29/10/2023 - 13:42:12]> [INFO]    ADMIN: Parsed config file successfully.
+<[29/10/2023 - 13:42:12]> [INFO]    START: Resource v-admin started.
+<[29/10/2023 - 13:42:12]> [INFO]    START: Starting resource randomquotes...
+<[29/10/2023 - 13:42:12]> [INFO]    START: Resource randomquotes started.
+<[29/10/2023 - 13:42:12]> [INFO]    START: Starting resource nametags...
+<[29/10/2023 - 13:42:12]> [INFO]    START: Resource nametags started.
+<[29/10/2023 - 13:42:12]> [INFO]    START: Starting resource scoreboard...
+<[29/10/2023 - 13:42:12]> [INFO]    START: Resource scoreboard started.
+<[29/10/2023 - 13:42:12]> [INFO]    START: Starting resource v-servernames...
+<[29/10/2023 - 13:42:12]> [INFO]    START: Resource v-servernames started.
+<[29/10/2023 - 13:42:12]> [INFO]    START: Starting resource v-help...
+<[29/10/2023 - 13:42:12]> [INFO]    START: Resource v-help started.
+<[29/10/2023 - 13:42:12]> [INFO]    START: Starting resource v-logo...
+<[29/10/2023 - 13:42:12]> [INFO]    START: Resource v-logo started.
+<[29/10/2023 - 13:42:12]> [INFO]    8/8 Resources loaded, 0 failed
+<[29/10/2023 - 13:42:12]> [INFO]    Connecting to the server listing...
+<[29/10/2023 - 13:42:13]> [INFO]    Connected to the server listing
+<[29/10/2023 - 13:42:13]> [INFO]    SERVER LISTING: Pinging server...
+<[29/10/2023 - 13:42:18]> [ERROR]   SERVER LISTING: Failed to ping the server.
+<[29/10/2023 - 13:42:18]> [INFO]    Disconnected from server listing
+<[29/10/2023 - 13:42:23]> [INFO]    Connecting to the server listing...
+<[29/10/2023 - 13:42:23]> [INFO]    Connected to the server listing
+<[29/10/2023 - 13:42:23]> [INFO]    SERVER LISTING: Pinging server...
+<[29/10/2023 - 13:42:28]> [ERROR]   SERVER LISTING: Failed to ping the server.
+<[29/10/2023 - 13:42:28]> [INFO]    Disconnected from server listing
+<[29/10/2023 - 13:42:33]> [INFO]    Connecting to the server listing...
+<[29/10/2023 - 13:42:34]> [INFO]    Connected to the server listing
+<[29/10/2023 - 13:42:34]> [INFO]    SERVER LISTING: Pinging server...
+<[29/10/2023 - 13:42:39]> [ERROR]   SERVER LISTING: Failed to ping the server.
+<[29/10/2023 - 13:42:39]> [INFO]    Disconnected from server listing
+<[29/10/2023 - 13:42:44]> [INFO]    Connecting to the server listing...
+<[29/10/2023 - 13:42:44]> [INFO]    Connected to the server listing
+<[29/10/2023 - 13:42:44]> [INFO]    SERVER LISTING: Pinging server...
+<[29/10/2023 - 13:42:49]> [ERROR]   SERVER LISTING: Failed to ping the server.
+<[29/10/2023 - 13:42:49]> [INFO]    Disconnected from server listing
+<[29/10/2023 - 13:42:52]> [INFO]    CONNECT: 26.253.103.83 is attempting to connect
+<[29/10/2023 - 13:42:52]> [INFO]    Tramposo38 IP:26.253.103.83 is joining!
+<[29/10/2023 - 13:42:54]> [INFO]    Connecting to the server listing...
+<[29/10/2023 - 13:42:55]> [INFO]    Connected to the server listing
+<[29/10/2023 - 13:42:55]> [INFO]    SERVER LISTING: Pinging server...
+<[29/10/2023 - 13:42:58]> [INFO]    [TRMPOSO] Tramposo38 => LastPosX: -1778.5986328125
+<[29/10/2023 - 13:42:58]> [INFO]    [TRMPOSO] Tramposo38 => LastPosY: -5.778890132904053
+<[29/10/2023 - 13:42:58]> [INFO]    [TRMPOSO] Tramposo38 => LastPosZ: -8.291667938232422
+<[29/10/2023 - 13:42:59]> [WARN]    [ADMIN] [#FFFFFF]Tramposo38 passed the token check and was given admin permissions!
+<[29/10/2023 - 13:43:00]> [ERROR]   SERVER LISTING: Failed to ping the server.
+<[29/10/2023 - 13:43:00]> [INFO]    Disconnected from server listing
+<[29/10/2023 - 13:43:05]> [INFO]    Connecting to the server listing...
+<[29/10/2023 - 13:43:05]> [INFO]    Connected to the server listing
+<[29/10/2023 - 13:43:06]> [INFO]    SERVER LISTING: Pinging server...
+<[29/10/2023 - 13:43:11]> [ERROR]   SERVER LISTING: Failed to ping the server.
+<[29/10/2023 - 13:43:11]> [INFO]    Disconnected from server listing
+<[29/10/2023 - 13:43:16]> [INFO]    Connecting to the server listing...
+<[29/10/2023 - 13:43:16]> [INFO]    Connected to the server listing
+<[29/10/2023 - 13:43:16]> [INFO]    SERVER LISTING: Pinging server...
+<[29/10/2023 - 13:43:19]> [INFO]    Tramposo38 IP:26.253.103.83 has left! Reason: Disconnected
+<[29/10/2023 - 13:43:21]> [ERROR]   SERVER LISTING: Failed to ping the server.
+<[29/10/2023 - 13:43:21]> [INFO]    Disconnected from server listing
+<[29/10/2023 - 13:43:26]> [INFO]    Connecting to the server listing...
+<[29/10/2023 - 13:45:04]> ------------------------------------------------------------
+<[29/10/2023 - 13:45:04]> --------------------- Logging Started ----------------------
+<[29/10/2023 - 13:45:04]> ------------------------------------------------------------
+<[29/10/2023 - 13:45:04]> Galactic 1.2.0
+<[29/10/2023 - 13:45:04]> Platform: Windows
+<[29/10/2023 - 13:45:04]> Windows NT 10.0 Build 19045 Win64; x64
+<[29/10/2023 - 13:45:04]> Intel(R) Core(TM) i5-4200U CPU @ 1.60GHz
+<[29/10/2023 - 13:45:04]> ------------------------------------------------------------
+<[29/10/2023 - 13:45:04]> [INFO]    Loading modules...
+<[29/10/2023 - 13:45:04]> [INFO]    Loaded module modules/mod_sqlite
+<[29/10/2023 - 13:45:04]> [INFO]    Loaded module modules/mod_hashing_x64
+<[29/10/2023 - 13:45:04]> [INFO]    2/2 Modules loaded, 0 failed
+<[29/10/2023 - 13:45:04]> [INFO]    Scanning resources...
+<[29/10/2023 - 13:45:04]> [INFO]    Loading resources...
+<[29/10/2023 - 13:45:04]> [INFO]    16 resources in the resource cache
+<[29/10/2023 - 13:45:04]> [INFO]    Server is starting...
+<[29/10/2023 - 13:45:04]> [INFO]    Server is now listening on port 22000 max players 120...
+<[29/10/2023 - 13:45:04]> [INFO]    Starting resources...
+<[29/10/2023 - 13:45:04]> [INFO]    START: Starting resource roleplay...
+<[29/10/2023 - 13:45:04]> [INFO]    [TRMPOSO] Initialising vehicle script...
+<[29/10/2023 - 13:45:04]> [INFO]    Vehicle 1 created successfully
+<[29/10/2023 - 13:45:04]> [INFO]    Vehicle 2 created successfully
+<[29/10/2023 - 13:45:04]> [INFO]    Vehicle 3 created successfully
+<[29/10/2023 - 13:45:04]> [INFO]    Vehicle 4 created successfully
+<[29/10/2023 - 13:45:04]> [INFO]    Vehicle 5 created successfully
+<[29/10/2023 - 13:45:04]> [INFO]    Vehicle 6 created successfully
+<[29/10/2023 - 13:45:04]> [INFO]    Vehicle 7 created successfully
+<[29/10/2023 - 13:45:04]> [INFO]    Vehicle 8 created successfully
+<[29/10/2023 - 13:45:04]> [INFO]    Vehicle 9 created successfully
+<[29/10/2023 - 13:45:04]> [INFO]    Vehicle 10 created successfully
+<[29/10/2023 - 13:45:04]> [INFO]    Vehicle 11 created successfully
+<[29/10/2023 - 13:45:04]> [INFO]    Vehicle 12 created successfully
+<[29/10/2023 - 13:45:04]> [INFO]    Vehicle 13 created successfully
+<[29/10/2023 - 13:45:04]> [INFO]    Vehicle 14 created successfully
+<[29/10/2023 - 13:45:04]> [INFO]    Vehicle 15 created successfully
+<[29/10/2023 - 13:45:04]> [INFO]    Vehicle 16 created successfully
+<[29/10/2023 - 13:45:04]> [INFO]    Vehicle 17 created successfully
+<[29/10/2023 - 13:45:04]> [INFO]    Vehicle 18 created successfully
+<[29/10/2023 - 13:45:04]> [INFO]    Vehicle 19 created successfully
+<[29/10/2023 - 13:45:04]> [INFO]    Vehicle 20 created successfully
+<[29/10/2023 - 13:45:04]> [INFO]    Vehicle 21 created successfully
+<[29/10/2023 - 13:45:04]> [INFO]    Vehicle 22 created successfully
+<[29/10/2023 - 13:45:04]> [INFO]    Vehicle 23 created successfully
+<[29/10/2023 - 13:45:04]> [INFO]    [TRMPOSO] Vehicle script initialised successfully.
+<[29/10/2023 - 13:45:04]> [INFO]    [TRMPOSO] Faction script initialising...
+<[29/10/2023 - 13:45:04]> [INFO]    Faction: Bongiovanni, Slots: 10, Vehicles: fordtTud01, Businesses: Bar, Soldiers: Tramposo38, Leader: Tramposo38
+<[29/10/2023 - 13:45:04]> [INFO]    Bongiovanni faction retrieved successfully
+<[29/10/2023 - 13:45:04]> [INFO]    [TRMPOSO] Faction script initialised successfully
+<[29/10/2023 - 13:45:04]> [INFO]    [TRMPOSO] Business script initialising...
+<[29/10/2023 - 13:45:04]> [INFO]    Business: Bongiovanni's Bar, Type: Bar, Items: drinks, Owner: -5.56, Position: Tramposo38, BigmERO, -1774.3, Money: 0 retrieved successfully.
+<[29/10/2023 - 13:45:04]> [INFO]    [TRMPOSO] Business script initialised successfully
+<[29/10/2023 - 13:45:04]> [INFO]    START: Resource roleplay started.
+<[29/10/2023 - 13:45:04]> [INFO]    START: Starting resource v-admin...
+<[29/10/2023 - 13:45:04]> [INFO]    ADMIN: Loaded config file contents successfully.
+<[29/10/2023 - 13:45:04]> [INFO]    ADMIN: Parsed config file successfully.
+<[29/10/2023 - 13:45:04]> [INFO]    START: Resource v-admin started.
+<[29/10/2023 - 13:45:04]> [INFO]    START: Starting resource randomquotes...
+<[29/10/2023 - 13:45:04]> [INFO]    START: Resource randomquotes started.
+<[29/10/2023 - 13:45:04]> [INFO]    START: Starting resource nametags...
+<[29/10/2023 - 13:45:04]> [INFO]    START: Resource nametags started.
+<[29/10/2023 - 13:45:04]> [INFO]    START: Starting resource scoreboard...
+<[29/10/2023 - 13:45:04]> [INFO]    START: Resource scoreboard started.
+<[29/10/2023 - 13:45:04]> [INFO]    START: Starting resource v-servernames...
+<[29/10/2023 - 13:45:04]> [INFO]    START: Resource v-servernames started.
+<[29/10/2023 - 13:45:04]> [INFO]    START: Starting resource v-help...
+<[29/10/2023 - 13:45:04]> [INFO]    START: Resource v-help started.
+<[29/10/2023 - 13:45:04]> [INFO]    START: Starting resource v-logo...
+<[29/10/2023 - 13:45:05]> [INFO]    START: Resource v-logo started.
+<[29/10/2023 - 13:45:05]> [INFO]    8/8 Resources loaded, 0 failed
+<[29/10/2023 - 13:45:05]> [INFO]    Connecting to the server listing...
+<[29/10/2023 - 13:45:05]> [INFO]    Connected to the server listing
+<[29/10/2023 - 13:45:05]> [INFO]    SERVER LISTING: Pinging server...
+<[29/10/2023 - 13:45:10]> [ERROR]   SERVER LISTING: Failed to ping the server.
+<[29/10/2023 - 13:45:10]> [INFO]    Disconnected from server listing
+<[29/10/2023 - 13:45:15]> [INFO]    Connecting to the server listing...
+<[29/10/2023 - 13:45:16]> [INFO]    Connected to the server listing
+<[29/10/2023 - 13:45:16]> [INFO]    SERVER LISTING: Pinging server...
+<[29/10/2023 - 13:45:19]> [INFO]    CONNECT: 26.253.103.83 is attempting to connect
+<[29/10/2023 - 13:45:19]> [INFO]    Tramposo38 IP:26.253.103.83 is joining!
+<[29/10/2023 - 13:45:21]> [ERROR]   SERVER LISTING: Failed to ping the server.
+<[29/10/2023 - 13:45:21]> [INFO]    Disconnected from server listing
+<[29/10/2023 - 13:45:24]> [INFO]    [TRMPOSO] Tramposo38 => LastPosX: -1770.8756103515625
+<[29/10/2023 - 13:45:24]> [INFO]    [TRMPOSO] Tramposo38 => LastPosY: -5.819451808929443
+<[29/10/2023 - 13:45:24]> [INFO]    [TRMPOSO] Tramposo38 => LastPosZ: -12.041664123535156
+<[29/10/2023 - 13:45:25]> [WARN]    [ADMIN] [#FFFFFF]Tramposo38 passed the token check and was given admin permissions!
+<[29/10/2023 - 13:45:26]> [INFO]    Connecting to the server listing...
+<[29/10/2023 - 13:45:26]> [INFO]    Connected to the server listing
+<[29/10/2023 - 13:45:26]> [INFO]    SERVER LISTING: Pinging server...
+<[29/10/2023 - 13:45:31]> [ERROR]   SERVER LISTING: Failed to ping the server.
+<[29/10/2023 - 13:45:31]> [INFO]    Disconnected from server listing
+<[29/10/2023 - 13:45:36]> [INFO]    Connecting to the server listing...
+<[29/10/2023 - 13:45:37]> [INFO]    Connected to the server listing
+<[29/10/2023 - 13:45:37]> [INFO]    SERVER LISTING: Pinging server...
+<[29/10/2023 - 13:45:42]> [ERROR]   SERVER LISTING: Failed to ping the server.
+<[29/10/2023 - 13:45:42]> [INFO]    Disconnected from server listing
+<[29/10/2023 - 13:45:44]> [INFO]    Tramposo38 IP:26.253.103.83 has left! Reason: Disconnected
+<[29/10/2023 - 13:45:47]> [INFO]    Connecting to the server listing...
+<[29/10/2023 - 13:45:47]> [INFO]    Connected to the server listing
+<[29/10/2023 - 13:45:48]> [INFO]    SERVER LISTING: Pinging server...
+<[29/10/2023 - 13:45:48]> [INFO]    Server shutting down...
+<[29/10/2023 - 13:45:48]> [INFO]    STOP: Stopping resource v-admin...
+<[29/10/2023 - 13:45:48]> [INFO]    ADMIN: Config file stringified successfully
+<[29/10/2023 - 13:45:48]> [INFO]    ADMIN: Config file saved successfully
+<[29/10/2023 - 13:45:48]> [INFO]    STOP: Resource v-admin stopped.
+<[29/10/2023 - 13:45:48]> [INFO]    STOP: Stopping resource nametags...
+<[29/10/2023 - 13:45:48]> [INFO]    STOP: Resource nametags stopped.
+<[29/10/2023 - 13:45:48]> [INFO]    STOP: Stopping resource roleplay...
+<[29/10/2023 - 13:45:48]> [INFO]    STOP: Resource roleplay stopped.
+<[29/10/2023 - 13:45:48]> [INFO]    STOP: Stopping resource randomquotes...
+<[29/10/2023 - 13:45:48]> [INFO]    STOP: Resource randomquotes stopped.
+<[29/10/2023 - 13:45:48]> [INFO]    STOP: Stopping resource scoreboard...
+<[29/10/2023 - 13:45:48]> [INFO]    STOP: Resource scoreboard stopped.
+<[29/10/2023 - 13:45:48]> [INFO]    STOP: Stopping resource v-help...
+<[29/10/2023 - 13:45:48]> [INFO]    STOP: Resource v-help stopped.
+<[29/10/2023 - 13:45:48]> [INFO]    STOP: Stopping resource v-logo...
+<[29/10/2023 - 13:45:48]> [INFO]    STOP: Resource v-logo stopped.
+<[29/10/2023 - 13:45:48]> [INFO]    STOP: Stopping resource v-servernames...
+<[29/10/2023 - 13:45:48]> [INFO]    STOP: Resource v-servernames stopped.
+<[29/10/2023 - 13:45:48]> ------------------------------------------------------------
+<[29/10/2023 - 13:45:48]> ---------------------- Logging Ended -----------------------
+<[29/10/2023 - 13:45:48]> ------------------------------------------------------------
