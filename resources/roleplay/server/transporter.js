@@ -2,6 +2,7 @@ let PLAYER_HAS_JOB = 0;
 let PLAYER_IS_WORKING = 0;
 let PLAYER_FINISHED_WORKING = 0;
 let PLAYER_IS_TRANSPORTER = 0;
+const TRUCKER_JOB_POS = [, ,];
 
 addCommandHandler("truckbiz", (command, params, client) => {
     if(client.administrator) {
@@ -11,7 +12,7 @@ addCommandHandler("truckbiz", (command, params, client) => {
             let frontOfPlayer = getPosInFrontOfPos(client.player.position, client.player.heading, 5);
 		    let bizTruck = game.createVehicle(`TruckBxx00.i3d`, frontOfPlayer, client.player.heading);
             if(bizTruck) {
-                messageClient(`${client.name} spawned a ${vehicleNames[vehicleModels.indexOf(model)]} vehicle`, client, COLOUR_YELLOW);
+                messageClient(`${client.name} spawned a business truck.`, client, COLOUR_YELLOW);
 			    let truckDebug = db.query(`INSERT INTO transporter_vehs (model, posX, posY, posZ, heading) VALUES ('TruckBxx00', '${frontOfPlayer.x}', '${frontOfPlayer.y}', '${frontOfPlayer.z}', '${client.player.heading}')`);
                 if(truckDebug) {
                     messageClient("You spawned a business truck successfully.", client, COLOUR_GREEN);
@@ -66,3 +67,4 @@ function initBizTrucksScript() {
 	createServerBizTrucks();
 	console.log('[TRMPOSO] Business trucks script initialised successfully.');
 }
+
